@@ -1,0 +1,191 @@
+[
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/app.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/app.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/app.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/app.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/app.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/defs.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/defs.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/defs.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/defs.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/defs.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/entity.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/entity.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/entity.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/entity.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/entity.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/main.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/main.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/main.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/main.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/main.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/ui.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/ui.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/ui.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/ui.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/ui.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/world.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/world.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/world.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/world.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/world.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/scene.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/scene.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/scene.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/scene_manager.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/scene_manager.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/scene_manager.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene_manager.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene_manager.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/scenes/game.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/scenes/game.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/scenes/game.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scenes/game.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scenes/game.cc"
+ }
+]
