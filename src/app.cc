@@ -1,6 +1,7 @@
 #include "app.hh"
 #include "defs.hh"
 #include "ui.hh"
+#include "scenes/game.hh"
 
 #include <algorithm>
 #include <memory>
@@ -9,9 +10,10 @@
 App* App::_instance = nullptr;
 
 App::App():
-	_scene_manager(_renderer) { 
+	_scene_manager(_event, _renderer) { 
 	_running = initSDL(); 
 	Font::init();
+	initScenes();
 }
 
 App::~App(){
@@ -66,4 +68,9 @@ bool App::initSDL(){
 	TTF_Init();
 
 	return true;
+}
+
+void App::initScenes(){
+	std::unique_ptr<Game> game_scene = std::make_unique<Game>(_event, _renderer);
+	addScene(std::move(game_scene));
 }

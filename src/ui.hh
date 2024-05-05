@@ -2,17 +2,23 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <vector>
+#include <functional>
+#include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 #include "defs.hh"
 
 namespace UI {
+	class Manager;
+	class Widget;
+
 	class Widget { // UI element base class
 		public:
 			Widget(int x, int y, SDL_Renderer* &renderer);
 			~Widget() = default;
-			virtual void render() = 0;
-			virtual void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state);
+			virtual void render(SDL_Renderer* renderer) = 0;
+			virtual void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state, SDL_Event& e);
 
 			uint32_t getID();
 
@@ -22,10 +28,22 @@ namespace UI {
 			bool _mouse_over; // true if mouse hovering widget
 			const uint32_t _id;
 	};
+	
+	// UI Manager
+	class Manager {
+		public:
+			Manager(SDL_Event& event);
+			~Manager() = default;
 
-	bool removeWidget(uint32_t id);
+			bool addWidget(Widget* widget);
+			bool removeWidget(uint32_t id);
+			void renderAndHandleWidgets(SDL_Point mouse_pos, const uint8_t* kb_state, SDL_Renderer* renderer);
+		private:
 
-	void renderAndHandleWidgets(SDL_Point mouse_pos, const uint8_t* kb_state);
+			uint32_t _widget_count = 0; // widget counter used to assign unique IDs to each widget
+			std::vector<Widget*> _widgets; // the list of widgets
+			SDL_Event& _event;
+	};
 
 	class Window {
 
@@ -35,7 +53,7 @@ namespace UI {
 		public:
 			Text(const std::string& text, 
 					int x, int y, 
-					SDL_Renderer* &renderer,
+					SDL_Renderer* renderer,
 					TTF_Font* font
 				);
 
@@ -43,7 +61,7 @@ namespace UI {
 			void setPos(int x, int y);
 
 			~Text();
-			void render();
+			void render(SDL_Renderer* renderer);
 		private:
 			std::string _text;	
 			SDL_Surface* _surface;
@@ -55,7 +73,7 @@ namespace UI {
 			Button(const std::string& text, 
 					int x, int y, 
 					int w, int h,
-					SDL_Renderer* &renderer,
+					SDL_Renderer* renderer,
 					TTF_Font* font = Font::openSansMedium,
 					SDL_Color bg_color = Color::GREY,
 					SDL_Color hover_color = Color::LIGHT_GREY
@@ -63,13 +81,12 @@ namespace UI {
 
 			~Button() = default;
 
-			virtual void onClick(void*) = 0;
+			void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state, SDL_Event& e) override;
+			void render(SDL_Renderer* renderer) override;
 
-			void render();
-			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;
 		private:
+
 			Text _text;
 			SDL_Color _bg_color, _hover_color;
 	};
-
 }

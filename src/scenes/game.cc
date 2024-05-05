@@ -1,13 +1,46 @@
 #include "game.hh"
+#include "ui.hh"
 
-Game::Game(): Scene("GAME"), 
-	_world(WINDOW_H / BLOCK_H, WINDOW_W / BLOCK_W){
+#include <iostream>
+
+class FirstBtn : public UI::Button {
+	public:
+		FirstBtn(SDL_Renderer* renderer): Button(
+				"Click Me", 
+				200, 200,
+				180, 50,
+				renderer){}
+
+		void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state, SDL_Event& event) override {
+			_mouse_over = SDL_PointInRect(&mouse_pos, &_rect);
+			if (event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
+				std::cout << "Nice, you clicked da first button.\n";
+			}
+		}
+
+
+};
+
+Game::Game(SDL_Event& event, SDL_Renderer* &renderer): Scene("GAME"), 
+	_world(WINDOW_H / BLOCK_H, WINDOW_W / BLOCK_W),
+	_renderer(renderer),
+	_event(event),
+	_ui_manager(event)
+{
+	_ui_manager.addWidget(new FirstBtn(_renderer));	
 };
 
 bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	drawWorld(renderer);
+	SDL_Point mouse_pos;
+
+	const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
+	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+	_ui_manager.renderAndHandleWidgets(mouse_pos, kb_state, renderer);
+
 	return true;
 };
 
@@ -16,28 +49,27 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 
 	static bool lmb_down = false, rmb_down = false;
 
-	SDL_Event event;
-	while (SDL_PollEvent(&event)){
-		switch(event.type){
+	while (SDL_PollEvent(&_event)){
+		switch(_event.type){
 			case SDL_MOUSEBUTTONDOWN:
 				{
-					if (event.button.button == SDL_BUTTON_LEFT)
+					if (_event.button.button == SDL_BUTTON_LEFT)
 						lmb_down = true;
-					else if (event.button.button == SDL_BUTTON_RIGHT)
+					else if (_event.button.button == SDL_BUTTON_RIGHT)
 						rmb_down = true;
 					break;
 				}
 			case SDL_MOUSEBUTTONUP:
 				{
-					if (event.button.button == SDL_BUTTON_LEFT)
+					if (_event.button.button == SDL_BUTTON_LEFT)
 						lmb_down = false;
-					else if (event.button.button == SDL_BUTTON_RIGHT)
+					else if (_event.button.button == SDL_BUTTON_RIGHT)
 						rmb_down = false;
 				}
 			case SDL_KEYDOWN:
 				{
-					// if (event.key.keysym.scancode == SDL_SCANCODE_P)
-					if (event.key.keysym.scancode == SDL_SCANCODE_M)
+					// if (_event.key.keysym.scancode == SDL_SCANCODE_P)
+					if (_event.key.keysym.scancode == SDL_SCANCODE_M)
 						fprintf(stdout, "Mouse: (%i,%i)\n", mouse_pos.x, mouse_pos.y);
 					break;
 				}
