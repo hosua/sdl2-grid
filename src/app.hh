@@ -19,8 +19,7 @@ class App {
 			return _instance;
 		}
 
-		void initScenes();
-
+		void addScene(std::unique_ptr<Scene> scene);
 		bool renderScenes();
 
 		void handleInputs();
@@ -36,9 +35,6 @@ class App {
 		App& operator=(App const&) = delete; // Don't implement
 
 	private:
-
-		void addScene(std::unique_ptr<Scene> scene);
-
 		static App* _instance;
 		App();
 		~App();

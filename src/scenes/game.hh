@@ -2,13 +2,12 @@
 #include "../scene.hh"
 #include "../world.hh"
 #include "../defs.hh"
-#include "../ui.hh"
 
 #define ROW_ROWS 
 
 class Game : public Scene {
 public:
-	Game(SDL_Event& event, SDL_Renderer* &renderer);
+	Game();
 	~Game() = default;
 
 	bool render(SDL_Renderer* &renderer) override;
@@ -23,7 +22,4 @@ public:
 private:
 	bool _end_game = false;
 	World _world;
-	SDL_Renderer* &_renderer;
-	SDL_Event& _event;
-	UI::Manager _ui_manager;
 };

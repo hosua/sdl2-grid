@@ -1,9 +1,7 @@
 #include "scene_manager.hh"
 #include <algorithm>
-#include <iostream>
 
-SceneManager::SceneManager(SDL_Event& event, SDL_Renderer* renderer): 
-	_event(event), _renderer(renderer){};	
+SceneManager::SceneManager(SDL_Renderer* &renderer): _renderer(renderer){};	
 
 void SceneManager::addScene(std::unique_ptr<Scene> scene){
 	_scenes.push_back(std::move(scene));
@@ -30,20 +28,14 @@ bool SceneManager::removeScene(const std::string& key){
 bool SceneManager::renderScenes(){
 	SDL_Point mouse_pos;
 	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
-	drawClear();
 	for (auto itr = _scenes.rbegin(); itr != _scenes.rend(); ++itr){
+		drawClear();
 		Scene* scene = itr->get();
-		if (scene->isRendering()){
-			// std::cout << "Rendering " << scene->getKey() << "\n";
-			if (!scene->render(_renderer))
-				return false;
-			
-			// if the scene isn't rendering, we probably don't want to handle input for it. So put it here
-			if (!scene->isPaused())
-				scene->handleInputs(mouse_pos);
-		}
+		if (!scene->render(_renderer))
+			return false;
+		scene->handleInputs(mouse_pos);
+		drawPresent();
 	}
-	drawPresent();
 	return true;
 };
 

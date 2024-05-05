@@ -1,9 +1,9 @@
 [
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -16,15 +16,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/app.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/app.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/app.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/app.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/app.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -37,15 +37,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/defs.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/defs.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/defs.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/defs.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/defs.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -58,15 +58,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/entity.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/entity.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/entity.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/entity.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/entity.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -79,15 +79,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/main.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/main.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/main.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/main.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/main.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -100,15 +100,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/ui.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/ui.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/ui.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/ui.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/ui.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -121,15 +121,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/world.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/world.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/world.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/world.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/world.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -142,15 +142,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/scene.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scene.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scene.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -163,15 +163,15 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/scene_manager.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scene_manager.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene_manager.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scene_manager.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scene_manager.cc"
  },
  {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "directory": "/home/hoswoo/Desktop/git/sdl2-grid/build",
   "arguments": [
    "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-I/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -184,8 +184,8 @@
    "-o",
    "CMakeFiles/grid-game.dir/src/scenes/game.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scenes/game.cc"
+   "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scenes/game.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scenes/game.cc"
+  "file": "/home/hoswoo/Desktop/Programming/c++/sdl2-grid/src/scenes/game.cc"
  }
 ]

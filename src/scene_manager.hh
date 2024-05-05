@@ -9,7 +9,7 @@
 
 class SceneManager {
 public:
-	SceneManager(SDL_Event& event, SDL_Renderer* renderer);	
+	SceneManager(SDL_Renderer* &renderer);	
 	~SceneManager() = default;
 	
 	void addScene(std::unique_ptr<Scene> scene);
@@ -24,7 +24,6 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Scene>> _scenes;
-	SDL_Event& _event;
-	SDL_Renderer* _renderer;
+	SDL_Renderer* &_renderer;
 };
 

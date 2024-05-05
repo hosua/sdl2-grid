@@ -7,10 +7,15 @@
 #include "defs.hh"
 #include "ui.hh"
 
+#include "scenes/game.hh"
+
 int main(){
 	srand(time(NULL));
 
 	App* app = App::getInstance();
+
+	std::unique_ptr<Game> game_scene = std::make_unique<Game>();
+	app->addScene(std::move(game_scene));
 
 	while (app->isRunning()){
 		if (!app->renderScenes())
