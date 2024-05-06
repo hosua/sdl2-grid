@@ -196,5 +196,49 @@
    "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scenes/game.cc"
   ],
   "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/scenes/game.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/pathfinders/dfs.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/pathfinders/dfs.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/pathfinders/dfs.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/pathfinders/dfs.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/pathfinders/dfs.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-grid/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/pathfinders/bfs.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/pathfinders/bfs.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/pathfinders/bfs.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/pathfinders/bfs.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-grid/src/pathfinders/bfs.cc"
  }
 ]

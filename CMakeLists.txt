@@ -19,12 +19,15 @@ set(SOURCES
 	src/scene.cc
 	src/scene_manager.cc
 	src/scenes/game.cc
+	src/pathfinders/dfs.cc
+	src/pathfinders/bfs.cc
 )
 
 # Define include directories
 set(INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scenes
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathfinders
 )
 
 # Add the executable

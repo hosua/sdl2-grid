@@ -1,6 +1,8 @@
 #include "game.hh"
 #include "defs.hh"
 #include "ui.hh"
+#include "pathfinders/dfs.hh"
+#include "pathfinders/bfs.hh"
 
 #include <iostream>
 #include <map>
@@ -8,172 +10,6 @@
 #include <queue>
 #include <utility>
 
-static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
-static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer);
-static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer);
-
-static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
-	std::vector<SDL_Point> path;
-	std::set<std::pair<int,int>> vis;
-
-	std::function<void(SDL_Point, World&, std::vector<SDL_Point>, std::vector<SDL_Point>&,
-			std::set<std::pair<int,int>>&)> dfs_helper;
-
-	SDL_Point goal = world.getEndPos();
-
-	// set render color for path search marking
-	SDL_Color c = Color::GREEN;
-	std::vector<SDL_Rect> search_markers; // store the rect of each node visited here
-	dfs_helper = [&](SDL_Point pos, World& world,
-			std::vector<SDL_Point> curr_path, std::vector<SDL_Point>& end_path, 
-			std::set<std::pair<int,int>>& vis){
-		curr_path.push_back({pos.x, pos.y}); // add to path
-		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
-
-		SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
-		search_markers.push_back(rect);
-
-		const SDL_Rect* rects = &search_markers[0];
-
-		world.renderClear(renderer);
-		world.draw(renderer);
-		// redraw the world
-
-		// render the current search
-		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
-		SDL_RenderFillRects(renderer, rects, search_markers.size());
-		SDL_Delay(10); // add some delay to the animation
-		SDL_RenderPresent(renderer);
-
-		if (pos.x == goal.x && pos.y == goal.y){
-			end_path = curr_path;
-			// remove starter node in path (player is already on here)
-			if (end_path.size() > 0)
-				end_path.erase(end_path.begin());
-			return;	
-		}
-		for (const SDL_Point& moves : s_moves){
-			int nx, ny;
-			nx = pos.x + moves.x, ny = pos.y + moves.y;
-			std::pair<int,int> pr = std::make_pair(nx, ny);
-			if (world.inBounds(nx, ny) &&
-					(world.getPos(nx, ny) == ENT_NONE || world.getPos(nx, ny) == ENT_END) 
-					&& vis.find(pr) == vis.end()){
-				dfs_helper({nx, ny}, world, curr_path, end_path, vis);
-				// immediately end the search if we already found a path
-				if (end_path.size() > 0)
-					return;
-			}
-		}
-	};
-
-	SDL_Point start = world.getPlayerPos();
-	std::vector<SDL_Point> temp_path;
-
-
-	// find the path
-	dfs_helper(start, world, temp_path, path, vis);
-
-	// animate the path we formed
-	SDL_Color c_finish = Color::LIGHT_GREEN;
-	SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
-	for (auto itr = path.rbegin(); itr != path.rend(); ++itr){
-		const SDL_Point pt = *itr;
-		const SDL_Rect rect = { LEFT_PANE_W + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H };
-		SDL_RenderFillRect(renderer, &rect);
-		SDL_Delay(7);
-		SDL_RenderPresent(renderer);
-	}
-
-
-	return path;
-}
-
-static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
-	using std::vector, std::function,
-		  std::map, std::pair, std::make_pair;
-
-	vector<SDL_Point> path;
-	std::set<pair<int,int>> vis;
-	map<pair<int,int>, SDL_Point> parent;
-
-	function<void(SDL_Point, World&, vector<SDL_Point>, vector<SDL_Point>&,
-			std::set<pair<int,int>>&)> bfs_helper;
-
-	SDL_Point start = world.getPlayerPos();
-	SDL_Point goal = world.getEndPos();
-
-	std::queue<SDL_Point> q; // <curr_node, parent>
-	q.push(start);
-	parent[make_pair(start.x, start.y)] = {-1,-1};
-
-	std::vector<SDL_Rect> search_markers;
-
-
-	const SDL_Color c = Color::GREEN;
-	while (!q.empty()){
-		size_t breadth = q.size();
-		while (breadth--){
-			SDL_Point pos = q.front();
-			printf("(%i,%i) -> ", pos.x, pos.y);
-			q.pop();
-			SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
-			const SDL_Rect* rects = &search_markers[0];
-			search_markers.push_back(rect);
-
-			world.renderClear(renderer);
-			world.draw(renderer);
-
-			// animate & reconstruct the path we formed when we reach the goal
-			if (pos.x == goal.x && pos.y == goal.y){
-				SDL_Color c_finish = Color::LIGHT_GREEN;
-				SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
-				// reconstruct
-				pair<int,int> crawl = make_pair(pos.x, pos.y);
-				SDL_Point c = { crawl.first, crawl.second };
-				path.push_back(c);
-				while (crawl.first != start.x || crawl.second != start.y){
-					c = { crawl.first, crawl.second };
-					path.push_back(c);
-					SDL_Point p = parent[crawl];
-					crawl.first = p.x, crawl.second = p.y;
-					rect = { LEFT_PANE_W + p.x * BLOCK_W, p.y * BLOCK_H, BLOCK_W, BLOCK_H };
-					SDL_RenderFillRect(renderer, &rect);
-					SDL_Delay(5); // add some delay to the animation
-					SDL_RenderPresent(renderer);
-				}
-
-				// remove starter node in path (player is already on here)
-				if (path.size() > 0)
-					path.erase(path.begin());
-				std::reverse(path.begin(), path.end());
-				return path;
-			}
-
-			for (const SDL_Point& moves : s_moves){
-				SDL_Point n = {pos.x + moves.x, pos.y + moves.y};
-				pair<int,int> pr = make_pair(n.x, n.y);
-				if (world.inBounds(n.x, n.y) &&
-						(world.getPos(n.x, n.y) == ENT_NONE || world.getPos(n.x, n.y) == ENT_END) 
-						&& vis.find(pr) == vis.end()){
-					q.push(n);
-					parent[make_pair(n.x, n.y)] = pos;
-					vis.insert(make_pair(n.x, n.y)); // mark as visited
-				}
-			}
-
-			// render the current search
-			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
-			SDL_RenderFillRects(renderer, rects, search_markers.size());
-			SDL_Delay(1); // add some delay to the animation
-			SDL_RenderPresent(renderer);
-
-		}
-	}
-
-
-	return {}; // no path found
-}
 
 class DFSBtn : public UI::Button {
 	public:
@@ -181,7 +17,7 @@ class DFSBtn : public UI::Button {
 		DFSBtn(World& world,
 				std::vector<SDL_Point>& path,
 				SDL_Renderer* &renderer,
-				bool& render_path_flag): 
+				bool& render_path_flag):
 			Button("DFS",
 					5, 5,
 					130, 50,
@@ -198,7 +34,7 @@ class DFSBtn : public UI::Button {
 				std::cout << "Finding path with DFS!\n";
 
 				_path = dfs(_world, _renderer); 
-				_world.setRenderPathFlag(true);
+				_render_path_flag = true;
 
 				if (_path.size() == 0){
 					std::cout << "No path found!\n";
