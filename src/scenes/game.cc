@@ -76,8 +76,10 @@ static std::vector<SDL_Point> bfs(World& world){
 			if (pos.x == goal.x && pos.y == goal.y){
 				// reconstruct the traversed path
 				std::pair<int,int> crawl = std::make_pair(pos.x, pos.y);
+				SDL_Point c = { crawl.first, crawl.second };
+				path.push_back(c);
 				while (crawl.first != start.x || crawl.second != start.y){
-					SDL_Point c = { crawl.first, crawl.second };
+					c = { crawl.first, crawl.second };
 					path.push_back(c);
 					SDL_Point p = parent[crawl];
 					crawl.first = p.x, crawl.second = p.y;
