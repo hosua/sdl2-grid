@@ -66,12 +66,12 @@ void World::deleteWall(int x, int y){
 bool World::inBounds(int x, int y){
 	return (x >= 0 && x < _cols && y >= 0 && y < _rows);
 }
-SDL_Point World::getStartPos(){
+SDL_Point World::getStartPos() const {
 	return _start;
 }
-SDL_Point World::getEndPos(){
+SDL_Point World::getEndPos() const {
 	return _end;
 }
-SDL_Point World::getPlayerPos(){
+SDL_Point World::getPlayerPos() const {
 	return _player;
 }

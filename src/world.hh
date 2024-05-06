@@ -14,9 +14,9 @@ public:
 	~World() = default;
 	void draw(SDL_Renderer* renderer);
 	void movePlayer(int x, int y);
-	SDL_Point getStartPos();
-	SDL_Point getEndPos();
-	SDL_Point getPlayerPos();
+	SDL_Point getStartPos() const;
+	SDL_Point getEndPos() const;
+	SDL_Point getPlayerPos() const;
 
 	void spawnWall(int x, int y);
 	void deleteWall(int x, int y);

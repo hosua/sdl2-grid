@@ -3,22 +3,42 @@
 
 #include <iostream>
 
+static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
+
+std::vector<SDL_Point> dfs(const World& world, std::vector<SDL_Point> path={}){
+	std::cout << "dfs was called\n";
+	// SDL_Point start = world.getPlayerPos();
+	// for (const SDL_Point& moves : s_moves){
+	// 	int nx, ny;
+	// }
+	return {};
+}
+
 class DFSBtn : public UI::Button {
 	public:
 		~DFSBtn() = default;
-		DFSBtn(SDL_Renderer* &renderer): 
+		DFSBtn(const World& world,
+				std::vector<SDL_Point> &path,
+				SDL_Renderer* &renderer): 
 			Button("DFS",
 					5, 5,
 					130, 50,
-					renderer){}
+					renderer),
+			_world(world),
+			_path(path) {}
 
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
 				event.type == SDL_MOUSEBUTTONDOWN &&
 				event.button.button == SDL_BUTTON_LEFT){
 				std::cout << "Finding path with DFS!\n";
+
+				_path = dfs(_world); // bad?
 			}
 		}
+	private:
+		const World& _world;
+		std::vector<SDL_Point>& _path;
 };
 
 class BFSBtn : public UI::Button {
@@ -56,7 +76,8 @@ public:
 };
 
 Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer){
-		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(renderer));
+
+		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer));
 		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(renderer));
 		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
 
@@ -154,3 +175,18 @@ bool Game::movePlayer(int dx, int dy){
 			pos.y != _world.getPlayerPos().y);
 }
 
+// gets and stores the path from player -> goal in _path.
+// helper() is a function that uses the world to find the path. It does not
+// modify world in any shape or form. helper() returns false when no path is found
+// returns false if no path is found
+bool Game::getPath(std::function<std::vector<SDL_Point>(const World& world, std::vector<SDL_Point> path)> helper){ 
+	_path = helper(_world, _path);
+	return _path.size() > 0;
+} 
+
+// renders _path (if one can be formed)
+void Game::renderPath(){
+	for (const SDL_Point pt : _path){
+		// render transparent square
+	}
+}
