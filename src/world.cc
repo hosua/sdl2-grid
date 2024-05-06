@@ -100,11 +100,11 @@ EntType World::getPos(int x, int y) const {
 	return ENT_NONE;
 }
 
-bool World::getPlayerMoveFlag() const {
+bool World::getRenderPathFlag() const {
 	return _render_path_flag;
 }
 
-void World::setPlayerMoveFlag(bool flag){ 
+void World::setRenderPathFlag(bool flag){ 
 	_render_path_flag = flag; 
 }
 

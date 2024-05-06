@@ -18,8 +18,8 @@ public:
 	SDL_Point getEndPos() const;
 	SDL_Point getPlayerPos() const;
 
-	bool getPlayerMoveFlag() const;
-	void setPlayerMoveFlag(bool flag);
+	bool getRenderPathFlag() const;
+	void setRenderPathFlag(bool flag);
 
 	// clearly renders only the world grid portion of the screen
 	void renderClear(SDL_Renderer* renderer);

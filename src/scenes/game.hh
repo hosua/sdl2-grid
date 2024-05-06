@@ -1,11 +1,8 @@
 #pragma once
 #include "../scene.hh"
 #include "../world.hh"
-#include "../defs.hh"
 
 #include <functional>
-
-#define ROW_ROWS 
 
 class Game : public Scene {
 public:

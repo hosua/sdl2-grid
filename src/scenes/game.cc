@@ -23,21 +23,18 @@ static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 
 	// set render color for path search marking
 	SDL_Color c = Color::GREEN;
-	SDL_Color c_bg = Color::BLACK;
 	std::vector<SDL_Rect> search_markers; // store the rect of each node visited here
-
-
-	dfs_helper = [&](SDL_Point pos, World& world, 
-			std::vector<SDL_Point> curr_path, std::vector<SDL_Point>& end_path, std::set<std::pair<int,int>>& vis){
+	dfs_helper = [&](SDL_Point pos, World& world,
+			std::vector<SDL_Point> curr_path, std::vector<SDL_Point>& end_path, 
+			std::set<std::pair<int,int>>& vis){
 		curr_path.push_back({pos.x, pos.y}); // add to path
 		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
 
-		const auto& [w_rows, w_cols] = world.getDimensions();
 		SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
 		search_markers.push_back(rect);
 
 		const SDL_Rect* rects = &search_markers[0];
-		
+
 		world.renderClear(renderer);
 		world.draw(renderer);
 		// redraw the world
@@ -110,14 +107,28 @@ static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 	q.push(start);
 	parent[make_pair(start.x, start.y)] = {-1,-1};
 
+	std::vector<SDL_Rect> search_markers;
+
+
+	const SDL_Color c = Color::GREEN;
 	while (!q.empty()){
 		size_t breadth = q.size();
 		while (breadth--){
 			SDL_Point pos = q.front();
+			printf("(%i,%i) -> ", pos.x, pos.y);
 			q.pop();
+			SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
+			const SDL_Rect* rects = &search_markers[0];
+			search_markers.push_back(rect);
 
+			world.renderClear(renderer);
+			world.draw(renderer);
+
+			// animate & reconstruct the path we formed when we reach the goal
 			if (pos.x == goal.x && pos.y == goal.y){
-				// reconstruct the traversed path
+				SDL_Color c_finish = Color::LIGHT_GREEN;
+				SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
+				// reconstruct
 				pair<int,int> crawl = make_pair(pos.x, pos.y);
 				SDL_Point c = { crawl.first, crawl.second };
 				path.push_back(c);
@@ -126,6 +137,10 @@ static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 					path.push_back(c);
 					SDL_Point p = parent[crawl];
 					crawl.first = p.x, crawl.second = p.y;
+					rect = { LEFT_PANE_W + p.x * BLOCK_W, p.y * BLOCK_H, BLOCK_W, BLOCK_H };
+					SDL_RenderFillRect(renderer, &rect);
+					SDL_Delay(5); // add some delay to the animation
+					SDL_RenderPresent(renderer);
 				}
 
 				// remove starter node in path (player is already on here)
@@ -146,6 +161,13 @@ static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 					vis.insert(make_pair(n.x, n.y)); // mark as visited
 				}
 			}
+
+			// render the current search
+			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
+			SDL_RenderFillRects(renderer, rects, search_markers.size());
+			SDL_Delay(1); // add some delay to the animation
+			SDL_RenderPresent(renderer);
+
 		}
 	}
 
@@ -158,14 +180,16 @@ class DFSBtn : public UI::Button {
 		~DFSBtn() = default;
 		DFSBtn(World& world,
 				std::vector<SDL_Point>& path,
-				SDL_Renderer* &renderer): 
+				SDL_Renderer* &renderer,
+				bool& render_path_flag): 
 			Button("DFS",
 					5, 5,
 					130, 50,
 					renderer),
 			_world(world),
 			_path(path),
-			_renderer(renderer){}
+			_renderer(renderer),
+			_render_path_flag(render_path_flag){}
 
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
@@ -173,8 +197,8 @@ class DFSBtn : public UI::Button {
 					event.button.button == SDL_BUTTON_LEFT){
 				std::cout << "Finding path with DFS!\n";
 
-				_world.setPlayerMoveFlag(false);
 				_path = dfs(_world, _renderer); 
+				_world.setRenderPathFlag(true);
 
 				if (_path.size() == 0){
 					std::cout << "No path found!\n";
@@ -190,6 +214,7 @@ class DFSBtn : public UI::Button {
 		World& _world;
 		std::vector<SDL_Point>& _path;
 		SDL_Renderer* &_renderer;
+		bool& _render_path_flag;
 };
 
 class BFSBtn : public UI::Button {
@@ -197,14 +222,16 @@ class BFSBtn : public UI::Button {
 		~BFSBtn() = default;
 		BFSBtn(World& world,
 				std::vector<SDL_Point>& path,
-				SDL_Renderer* &renderer):
+				SDL_Renderer* &renderer,
+				bool& render_path_flag):
 			Button("BFS", 
 					5, 60, 
 					130, 50,
 					renderer),
 			_world(world),
 			_path(path),
-			_renderer(renderer){}
+			_renderer(renderer),
+			_render_path_flag(render_path_flag) {}
 
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
@@ -212,8 +239,8 @@ class BFSBtn : public UI::Button {
 					event.button.button == SDL_BUTTON_LEFT){
 				std::cout << "Finding path with BFS!\n";
 
-				_world.setPlayerMoveFlag(false);
 				_path = bfs(_world, _renderer); 
+				_render_path_flag = true;
 
 				if (_path.size() == 0){
 					std::cout << "No path found!\n";
@@ -230,6 +257,7 @@ class BFSBtn : public UI::Button {
 		World& _world;
 		std::vector<SDL_Point>& _path;
 		SDL_Renderer* &_renderer;
+		bool& _render_path_flag;
 };
 
 class AStarBtn : public UI::Button {
@@ -249,11 +277,11 @@ class AStarBtn : public UI::Button {
 		}
 };
 
-Game::Game(SDL_Renderer* &renderer) : 
+Game::Game(SDL_Renderer* &renderer):
 	Scene("GAME", renderer), _world(_render_path_flag) {
 
-		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer));
-		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer));
+		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer, _render_path_flag));
+		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer, _render_path_flag));
 		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
 
 		addWidget(std::move(btn_dfs));
@@ -266,7 +294,7 @@ bool Game::render(SDL_Renderer* &renderer) {
 		return false;
 	drawWorld(renderer);
 
-	if (!_world.getPlayerMoveFlag())
+	if (_world.getRenderPathFlag())
 		renderPath(renderer);
 
 	renderWidgets();
@@ -337,7 +365,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 		// if the player moved, reset the delay timer
 		if (moved){ 
 			playerLastMoved = PLAYER_MOVE_DELAY;
-			_world.setPlayerMoveFlag(true);
+			_world.setRenderPathFlag(false);
 		}
 	} else {
 		playerLastMoved--;
