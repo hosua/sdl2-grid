@@ -12,7 +12,6 @@ static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer);
 static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer);
 
-// TODO: Improve this so that path finders will animate the pathfinding process
 static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
@@ -21,31 +20,28 @@ static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 			std::set<std::pair<int,int>>&)> dfs_helper;
 
 	SDL_Point goal = world.getEndPos();
-	
+
 	// set render color for path search marking
 	SDL_Color c = Color::GREEN;
 	SDL_Color c_bg = Color::BLACK;
 	std::vector<SDL_Rect> search_markers; // store the rect of each node visited here
-	
+
 
 	dfs_helper = [&](SDL_Point pos, World& world, 
 			std::vector<SDL_Point> curr_path, std::vector<SDL_Point>& end_path, std::set<std::pair<int,int>>& vis){
 		curr_path.push_back({pos.x, pos.y}); // add to path
 		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
-		
+
 		const auto& [w_rows, w_cols] = world.getDimensions();
 		SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
 		search_markers.push_back(rect);
-		
+
 		const SDL_Rect* rects = &search_markers[0];
 		
-		SDL_Rect world_rect = { LEFT_PANE_W, 0, BLOCK_W * w_cols, BLOCK_H * w_rows };
-		// clear world with black color
-		SDL_SetRenderDrawColor(renderer, c_bg.r, c_bg.g, c_bg.b, 255); 
-		SDL_RenderFillRect(renderer, &world_rect);
-		// redraw the world
+		world.renderClear(renderer);
 		world.draw(renderer);
-		
+		// redraw the world
+
 		// render the current search
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 		SDL_RenderFillRects(renderer, rects, search_markers.size());
@@ -77,20 +73,18 @@ static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 	SDL_Point start = world.getPlayerPos();
 	std::vector<SDL_Point> temp_path;
 
-	
+
 	// find the path
 	dfs_helper(start, world, temp_path, path, vis);
 
 	// animate the path we formed
 	SDL_Color c_finish = Color::LIGHT_GREEN;
-
 	SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
-
 	for (auto itr = path.rbegin(); itr != path.rend(); ++itr){
 		const SDL_Point pt = *itr;
 		const SDL_Rect rect = { LEFT_PANE_W + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H };
 		SDL_RenderFillRect(renderer, &rect);
-		SDL_Delay(10);
+		SDL_Delay(7);
 		SDL_RenderPresent(renderer);
 	}
 
@@ -99,19 +93,22 @@ static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 }
 
 static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
-	std::vector<SDL_Point> path;
-	std::set<std::pair<int,int>> vis;
-	std::map<std::pair<int,int>, SDL_Point> parent;
+	using std::vector, std::function,
+		  std::map, std::pair, std::make_pair;
 
-	std::function<void(SDL_Point, World&, std::vector<SDL_Point>, std::vector<SDL_Point>&,
-			std::set<std::pair<int,int>>&)> bfs_helper;
+	vector<SDL_Point> path;
+	std::set<pair<int,int>> vis;
+	map<pair<int,int>, SDL_Point> parent;
+
+	function<void(SDL_Point, World&, vector<SDL_Point>, vector<SDL_Point>&,
+			std::set<pair<int,int>>&)> bfs_helper;
 
 	SDL_Point start = world.getPlayerPos();
 	SDL_Point goal = world.getEndPos();
-	
+
 	std::queue<SDL_Point> q; // <curr_node, parent>
 	q.push(start);
-	parent[std::make_pair(start.x, start.y)] = {-1,-1};
+	parent[make_pair(start.x, start.y)] = {-1,-1};
 
 	while (!q.empty()){
 		size_t breadth = q.size();
@@ -121,7 +118,7 @@ static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 
 			if (pos.x == goal.x && pos.y == goal.y){
 				// reconstruct the traversed path
-				std::pair<int,int> crawl = std::make_pair(pos.x, pos.y);
+				pair<int,int> crawl = make_pair(pos.x, pos.y);
 				SDL_Point c = { crawl.first, crawl.second };
 				path.push_back(c);
 				while (crawl.first != start.x || crawl.second != start.y){
@@ -140,13 +137,13 @@ static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 
 			for (const SDL_Point& moves : s_moves){
 				SDL_Point n = {pos.x + moves.x, pos.y + moves.y};
-				std::pair<int,int> pr = std::make_pair(n.x, n.y);
+				pair<int,int> pr = make_pair(n.x, n.y);
 				if (world.inBounds(n.x, n.y) &&
 						(world.getPos(n.x, n.y) == ENT_NONE || world.getPos(n.x, n.y) == ENT_END) 
 						&& vis.find(pr) == vis.end()){
 					q.push(n);
-					parent[std::make_pair(n.x, n.y)] = pos;
-					vis.insert(std::make_pair(n.x, n.y)); // mark as visited
+					parent[make_pair(n.x, n.y)] = pos;
+					vis.insert(make_pair(n.x, n.y)); // mark as visited
 				}
 			}
 		}
@@ -228,6 +225,7 @@ class BFSBtn : public UI::Button {
 				}
 			}
 		}
+
 	private:
 		World& _world;
 		std::vector<SDL_Point>& _path;
@@ -251,16 +249,17 @@ class AStarBtn : public UI::Button {
 		}
 };
 
-Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer){
+Game::Game(SDL_Renderer* &renderer) : 
+	Scene("GAME", renderer), _world(_render_path_flag) {
 
-	std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer));
-	std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer));
-	std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
+		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer));
+		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer));
+		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
 
-	addWidget(std::move(btn_dfs));
-	addWidget(std::move(btn_bfs));
-	addWidget(std::move(btn_astar));
-};
+		addWidget(std::move(btn_dfs));
+		addWidget(std::move(btn_bfs));
+		addWidget(std::move(btn_astar));
+	};
 
 bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
@@ -350,10 +349,10 @@ void Game::drawWorld(SDL_Renderer* &renderer) {
 	_world.draw(renderer);
 };
 
+// returns true if the player moved 
 bool Game::movePlayer(int dx, int dy){
 	SDL_Point pos = _world.getPlayerPos();
 	_world.movePlayer(pos.x + dx, pos.y + dy); // internally handles boundary checks
-											   // return true if new player position is not the same as original	
 	return (pos.x != _world.getPlayerPos().x ||
 			pos.y != _world.getPlayerPos().y);
 }

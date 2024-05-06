@@ -25,6 +25,7 @@ public:
 
 private:
 	bool _end_game = false;
+	bool _render_path_flag = false;
 	World _world;
 	std::vector<SDL_Point> _path;
 };

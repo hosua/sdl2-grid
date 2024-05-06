@@ -10,7 +10,7 @@ extern const int WORLD_H;
 
 class World {
 public:
-	World();
+	World(bool& render_path_flag);
 	~World() = default;
 	void draw(SDL_Renderer* renderer);
 	void movePlayer(int x, int y);
@@ -20,6 +20,9 @@ public:
 
 	bool getPlayerMoveFlag() const;
 	void setPlayerMoveFlag(bool flag);
+
+	// clearly renders only the world grid portion of the screen
+	void renderClear(SDL_Renderer* renderer);
 
 	EntType getPos(int x, int y) const; // gets the entity type at the specified position
 
@@ -33,5 +36,5 @@ private:
 	uint16_t _rows, _cols;
 	std::vector<std::vector<EntType>> _grid;
 	SDL_Point _start, _end, _player;
-	bool _player_move_flag; // if true, path rendering should stop
+	bool& _render_path_flag; // if true, path rendering should stop
 };

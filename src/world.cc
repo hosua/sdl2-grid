@@ -3,8 +3,7 @@
 const int WORLD_W = WINDOW_W - LEFT_PANE_W;
 const int WORLD_H = WINDOW_H;
 
-World::World(){
-
+World::World(bool& render_path_flag): _render_path_flag(render_path_flag) {
 	_rows = WORLD_H / BLOCK_H;
 	_cols = WORLD_W / BLOCK_W;
 
@@ -53,8 +52,20 @@ void World::movePlayer(int nx, int ny){
 		_grid[_player.y][_player.x] = ENT_NONE;
 		_player.x = nx, _player.y = ny;
 		_grid[ny][nx] = ENT_PLAYER;
-		_player_move_flag = false;
+		_render_path_flag = false;
 	}
+}
+
+// clearly renders only the world grid portion of the screen
+void World::renderClear(SDL_Renderer* renderer){
+	const SDL_Color c = Color::BLACK;
+	SDL_Rect world_rect = { LEFT_PANE_W, 0, BLOCK_W * _cols, BLOCK_H * _rows };
+	// clear world with black color
+	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 255); 
+	SDL_RenderFillRect(renderer, &world_rect);
+	// redraw the world
+	draw(renderer);
+
 }
 
 void World::spawnWall(int x, int y){
@@ -70,12 +81,15 @@ void World::deleteWall(int x, int y){
 bool World::inBounds(int x, int y) const {
 	return (x >= 0 && x < _cols && y >= 0 && y < _rows);
 }
+
 SDL_Point World::getStartPos() const {
 	return _start;
 }
+
 SDL_Point World::getEndPos() const {
 	return _end;
 }
+
 SDL_Point World::getPlayerPos() const {
 	return _player;
 }
@@ -87,11 +101,11 @@ EntType World::getPos(int x, int y) const {
 }
 
 bool World::getPlayerMoveFlag() const {
-	return _player_move_flag;
+	return _render_path_flag;
 }
 
 void World::setPlayerMoveFlag(bool flag){ 
-	_player_move_flag = flag; 
+	_render_path_flag = flag; 
 }
 
 const std::pair<int,int> World::getDimensions(){
