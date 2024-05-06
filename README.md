@@ -22,3 +22,4 @@ As of writing, only BFS and DFS are implemented.
 - [ ] Loading/Saving Maps
 - [ ] Ability to tweak speed settings via UI
 - [ ] Add compilation instructions/binary for Windows
+- [ ] Multithreading support so that input isn't blocked whilst pathfinding
