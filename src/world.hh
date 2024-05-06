@@ -28,6 +28,7 @@ public:
 
 	bool inBounds(int x, int y) const;
 
+	const std::pair<int,int> getDimensions();
 private:
 	uint16_t _rows, _cols;
 	std::vector<std::vector<EntType>> _grid;

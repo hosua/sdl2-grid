@@ -9,11 +9,11 @@
 #include <utility>
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
-static std::vector<SDL_Point> dfs(World& world);
-static std::vector<SDL_Point> bfs(World& world);
+static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer);
+static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer);
 
 // TODO: Improve this so that path finders will animate the pathfinding process
-static std::vector<SDL_Point> dfs(World& world){
+static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 
@@ -21,11 +21,36 @@ static std::vector<SDL_Point> dfs(World& world){
 			std::set<std::pair<int,int>>&)> dfs_helper;
 
 	SDL_Point goal = world.getEndPos();
+	
+	// set render color for path search marking
+	SDL_Color c = Color::GREEN;
+	SDL_Color c_bg = Color::BLACK;
+	std::vector<SDL_Rect> search_markers; // store the rect of each node visited here
+	
 
 	dfs_helper = [&](SDL_Point pos, World& world, 
 			std::vector<SDL_Point> curr_path, std::vector<SDL_Point>& end_path, std::set<std::pair<int,int>>& vis){
 		curr_path.push_back({pos.x, pos.y}); // add to path
 		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
+		
+		const auto& [w_rows, w_cols] = world.getDimensions();
+		SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
+		search_markers.push_back(rect);
+		
+		const SDL_Rect* rects = &search_markers[0];
+		
+		SDL_Rect world_rect = { LEFT_PANE_W, 0, BLOCK_W * w_cols, BLOCK_H * w_rows };
+		// clear world with black color
+		SDL_SetRenderDrawColor(renderer, c_bg.r, c_bg.g, c_bg.b, 255); 
+		SDL_RenderFillRect(renderer, &world_rect);
+		// redraw the world
+		world.draw(renderer);
+		
+		// render the current search
+		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
+		SDL_RenderFillRects(renderer, rects, search_markers.size());
+		SDL_Delay(10); // add some delay to the animation
+		SDL_RenderPresent(renderer);
 
 		if (pos.x == goal.x && pos.y == goal.y){
 			end_path = curr_path;
@@ -42,6 +67,9 @@ static std::vector<SDL_Point> dfs(World& world){
 					(world.getPos(nx, ny) == ENT_NONE || world.getPos(nx, ny) == ENT_END) 
 					&& vis.find(pr) == vis.end()){
 				dfs_helper({nx, ny}, world, curr_path, end_path, vis);
+				// immediately end the search if we already found a path
+				if (end_path.size() > 0)
+					return;
 			}
 		}
 	};
@@ -49,10 +77,12 @@ static std::vector<SDL_Point> dfs(World& world){
 	SDL_Point start = world.getPlayerPos();
 	std::vector<SDL_Point> temp_path;
 	dfs_helper(start, world, temp_path, path, vis);
+
+	// animate the path we formed
 	return path;
 }
 
-static std::vector<SDL_Point> bfs(World& world){
+static std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 	std::map<std::pair<int,int>, SDL_Point> parent;
@@ -121,7 +151,8 @@ class DFSBtn : public UI::Button {
 					130, 50,
 					renderer),
 			_world(world),
-			_path(path) {}
+			_path(path),
+			_renderer(renderer){}
 
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
@@ -130,7 +161,7 @@ class DFSBtn : public UI::Button {
 				std::cout << "Finding path with DFS!\n";
 
 				_world.setPlayerMoveFlag(false);
-				_path = dfs(_world); 
+				_path = dfs(_world, _renderer); 
 
 				if (_path.size() == 0){
 					std::cout << "No path found!\n";
@@ -145,6 +176,7 @@ class DFSBtn : public UI::Button {
 	private:
 		World& _world;
 		std::vector<SDL_Point>& _path;
+		SDL_Renderer* &_renderer;
 };
 
 class BFSBtn : public UI::Button {
@@ -158,7 +190,8 @@ class BFSBtn : public UI::Button {
 					130, 50,
 					renderer),
 			_world(world),
-			_path(path){}
+			_path(path),
+			_renderer(renderer){}
 
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
@@ -167,7 +200,7 @@ class BFSBtn : public UI::Button {
 				std::cout << "Finding path with BFS!\n";
 
 				_world.setPlayerMoveFlag(false);
-				_path = bfs(_world); 
+				_path = bfs(_world, _renderer); 
 
 				if (_path.size() == 0){
 					std::cout << "No path found!\n";
@@ -182,6 +215,7 @@ class BFSBtn : public UI::Button {
 	private:
 		World& _world;
 		std::vector<SDL_Point>& _path;
+		SDL_Renderer* &_renderer;
 };
 
 class AStarBtn : public UI::Button {

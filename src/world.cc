@@ -93,3 +93,7 @@ bool World::getPlayerMoveFlag() const {
 void World::setPlayerMoveFlag(bool flag){ 
 	_player_move_flag = flag; 
 }
+
+const std::pair<int,int> World::getDimensions(){
+	return std::make_pair(_rows, _cols);
+}
