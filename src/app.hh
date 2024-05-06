@@ -26,7 +26,9 @@ class App {
 		bool initSDL();
 
 		bool isRunning() const;
-		void setRunning(bool flag){ _running = flag; };
+		void setRunning(bool flag){ _running = flag; }
+
+		SDL_Renderer* & getRenderer(){ return _renderer; }
 
 		// move player relative to current pos, returns true if player moved
 		bool movePlayer(int dx, int dy); 

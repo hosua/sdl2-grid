@@ -7,7 +7,7 @@
 
 class Game : public Scene {
 public:
-	Game();
+	Game(SDL_Renderer* &renderer);
 	~Game() = default;
 
 	bool render(SDL_Renderer* &renderer) override;

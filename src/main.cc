@@ -14,7 +14,7 @@ int main(){
 
 	App* app = App::getInstance();
 
-	std::unique_ptr<Game> game_scene = std::make_unique<Game>();
+	std::unique_ptr<Game> game_scene = std::make_unique<Game>(app->getRenderer());
 	app->addScene(std::move(game_scene));
 
 	while (app->isRunning()){

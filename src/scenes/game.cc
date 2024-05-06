@@ -1,13 +1,30 @@
 #include "game.hh"
+#include "ui.hh"
 
-Game::Game(): Scene("GAME"), 
-	_world(WINDOW_H / BLOCK_H, WINDOW_W / BLOCK_W){
+class FirstBtn : public UI::Button {
+	public:
+		~FirstBtn() = default;
+		FirstBtn(SDL_Renderer* &renderer): 
+			Button("Click Me",
+					200, 200,
+					150, 50,
+					renderer){}
+
+		void onClick(void){
+		}
 };
+
+Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer), 
+	_world(WINDOW_H / BLOCK_H, WINDOW_W / BLOCK_W){
+		std::unique_ptr<FirstBtn> btn = std::unique_ptr<FirstBtn>(new FirstBtn(m_renderer));
+		addWidget(std::move(btn));
+	};
 
 bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	drawWorld(renderer);
+
 	return true;
 };
 
@@ -45,7 +62,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 				break;
 		}
 	}
-	
+
 	// handle continuous mouse down events
 	if (lmb_down) _world.spawnWall(g.x, g.y);
 	if (rmb_down) _world.deleteWall(g.x, g.y);
@@ -57,7 +74,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 	}
 
 	static uint32_t playerLastMoved = 0;
-	
+
 	if (playerLastMoved == 0){ // add some delay between movement events
 		bool moved = false;
 		if (kb_state[SDL_SCANCODE_UP] || kb_state[SDL_SCANCODE_W])
@@ -68,7 +85,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 			moved |= movePlayer(-1, 0);
 		if (kb_state[SDL_SCANCODE_RIGHT] || kb_state[SDL_SCANCODE_D])
 			moved |= movePlayer(+1, 0);
-		
+
 		// if the player moved, reset the delay timer
 		if (moved) playerLastMoved = PLAYER_MOVE_DELAY;
 	} else {
@@ -84,7 +101,7 @@ void Game::drawWorld(SDL_Renderer* &renderer) {
 bool Game::movePlayer(int dx, int dy){
 	SDL_Point pos = _world.getPlayerPos();
 	_world.movePlayer(pos.x + dx, pos.y + dy); // internally handles boundary checks
-	// return true if new player position is not the same as original	
+											   // return true if new player position is not the same as original	
 	return (pos.x != _world.getPlayerPos().x ||
 			pos.y != _world.getPlayerPos().y);
 }

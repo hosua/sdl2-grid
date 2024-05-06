@@ -1,44 +1,64 @@
 #include "ui.hh"	
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 namespace UI {
-	static uint32_t widget_count = 0; // widget counter used to assign unique IDs to each widget
-	static std::vector<Widget*> widgets; 
+	static uint32_t s_widget_counter = 0; // assigns unique ID to each widget
 
 	/* ======== Widget (Base class for UI elements) ======== */
 
 	Widget::Widget(int x, int y, SDL_Renderer* &renderer):
 		_rect({ x, y, 0, 0 }), // do not forget to set _rect w and h later!!
 		_renderer(renderer),
-		_id(widget_count++) {
-		}
+		_id(s_widget_counter++) {
+	}
 
-	void Widget::handleInput(SDL_Point mouse_pos, const uint8_t* kb_state){
-		_mouse_over = SDL_PointInRect(&mouse_pos, &_rect);
+	void Widget::handleInputs(SDL_Point mouse_pos, const uint8_t* kb_state){
+		if (isMouseOver(mouse_pos)){
+			std::cout << "Widget has no input action\n";
+		}
 		// kb_state not needed here but can be used in overriden functions if needed
+	}
+
+	bool Widget::isMouseOver(SDL_Point mouse_pos){
+		return SDL_PointInRect(&mouse_pos, &_rect);
 	}
 
 	uint32_t Widget::getID(){
 		return _id;
 	}
 
-	bool removeWidget(uint32_t id){
-		auto itr = std::remove_if(widgets.begin(), widgets.end(), [&](Widget* wg){
+	WidgetManager::WidgetManager(){
+	}
+	
+	bool WidgetManager::addWidget(std::unique_ptr<Widget> widget){ // true if add sucessful
+		_widgets.push_back(std::move(widget));	
+		return true;
+	} 
+
+	bool WidgetManager::removeWidget(uint32_t id){ // true if remove successful
+		auto itr = std::remove_if(_widgets.begin(), _widgets.end(), [&](std::unique_ptr<Widget>& wg){
 				return (wg->getID() == id);
 				});
-		if (itr == widgets.end()) return false;
+		if (itr == _widgets.end()) return false;
 
-		widgets.erase(itr, widgets.end());
+		_widgets.erase(itr, _widgets.end());
 		return true;
-	}
+	
+		return true;	
+	} 
 
-	void renderAndHandleWidgets(SDL_Point mouse_pos, const uint8_t* kb_state){
-		for (Widget* &wg : widgets){
+	void WidgetManager::renderAndHandleInputs(){
+		SDL_Point mouse_pos;
+		SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+		const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
+
+		for (std::unique_ptr<Widget>& wg : _widgets){
 			wg->render();
-			wg->handleInput(mouse_pos, kb_state);
+			wg->handleInputs(mouse_pos, kb_state);
 		}
 	}
+
 
 	/* ======== Text ======== */
 
@@ -46,7 +66,6 @@ namespace UI {
 			int x, int y, 
 			SDL_Renderer* &renderer, 
 			TTF_Font* font) : Widget(x, y, renderer) {
-		widgets.push_back(this);
 		_surface = TTF_RenderText_Blended(font, text.c_str(), Color::WHITE);
 		_texture = SDL_CreateTextureFromSurface(renderer, _surface);
 		_rect = { x, y, _surface->w, _surface->h };
@@ -82,8 +101,6 @@ namespace UI {
 	_text(text, 0, 0, renderer, font),
 	_bg_color(bg_color),
 	_hover_color(hover_color) {
-		widgets.push_back(this);
-
 		_rect = { x, y, w, h };
 
 		// calculate text size
@@ -94,7 +111,9 @@ namespace UI {
 	}
 
 	void Button::render(){
-		SDL_Color c = (_mouse_over) ? _hover_color : _bg_color;
+		SDL_Point mouse_pos;
+		SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+		SDL_Color c = (isMouseOver(mouse_pos)) ? _hover_color : _bg_color;
 		SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
 		SDL_RenderFillRect(_renderer, &_rect);
 		_text.render();

@@ -5,16 +5,25 @@
 #include <vector>
 #include <string>
 
+#include "ui.hh"
+
 class Scene {
 public:
-	Scene(const std::string& key);
+	Scene(const std::string& key, SDL_Renderer* &renderer);
 	~Scene() = default;
 
 	const std::string& getKey() const; 
 	// render returns false if the game should shutdown
 	virtual bool render(SDL_Renderer* &renderer) = 0;
 	virtual void handleInputs(SDL_Point& mouse_pos) = 0;
+	
+	bool addWidget(std::unique_ptr<UI::Widget> widget); 
+	bool removeWidget(uint32_t id);
 
+	void renderAndHandleWidgetInputs();
+
+	SDL_Renderer* &m_renderer;
 private:
 	const std::string& _key;
+	UI::WidgetManager _widget_mgr;
 };

@@ -1,7 +1,8 @@
 #include "scene_manager.hh"
 #include <algorithm>
 
-SceneManager::SceneManager(SDL_Renderer* &renderer): _renderer(renderer){};	
+
+SceneManager::SceneManager(SDL_Renderer* &renderer): m_renderer(renderer) {};	
 
 void SceneManager::addScene(std::unique_ptr<Scene> scene){
 	_scenes.push_back(std::move(scene));
@@ -31,7 +32,7 @@ bool SceneManager::renderScenes(){
 	for (auto itr = _scenes.rbegin(); itr != _scenes.rend(); ++itr){
 		drawClear();
 		Scene* scene = itr->get();
-		if (!scene->render(_renderer))
+		if (!scene->render(m_renderer))
 			return false;
 		scene->handleInputs(mouse_pos);
 		drawPresent();
@@ -41,11 +42,11 @@ bool SceneManager::renderScenes(){
 
 void SceneManager::drawClear(const SDL_Color& color) const {
 	const SDL_Color& c = color;
-	SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
-	SDL_RenderClear(_renderer);
+	SDL_SetRenderDrawColor(m_renderer, c.r, c.g, c.b, c.a);
+	SDL_RenderClear(m_renderer);
 }
 
 void SceneManager::drawPresent() const {
-	SDL_RenderPresent(_renderer);
+	SDL_RenderPresent(m_renderer);
 }
 

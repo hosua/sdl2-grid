@@ -2,8 +2,9 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <vector>
+#include <memory>
 #include <string>
+#include <vector>
 #include "defs.hh"
 
 namespace UI {
@@ -12,23 +13,29 @@ namespace UI {
 			Widget(int x, int y, SDL_Renderer* &renderer);
 			~Widget() = default;
 			virtual void render() = 0;
-			virtual void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state);
-
+			virtual void handleInputs(SDL_Point mouse_pos, const uint8_t* kb_state);
+			
+			bool isMouseOver(SDL_Point mouse_pos);
 			uint32_t getID();
 
 		protected:
 			SDL_Rect _rect; // destination rect
 			SDL_Renderer* &_renderer;
-			bool _mouse_over; // true if mouse hovering widget
 			const uint32_t _id;
 	};
 
-	bool removeWidget(uint32_t id);
+	class WidgetManager {
+	public:
+		WidgetManager();
+		~WidgetManager() = default;
+		
+		bool addWidget(std::unique_ptr<Widget> widget); // true if add sucessful
+		bool removeWidget(uint32_t id); // true if remove successful
+		void renderAndHandleInputs();
 
-	void renderAndHandleWidgets(SDL_Point mouse_pos, const uint8_t* kb_state);
-
-	class Window {
-
+	private:
+		std::vector<std::unique_ptr<Widget>> _widgets;
+		int _widget_count = 0;
 	};
 
 	class Text : Widget {
@@ -63,7 +70,7 @@ namespace UI {
 
 			~Button() = default;
 
-			virtual void onClick(void*) = 0;
+			virtual void onClick(void) = 0;
 
 			void render();
 			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;
