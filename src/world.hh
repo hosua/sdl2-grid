@@ -17,6 +17,10 @@ public:
 	SDL_Point getStartPos() const;
 	SDL_Point getEndPos() const;
 	SDL_Point getPlayerPos() const;
+
+	bool getPlayerMoveFlag() const;
+	void setPlayerMoveFlag(bool flag);
+
 	EntType getPos(int x, int y) const; // gets the entity type at the specified position
 
 	void spawnWall(int x, int y);
@@ -28,4 +32,5 @@ private:
 	uint16_t _rows, _cols;
 	std::vector<std::vector<EntType>> _grid;
 	SDL_Point _start, _end, _player;
+	bool _player_move_flag; // if true, path rendering should stop
 };

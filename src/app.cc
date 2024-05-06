@@ -41,6 +41,7 @@ bool App::initSDL(){
 		return false;
 	} 
 
+
 	_window = SDL_CreateWindow("Game Engine",
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 			WINDOW_W, WINDOW_H, 
@@ -56,6 +57,8 @@ bool App::initSDL(){
 		std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << '\n';
 		return false;
 	}
+
+	SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND); // but will it blend?
 
 	_surface = SDL_GetWindowSurface(_window);
 	if (!_surface){

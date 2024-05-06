@@ -18,8 +18,8 @@ public:
 	void drawWorld(SDL_Renderer* &renderer);
 	
 	// gets and stores the path from player -> goal in _path.
-	bool getPath(std::function<std::vector<SDL_Point>(const World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
-	void renderPath(); // renders _path (if one can be formed)
+	bool getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
+	void renderPath(SDL_Renderer* &renderer); // renders _path (if one can be formed)
 	// move player relative to current pos, returns true if player moved
 	bool movePlayer(int dx, int dy); 
 

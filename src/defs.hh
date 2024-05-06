@@ -18,10 +18,11 @@ extern SDL_Point POS_ZERO;
 
 namespace Color {
 	extern SDL_Color BLACK;
+	extern SDL_Color LIGHT_BLUE;
 	extern SDL_Color BLUE;
+	extern SDL_Color LIGHT_GREY;
 	extern SDL_Color GREY;
 	extern SDL_Color GREEN;
-	extern SDL_Color LIGHT_GREY;
 	extern SDL_Color RED;
 	extern SDL_Color WHITE; 
 }

@@ -53,6 +53,7 @@ void World::movePlayer(int nx, int ny){
 		_grid[_player.y][_player.x] = ENT_NONE;
 		_player.x = nx, _player.y = ny;
 		_grid[ny][nx] = ENT_PLAYER;
+		_player_move_flag = false;
 	}
 }
 
@@ -83,4 +84,12 @@ EntType World::getPos(int x, int y) const {
 	if (inBounds(x, y))
 		return _grid[y][x];
 	return ENT_NONE;
+}
+
+bool World::getPlayerMoveFlag() const {
+	return _player_move_flag;
+}
+
+void World::setPlayerMoveFlag(bool flag){ 
+	_player_move_flag = flag; 
 }

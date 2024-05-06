@@ -1,4 +1,5 @@
 #include "game.hh"
+#include "defs.hh"
 #include "ui.hh"
 
 #include <iostream>
@@ -9,27 +10,29 @@
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> dfs(const World& world){
+std::vector<SDL_Point> dfs(World& world){
 	std::cout << "dfs was called\n";
 	
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 
-	std::function<void(SDL_Point, const World&, std::vector<SDL_Point>, std::vector<SDL_Point>&,
+	std::function<void(SDL_Point, World&, std::vector<SDL_Point>, std::vector<SDL_Point>&,
 			std::set<std::pair<int,int>>&)> dfs_helper;
 
 	SDL_Point goal = world.getEndPos();
 
-	dfs_helper = [&](SDL_Point pos, const World& world, 
+	dfs_helper = [&](SDL_Point pos, World& world, 
 			std::vector<SDL_Point> curr_path, std::vector<SDL_Point>& end_path, std::set<std::pair<int,int>>& vis){
 		curr_path.push_back({pos.x, pos.y}); // add to path
 		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
-			
+
 		if (pos.x == goal.x && pos.y == goal.y){
 			end_path = curr_path;
+			// remove starter node in path (player is already on here)
+			if (end_path.size() > 0)
+				end_path.erase(end_path.begin());
 			return;	
 		}
-
 		for (const SDL_Point& moves : s_moves){
 			int nx, ny;
 			nx = pos.x + moves.x, ny = pos.y + moves.y;
@@ -51,7 +54,7 @@ std::vector<SDL_Point> dfs(const World& world){
 class DFSBtn : public UI::Button {
 	public:
 		~DFSBtn() = default;
-		DFSBtn(const World& world,
+		DFSBtn(World& world,
 				std::vector<SDL_Point> &path,
 				SDL_Renderer* &renderer): 
 			Button("DFS",
@@ -66,7 +69,8 @@ class DFSBtn : public UI::Button {
 				event.type == SDL_MOUSEBUTTONDOWN &&
 				event.button.button == SDL_BUTTON_LEFT){
 				std::cout << "Finding path with DFS!\n";
-
+				
+				_world.setPlayerMoveFlag(false);
 				_path = dfs(_world); 
 				
 				if (_path.size() == 0){
@@ -80,7 +84,7 @@ class DFSBtn : public UI::Button {
 			}
 		}
 	private:
-		const World& _world;
+		World& _world;
 		std::vector<SDL_Point>& _path;
 };
 
@@ -133,6 +137,10 @@ bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	drawWorld(renderer);
+
+	if (!_world.getPlayerMoveFlag())
+		renderPath(renderer);
+
 	renderWidgets();
 	return true;
 };
@@ -199,7 +207,10 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 			moved |= movePlayer(+1, 0);
 
 		// if the player moved, reset the delay timer
-		if (moved) playerLastMoved = PLAYER_MOVE_DELAY;
+		if (moved){ 
+			playerLastMoved = PLAYER_MOVE_DELAY;
+			_world.setPlayerMoveFlag(true);
+		}
 	} else {
 		playerLastMoved--;
 	}
@@ -222,14 +233,20 @@ bool Game::movePlayer(int dx, int dy){
 // helper() is a function that uses the world to find the path. It does not
 // modify world in any shape or form. helper() returns false when no path is found
 // returns false if no path is found
-bool Game::getPath(std::function<std::vector<SDL_Point>(const World& world, std::vector<SDL_Point> path)> helper){ 
+bool Game::getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper){ 
 	_path = helper(_world, _path);
 	return _path.size() > 0;
 } 
 
 // renders _path (if one can be formed)
-void Game::renderPath(){
+void Game::renderPath(SDL_Renderer* &renderer){
+	SDL_Color c = Color::LIGHT_BLUE;
+	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 	for (const SDL_Point pt : _path){
+		SDL_Rect rect = {
+			LEFT_PANE_W + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H
+		};
 		// render transparent square
+		SDL_RenderFillRect(renderer, &rect);
 	}
 }
