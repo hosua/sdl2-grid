@@ -3,45 +3,66 @@
 
 #include <iostream>
 
-class FirstBtn : public UI::Button {
+class DFSBtn : public UI::Button {
 	public:
-		~FirstBtn() = default;
-		FirstBtn(SDL_Renderer* &renderer): 
-			Button("First",
-					0, 200,
-					140, 50,
+		~DFSBtn() = default;
+		DFSBtn(SDL_Renderer* &renderer): 
+			Button("DFS",
+					5, 5,
+					130, 50,
 					renderer){}
 
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
 				event.type == SDL_MOUSEBUTTONDOWN &&
 				event.button.button == SDL_BUTTON_LEFT){
-				std::cout << "Clicked first button!\n";
+				std::cout << "Finding path with DFS!\n";
 			}
 		}
 };
 
-class SecondBtn : public UI::Button {
+class BFSBtn : public UI::Button {
 public:
-	SecondBtn(SDL_Renderer* &renderer):
-		Button("Second", 
-				0, 405, 
-				140, 50,
+	BFSBtn(SDL_Renderer* &renderer):
+		Button("BFS", 
+				5, 60, 
+				130, 50,
 				renderer){}
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
 				event.type == SDL_MOUSEBUTTONDOWN &&
 				event.button.button == SDL_BUTTON_LEFT){
-				std::cout << "Clicked second button!\n";
+				std::cout << "Finding path with BFS!\n";
+				// do BFS logic hurr
 			}
 		}
 };
 
+class AStarBtn : public UI::Button {
+public:
+	AStarBtn(SDL_Renderer* &renderer):
+		Button("A*", 
+				5, 115, 
+				130, 50,
+				renderer){}
+	void handleInputs(SDL_Event event) override {
+		if (isMouseOver() && 
+			event.type == SDL_MOUSEBUTTONDOWN &&
+			event.button.button == SDL_BUTTON_LEFT){
+			std::cout << "Finding path with A* search!\n";
+			// do a* logic hurr
+		}
+	}
+};
+
 Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer){
-		std::unique_ptr<FirstBtn> btn_1 = std::unique_ptr<FirstBtn>(new FirstBtn(renderer));
-		std::unique_ptr<SecondBtn> btn_2 = std::unique_ptr<SecondBtn>(new SecondBtn(renderer));
-		addWidget(std::move(btn_1));
-		addWidget(std::move(btn_2));
+		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(renderer));
+		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(renderer));
+		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
+
+		addWidget(std::move(btn_dfs));
+		addWidget(std::move(btn_bfs));
+		addWidget(std::move(btn_astar));
 	};
 
 bool Game::render(SDL_Renderer* &renderer) {

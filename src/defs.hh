@@ -7,8 +7,8 @@
 
 #define LEFT_PANE_W 140
 
-#define BLOCK_W 40
-#define BLOCK_H 40
+#define BLOCK_W 20
+#define BLOCK_H 20
 
 #define PLAYER_MOVE_DELAY 3
 
