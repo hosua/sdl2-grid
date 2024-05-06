@@ -2,7 +2,7 @@
 #include <algorithm>
 
 
-SceneManager::SceneManager(SDL_Renderer* &renderer): m_renderer(renderer) {};	
+SceneManager::SceneManager(SDL_Renderer* &renderer): _renderer(renderer) {};	
 
 void SceneManager::addScene(std::unique_ptr<Scene> scene){
 	_scenes.push_back(std::move(scene));
@@ -29,24 +29,24 @@ bool SceneManager::removeScene(const std::string& key){
 bool SceneManager::renderScenes(){
 	SDL_Point mouse_pos;
 	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+	drawClear();
 	for (auto itr = _scenes.rbegin(); itr != _scenes.rend(); ++itr){
-		drawClear();
 		Scene* scene = itr->get();
-		if (!scene->render(m_renderer))
+		if (!scene->render(_renderer))
 			return false;
 		scene->handleInputs(mouse_pos);
-		drawPresent();
 	}
+	drawPresent();
 	return true;
 };
 
 void SceneManager::drawClear(const SDL_Color& color) const {
 	const SDL_Color& c = color;
-	SDL_SetRenderDrawColor(m_renderer, c.r, c.g, c.b, c.a);
-	SDL_RenderClear(m_renderer);
+	SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
+	SDL_RenderClear(_renderer);
 }
 
 void SceneManager::drawPresent() const {
-	SDL_RenderPresent(m_renderer);
+	SDL_RenderPresent(_renderer);
 }
 

@@ -13,7 +13,7 @@ namespace UI {
 			Widget(int x, int y, SDL_Renderer* &renderer);
 			~Widget() = default;
 			virtual void render() = 0;
-			virtual void handleInputs(SDL_Point mouse_pos, const uint8_t* kb_state);
+			virtual void handleInputs(SDL_Event event);
 			
 			bool isMouseOver();
 			uint32_t getID();
@@ -31,7 +31,9 @@ namespace UI {
 		
 		bool addWidget(std::unique_ptr<Widget> widget); // true if add sucessful
 		bool removeWidget(uint32_t id); // true if remove successful
-		void renderAndHandleInputs();
+
+		void renderWidgets();
+		void handleWidgetInputs(SDL_Event event);
 
 	private:
 		std::vector<std::unique_ptr<Widget>> _widgets;
@@ -69,8 +71,8 @@ namespace UI {
 				  );
 
 			~Button() = default;
-
-			virtual void onClick(void) = 0;
+			
+			// override handleInputs from Widget class
 
 			void render();
 			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;

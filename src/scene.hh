@@ -19,9 +19,10 @@ public:
 	
 	bool addWidget(std::unique_ptr<UI::Widget> widget); 
 	bool removeWidget(uint32_t id);
-
-	void renderAndHandleWidgetInputs();
-
+	
+	void renderWidgets();
+	void handleWidgetInputs(SDL_Event event);
+	
 private:
 	const std::string& _key;
 	UI::WidgetManager _widget_mgr;

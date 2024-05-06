@@ -46,6 +46,5 @@ class App {
 		SDL_Window* _window = nullptr;
 		SDL_Surface* _surface = nullptr;
 		SDL_Renderer* _renderer = nullptr;
-		SDL_Event _event;
 		SceneManager _scene_manager;
 };

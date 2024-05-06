@@ -7,29 +7,49 @@ class FirstBtn : public UI::Button {
 	public:
 		~FirstBtn() = default;
 		FirstBtn(SDL_Renderer* &renderer): 
-			Button("Click Me",
+			Button("First",
 					200, 200,
 					150, 50,
 					renderer){}
 
-		void onClick(void){
-			if (isMouseOver()){
-				std::cout << "Clicked the button!\n";
+		void handleInputs(SDL_Event event) override {
+			if (isMouseOver() && 
+				event.type == SDL_MOUSEBUTTONDOWN &&
+				event.button.button == SDL_BUTTON_LEFT){
+				std::cout << "Clicked first button!\n";
+			}
+		}
+};
+
+class SecondBtn : public UI::Button {
+public:
+	SecondBtn(SDL_Renderer* &renderer):
+		Button("Second", 
+				200, 405, 
+				150, 50,
+				renderer){}
+		void handleInputs(SDL_Event event) override {
+			if (isMouseOver() && 
+				event.type == SDL_MOUSEBUTTONDOWN &&
+				event.button.button == SDL_BUTTON_LEFT){
+				std::cout << "Clicked second button!\n";
 			}
 		}
 };
 
 Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer), 
 	_world(WINDOW_H / BLOCK_H, WINDOW_W / BLOCK_W){
-		std::unique_ptr<FirstBtn> btn = std::unique_ptr<FirstBtn>(new FirstBtn(renderer));
-		addWidget(std::move(btn));
+		std::unique_ptr<FirstBtn> btn_1 = std::unique_ptr<FirstBtn>(new FirstBtn(renderer));
+		std::unique_ptr<SecondBtn> btn_2 = std::unique_ptr<SecondBtn>(new SecondBtn(renderer));
+		addWidget(std::move(btn_1));
+		addWidget(std::move(btn_2));
 	};
 
 bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	drawWorld(renderer);
-	renderAndHandleWidgetInputs();
+	renderWidgets();
 	return true;
 };
 
@@ -37,7 +57,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 	SDL_Point g = { mouse_pos.x / BLOCK_W, mouse_pos.y / BLOCK_H };
 
 	static bool lmb_down = false, rmb_down = false;
-
+	
 	SDL_Event event;
 	while (SDL_PollEvent(&event)){
 		switch(event.type){
@@ -55,6 +75,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 						lmb_down = false;
 					else if (event.button.button == SDL_BUTTON_RIGHT)
 						rmb_down = false;
+					break;
 				}
 			case SDL_KEYDOWN:
 				{
@@ -66,9 +87,10 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 			default:
 				break;
 		}
+
+		handleWidgetInputs(event);
 	}
 
-	// handle continuous mouse down events
 	if (lmb_down) _world.spawnWall(g.x, g.y);
 	if (rmb_down) _world.deleteWall(g.x, g.y);
 	SDL_PumpEvents();
@@ -80,7 +102,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 
 	static uint32_t playerLastMoved = 0;
 
-	if (playerLastMoved == 0){ // add some delay between movement events
+	if (playerLastMoved == 0){ // add some delay between movement g_events
 		bool moved = false;
 		if (kb_state[SDL_SCANCODE_UP] || kb_state[SDL_SCANCODE_W])
 			moved |= movePlayer(0, -1);
@@ -106,7 +128,7 @@ void Game::drawWorld(SDL_Renderer* &renderer) {
 bool Game::movePlayer(int dx, int dy){
 	SDL_Point pos = _world.getPlayerPos();
 	_world.movePlayer(pos.x + dx, pos.y + dy); // internally handles boundary checks
-											   // return true if new player position is not the same as original	
+	// return true if new player position is not the same as original	
 	return (pos.x != _world.getPlayerPos().x ||
 			pos.y != _world.getPlayerPos().y);
 }

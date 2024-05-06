@@ -22,8 +22,8 @@ public:
 	// renderScenes returns false if the game should shutdown
 	bool renderScenes();
 
-	SDL_Renderer* &m_renderer;
 private:
 	std::vector<std::unique_ptr<Scene>> _scenes;
+	SDL_Renderer* &_renderer;
 };
 

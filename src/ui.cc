@@ -13,11 +13,12 @@ namespace UI {
 		_id(s_widget_counter++) {
 	}
 
-	void Widget::handleInputs(SDL_Point mouse_pos, const uint8_t* kb_state){
-		if (isMouseOver()){
+	void Widget::handleInputs(SDL_Event event){
+		if (isMouseOver() &&
+				event.type == SDL_MOUSEBUTTONDOWN &&
+				event.button.button == SDL_BUTTON_LEFT){
 			std::cout << "Widget has no input action\n";
 		}
-		// kb_state not needed here but can be used in overriden functions if needed
 	}
 
 	bool Widget::isMouseOver(){
@@ -46,19 +47,16 @@ namespace UI {
 
 		_widgets.erase(itr, _widgets.end());
 		return true;
-	
-		return true;	
 	} 
-
-	void WidgetManager::renderAndHandleInputs(){
-		SDL_Point mouse_pos;
-		SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
-		const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
-
-		for (std::unique_ptr<Widget>& wg : _widgets){
+	
+	void WidgetManager::renderWidgets(){
+		for (std::unique_ptr<Widget>& wg : _widgets)
 			wg->render();
-			wg->handleInputs(mouse_pos, kb_state);
-		}
+	}
+
+	void WidgetManager::handleWidgetInputs(SDL_Event event){
+		for (std::unique_ptr<Widget>& wg : _widgets)
+			wg->handleInputs(event);
 	}
 
 
