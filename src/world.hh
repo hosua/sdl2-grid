@@ -17,13 +17,15 @@ public:
 	SDL_Point getStartPos() const;
 	SDL_Point getEndPos() const;
 	SDL_Point getPlayerPos() const;
+	EntType getPos(int x, int y) const; // gets the entity type at the specified position
 
 	void spawnWall(int x, int y);
 	void deleteWall(int x, int y);
 
+	bool inBounds(int x, int y) const;
+
 private:
 	uint16_t _rows, _cols;
 	std::vector<std::vector<EntType>> _grid;
-	bool inBounds(int x, int y);
 	SDL_Point _start, _end, _player;
 };

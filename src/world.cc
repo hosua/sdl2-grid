@@ -9,12 +9,15 @@ World::World(){
 	_cols = WORLD_W / BLOCK_W;
 
 	_grid = std::vector<std::vector<EntType>>(_rows, std::vector<EntType>(_cols, ENT_NONE));
-	_start = { 0, 0 };
-	_end = { _cols-1, _rows-1 };
-	_player = { 1, 1 };
 
-	_grid[_start.y][_start.x] = ENT_START;
+	// start is unnecessary, the player will just be the start
+	// _start = { 0, 0 };
+	// _grid[_start.y][_start.x] = ENT_START;
+
+	_player = { 0, 0 };
 	_grid[_player.y][_player.x] = ENT_PLAYER;
+
+	_end = { _cols-1, _rows-1 };
 	_grid[_end.y][_end.x] = ENT_END;
 }
 
@@ -63,7 +66,7 @@ void World::deleteWall(int x, int y){
 		_grid[y][x] = ENT_NONE;
 }
 
-bool World::inBounds(int x, int y){
+bool World::inBounds(int x, int y) const {
 	return (x >= 0 && x < _cols && y >= 0 && y < _rows);
 }
 SDL_Point World::getStartPos() const {
@@ -74,4 +77,10 @@ SDL_Point World::getEndPos() const {
 }
 SDL_Point World::getPlayerPos() const {
 	return _player;
+}
+// gets the entity type at the specified position
+EntType World::getPos(int x, int y) const {
+	if (inBounds(x, y))
+		return _grid[y][x];
+	return ENT_NONE;
 }

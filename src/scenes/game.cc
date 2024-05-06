@@ -2,16 +2,50 @@
 #include "ui.hh"
 
 #include <iostream>
+#include <stack>
+
+#include <set>
+#include <utility>
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> dfs(const World& world, std::vector<SDL_Point> path={}){
+std::vector<SDL_Point> dfs(const World& world){
 	std::cout << "dfs was called\n";
-	// SDL_Point start = world.getPlayerPos();
-	// for (const SDL_Point& moves : s_moves){
-	// 	int nx, ny;
-	// }
-	return {};
+	
+	std::vector<SDL_Point> path;
+	std::set<std::pair<int,int>> vis;
+
+	std::function<void(SDL_Point, const World&, std::vector<SDL_Point>, std::vector<SDL_Point>&,
+			std::set<std::pair<int,int>>&)> dfs_helper;
+
+	SDL_Point goal = world.getEndPos();
+
+	dfs_helper = [&](SDL_Point pos, const World& world, 
+			std::vector<SDL_Point> curr_path, std::vector<SDL_Point>& end_path, std::set<std::pair<int,int>>& vis){
+		curr_path.push_back({pos.x, pos.y}); // add to path
+		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
+			
+		if (pos.x == goal.x && pos.y == goal.y){
+			end_path = curr_path;
+			return;	
+		}
+
+		for (const SDL_Point& moves : s_moves){
+			int nx, ny;
+			nx = pos.x + moves.x, ny = pos.y + moves.y;
+			std::pair<int,int> pr = std::make_pair(nx, ny);
+			if (world.inBounds(nx, ny) &&
+					(world.getPos(nx, ny) == ENT_NONE || world.getPos(nx, ny) == ENT_END) 
+					&& vis.find(pr) == vis.end()){
+				dfs_helper({nx, ny}, world, curr_path, end_path, vis);
+			}
+		}
+	};
+
+	SDL_Point start = world.getPlayerPos();
+	std::vector<SDL_Point> temp_path;
+	dfs_helper(start, world, temp_path, path, vis);
+	return path;
 }
 
 class DFSBtn : public UI::Button {
@@ -33,7 +67,16 @@ class DFSBtn : public UI::Button {
 				event.button.button == SDL_BUTTON_LEFT){
 				std::cout << "Finding path with DFS!\n";
 
-				_path = dfs(_world); // bad?
+				_path = dfs(_world); 
+				
+				if (_path.size() == 0){
+					std::cout << "No path found!\n";
+				} else {
+					std::cout << "Path: \n";
+					for (const SDL_Point& pt : _path)
+						printf("(%i,%i) -> ", pt.x, pt.y);
+					std::cout << "\n";
+				}
 			}
 		}
 	private:
