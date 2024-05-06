@@ -113,16 +113,40 @@ class AStarBtn : public UI::Button {
 		}
 };
 
+class ExitBtn : public UI::Button {
+	public:
+		ExitBtn(SDL_Renderer* &renderer, bool& end_game):
+			Button("Exit",
+					5, WINDOW_H - 55,
+					130, 50,
+					renderer, 
+					Font::openSansSmall,
+					Color::RED),
+				_end_game(end_game) {}
+		void handleInputs(SDL_Event event) override {
+			if (isMouseOver() && 
+					event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
+				std::cout << "Exiting the game.\n";
+				_end_game = true;
+			}
+		}	
+	private:
+		bool& _end_game;
+};
+
 Game::Game(SDL_Renderer* &renderer):
 	Scene("GAME", renderer), _world(_render_path_flag) {
 
 		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer, _render_path_flag));
 		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer, _render_path_flag));
 		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
+		std::unique_ptr<ExitBtn> btn_exit = std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
 
 		addWidget(std::move(btn_dfs));
 		addWidget(std::move(btn_bfs));
 		addWidget(std::move(btn_astar));
+		addWidget(std::move(btn_exit));
 	};
 
 bool Game::render(SDL_Renderer* &renderer) {
