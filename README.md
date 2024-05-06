@@ -4,7 +4,7 @@ A fun little project that demonstrates different path-finding algorithms with pr
 
 https://github.com/hosua/sdl2-grid/assets/22788738/6a682d61-5d16-410e-a766-e598570c0d8b
 
-# Compilation Instructions
+# Linux Compilation Instructions
 ```
 mkdir build
 cd build
@@ -21,3 +21,4 @@ As of writing, only BFS and DFS are implemented.
 - [ ] A* search 
 - [ ] Loading/Saving Maps
 - [ ] Ability to tweak speed settings via UI
+- [ ] Add compilation instructions/binary for Windows
