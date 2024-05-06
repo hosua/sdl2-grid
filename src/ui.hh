@@ -96,7 +96,7 @@ namespace UI {
 
 			~Button() = default;
 			
-			// override handleInputs from Widget class
+			// override handleInputs from Widget class for input events
 
 			void render();
 			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;

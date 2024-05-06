@@ -29,8 +29,8 @@ public:
 
 	EntType getPos(int x, int y) const; // gets the entity type at the specified position
 
-	void spawnWall(int x, int y);
-	void deleteWall(int x, int y);
+	void spawnEntity(const EntType entity_type, int x, int y);
+	void deleteWall(int x, int y); // walls are currently the only type that should be deletable
 
 	bool inBounds(int x, int y) const;
 

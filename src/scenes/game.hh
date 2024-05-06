@@ -20,9 +20,12 @@ public:
 	// move player relative to current pos, returns true if player moved
 	bool movePlayer(int dx, int dy); 
 
+	void setEntityType(EntType entity_type);
+
 private:
 	bool _end_game = false;
 	bool _render_path_flag = false;
 	World _world;
 	std::vector<SDL_Point> _path;
+	EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
 };

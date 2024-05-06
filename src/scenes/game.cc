@@ -113,6 +113,70 @@ class AStarBtn : public UI::Button {
 		}
 };
 
+
+class SelectEntWallBtn : public UI::Button {
+	public:
+		SelectEntWallBtn(SDL_Renderer* &renderer, EntType &ent_type):
+		Button("1",
+				5, 170,
+				40, 40,
+				renderer,
+				Font::openSansSmall,
+				Color::VERY_LIGHT_GREY),
+		_ent_type(ent_type) {}
+		void handleInputs(SDL_Event event) override {
+			if (isMouseOver() && 
+					event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
+				_ent_type = ENT_WALL;
+			}
+		}
+	private:
+		EntType& _ent_type;
+};
+
+class SelectEntPlayerBtn : public UI::Button {
+	public:
+		SelectEntPlayerBtn(SDL_Renderer* &renderer, EntType &ent_type):
+		Button("2",
+				50, 170,
+				40, 40,
+				renderer,
+				Font::openSansSmall,
+				Color::BLUE),
+		_ent_type(ent_type) {}
+		void handleInputs(SDL_Event event) override {
+			if (isMouseOver() && 
+					event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
+				_ent_type = ENT_PLAYER;
+			}
+		}
+	private:
+		EntType& _ent_type;
+};
+
+class SelectEntEndBtn : public UI::Button {
+	public:
+		SelectEntEndBtn(SDL_Renderer* &renderer, EntType &ent_type):
+		Button("3",
+				95, 170,
+				40, 40,
+				renderer,
+				Font::openSansSmall,
+				Color::RED),
+		_ent_type(ent_type) {}
+		void handleInputs(SDL_Event event) override {
+			if (isMouseOver() && 
+					event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
+				_ent_type = ENT_END;
+			}
+		}
+	private:
+		EntType& _ent_type;
+};
+
 class ExitBtn : public UI::Button {
 	public:
 		ExitBtn(SDL_Renderer* &renderer, bool& end_game):
@@ -143,9 +207,16 @@ Game::Game(SDL_Renderer* &renderer):
 		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
 		std::unique_ptr<ExitBtn> btn_exit = std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
 
+		std::unique_ptr<SelectEntPlayerBtn> btn_player = std::unique_ptr<SelectEntPlayerBtn>(new SelectEntPlayerBtn(renderer, _entity_type));
+		std::unique_ptr<SelectEntWallBtn> btn_wall = std::unique_ptr<SelectEntWallBtn>(new SelectEntWallBtn(renderer, _entity_type));
+		std::unique_ptr<SelectEntEndBtn> btn_end = std::unique_ptr<SelectEntEndBtn>(new SelectEntEndBtn(renderer, _entity_type));
+
 		addWidget(std::move(btn_dfs));
 		addWidget(std::move(btn_bfs));
 		addWidget(std::move(btn_astar));
+		addWidget(std::move(btn_player));
+		addWidget(std::move(btn_wall));
+		addWidget(std::move(btn_end));
 		addWidget(std::move(btn_exit));
 	};
 
@@ -199,7 +270,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 		handleWidgetInputs(event);
 	}
 
-	if (lmb_down) _world.spawnWall(g.x, g.y);
+	if (lmb_down) _world.spawnEntity(_entity_type, g.x, g.y);
 	if (rmb_down) _world.deleteWall(g.x, g.y);
 
 	SDL_PumpEvents();
@@ -207,6 +278,18 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 	if (kb_state[SDL_SCANCODE_ESCAPE]){
 		_end_game = true;
 		return;
+	} 
+
+	if (kb_state[SDL_SCANCODE_1]){
+		setEntityType(ENT_WALL);
+	}
+
+	if (kb_state[SDL_SCANCODE_2]){
+		setEntityType(ENT_PLAYER);
+	}
+
+	if (kb_state[SDL_SCANCODE_3]){
+		setEntityType(ENT_END);
 	}
 
 	static uint32_t playerLastMoved = 0;
@@ -265,4 +348,8 @@ void Game::renderPath(SDL_Renderer* &renderer){
 		// render transparent square
 		SDL_RenderFillRect(renderer, &rect);
 	}
+}
+
+void Game::setEntityType(EntType entity_type){
+	_entity_type = entity_type;
 }

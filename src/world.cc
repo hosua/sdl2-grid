@@ -68,9 +68,28 @@ void World::renderClear(SDL_Renderer* renderer){
 
 }
 
-void World::spawnWall(int x, int y){
-	if (inBounds(x, y) && _grid[y][x] == ENT_NONE)
-		_grid[y][x] = ENT_WALL;
+void World::spawnEntity(const EntType entity_type, int x, int y){
+	if (inBounds(x, y) && _grid[y][x] == ENT_NONE){
+		switch(entity_type){
+			case ENT_WALL:
+				_grid[y][x] = entity_type;
+				break;
+			case ENT_PLAYER: 
+			{
+				SDL_Point old_pos = getPlayerPos();
+				std::swap(_grid[y][x], _grid[old_pos.y][old_pos.x]);
+				_player = { x, y };
+				break;
+			}
+			case ENT_END:
+			{
+				SDL_Point old_pos = getEndPos();
+				std::swap(_grid[y][x], _grid[old_pos.y][old_pos.x]);
+				_end = { x, y };
+				break;
+			}
+		}
+	}
 }
 
 void World::deleteWall(int x, int y){
