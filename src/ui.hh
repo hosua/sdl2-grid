@@ -70,7 +70,7 @@ namespace UI {
 					SDL_Renderer* &renderer,
 					int min_val = 0, int max_val = 10,
 					TTF_Font* font = Font::openSansMedium,
-					SDL_Color bg_color = Color::GREY,
+					SDL_Color bg_color = Color::DARK_GREY,
 					SDL_Color hover_color = Color::LIGHT_GREY);
 
 			SDL_Rect getSize();
@@ -90,7 +90,7 @@ namespace UI {
 					int w, int h,
 					SDL_Renderer* &renderer,
 					TTF_Font* font = Font::openSansMedium,
-					SDL_Color bg_color = Color::GREY,
+					SDL_Color bg_color = Color::DARK_GREY,
 					SDL_Color hover_color = Color::LIGHT_GREY
 				  );
 

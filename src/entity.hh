@@ -6,7 +6,6 @@
 
 typedef enum {
 	ENT_NONE,
-	ENT_START,
 	ENT_END,
 	ENT_WALL,
 	ENT_PLAYER,

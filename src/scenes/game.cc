@@ -122,7 +122,7 @@ class SelectEntWallBtn : public UI::Button {
 				40, 40,
 				renderer,
 				Font::openSansSmall,
-				Color::VERY_LIGHT_GREY),
+				Color::GREY),
 		_ent_type(ent_type) {}
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 

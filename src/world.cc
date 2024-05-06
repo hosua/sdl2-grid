@@ -9,10 +9,6 @@ World::World(bool& render_path_flag): _render_path_flag(render_path_flag) {
 
 	_grid = std::vector<std::vector<EntType>>(_rows, std::vector<EntType>(_cols, ENT_NONE));
 
-	// start is unnecessary, the player will just be the start
-	// _start = { 0, 0 };
-	// _grid[_start.y][_start.x] = ENT_START;
-
 	_player = { 0, 0 };
 	_grid[_player.y][_player.x] = ENT_PLAYER;
 
@@ -88,6 +84,8 @@ void World::spawnEntity(const EntType entity_type, int x, int y){
 				_end = { x, y };
 				break;
 			}
+			case ENT_NONE:
+				break;
 		}
 	}
 }

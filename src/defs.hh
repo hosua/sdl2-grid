@@ -20,8 +20,9 @@ namespace Color {
 	extern SDL_Color BLACK;
 	extern SDL_Color BLUE;
 	extern SDL_Color LIGHT_BLUE;
-	extern SDL_Color GREY;
 	extern SDL_Color LIGHT_GREY;
+	extern SDL_Color GREY;
+	extern SDL_Color DARK_GREY;
 	extern SDL_Color VERY_LIGHT_GREY;
 	extern SDL_Color GREEN;
 	extern SDL_Color LIGHT_GREEN;
