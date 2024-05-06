@@ -13,9 +13,12 @@ public:
 	World(bool& render_path_flag);
 	~World() = default;
 	void draw(SDL_Renderer* renderer);
-	void movePlayer(int x, int y);
-	SDL_Point getStartPos() const;
+	void movePlayer(int x, int y); 
+	SDL_Point getStartPos() const; // unused
+
 	SDL_Point getEndPos() const;
+	void setEndPos(int x, int y);
+
 	SDL_Point getPlayerPos() const;
 
 	bool getRenderPathFlag() const;

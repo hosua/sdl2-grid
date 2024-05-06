@@ -26,8 +26,8 @@ namespace UI {
 
 	class WidgetManager {
 	public:
-		WidgetManager();
 		~WidgetManager() = default;
+		WidgetManager();
 		
 		bool addWidget(std::unique_ptr<Widget> widget); // true if add sucessful
 		bool removeWidget(uint32_t id); // true if remove successful
@@ -42,6 +42,7 @@ namespace UI {
 
 	class Text : Widget {
 		public:
+			~Text();
 			Text(const std::string& text, 
 					int x, int y, 
 					SDL_Renderer* &renderer,
@@ -51,12 +52,35 @@ namespace UI {
 			SDL_Rect getSize();
 			void setPos(int x, int y);
 
-			~Text();
 			void render();
 		private:
 			std::string _text;	
 			SDL_Surface* _surface;
 			SDL_Texture* _texture;
+	};
+
+	
+	// TODO: Maybe make this a template to be usable with floats & doubles latewr
+	class Spinner : Widget {
+		public:
+			~Spinner() = default;
+			Spinner(int& val,
+					int x, int y,
+					int w, int h,
+					SDL_Renderer* &renderer,
+					int min_val = 0, int max_val = 10,
+					TTF_Font* font = Font::openSansMedium,
+					SDL_Color bg_color = Color::GREY,
+					SDL_Color hover_color = Color::LIGHT_GREY);
+
+			SDL_Rect getSize();
+			void setPos(int x, int y);
+			void incVal();
+			void decVal();
+
+		private:
+			Text _text;
+			int _val, _min_val, _max_val;
 	};
 
 	class Button : public Widget {

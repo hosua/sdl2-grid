@@ -6,7 +6,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-
 #include "scene.hh"
 #include "scene_manager.hh"
 

@@ -118,4 +118,31 @@ namespace UI {
 		SDL_RenderFillRect(_renderer, &_rect);
 		_text.render();
 	}
+	Spinner::Spinner(int& val,
+			int x, int y,
+			int w, int h,
+			SDL_Renderer* &renderer,
+			int min_val, int max_val,
+			TTF_Font* font,
+			SDL_Color bg_color,
+			SDL_Color hover_color)
+	: Widget(x, y, renderer), 
+	_text("0", 0, 0, renderer, font),
+	_val(val), _min_val(min_val), _max_val(max_val) {}
+
+	SDL_Rect Spinner::getSize(){
+		return _rect;
+	}
+
+	void Spinner::setPos(int x, int y){
+		_rect.x = x, _rect.y = y;
+	}
+
+	void Spinner::incVal(){
+		_val = std::clamp<int>(++_val, _min_val, _max_val);
+	}
+
+	void Spinner::decVal(){
+		_val = std::clamp<int>(--_val, _min_val, _max_val);
+	}
 }

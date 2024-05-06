@@ -16,6 +16,9 @@ std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 
 	SDL_Point goal = world.getEndPos();
 
+	world.renderClear(renderer);
+	world.draw(renderer);
+
 	// set render color for path search marking
 	SDL_Color c = Color::GREEN;
 	std::vector<SDL_Rect> search_markers; // store the rect of each node visited here
@@ -28,17 +31,12 @@ std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 		SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
 		search_markers.push_back(rect);
 
-		const SDL_Rect* rects = &search_markers[0];
-
-		world.renderClear(renderer);
-		world.draw(renderer);
-		// redraw the world
-
 		// render the current search
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
-		SDL_RenderFillRects(renderer, rects, search_markers.size());
+		SDL_RenderFillRect(renderer, &rect);
 		SDL_Delay(10); // add some delay to the animation
 		SDL_RenderPresent(renderer);
+
 
 		if (pos.x == goal.x && pos.y == goal.y){
 			end_path = curr_path;

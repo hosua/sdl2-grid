@@ -90,6 +90,10 @@ SDL_Point World::getEndPos() const {
 	return _end;
 }
 
+void World::setEndPos(int x, int y){
+	_end = { x, y };
+}
+
 SDL_Point World::getPlayerPos() const {
 	return _player;
 }
