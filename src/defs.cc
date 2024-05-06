@@ -7,6 +7,7 @@ namespace Color {
 	SDL_Color BLUE = { 0, 87, 201, 255 };
 	SDL_Color LIGHT_BLUE = { 19, 176, 255, 255 };
 	SDL_Color GREEN = { 32, 148, 0, 255 };
+	SDL_Color LIGHT_GREEN = { 0, 226, 0, 255 };
 	SDL_Color GREY = { 64, 64, 64, 255 };
 	SDL_Color LIGHT_GREY = { 150, 150, 150, 255 };
 	SDL_Color RED = { 171, 11, 0, 255 };

@@ -76,9 +76,25 @@ static std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
 
 	SDL_Point start = world.getPlayerPos();
 	std::vector<SDL_Point> temp_path;
+
+	
+	// find the path
 	dfs_helper(start, world, temp_path, path, vis);
 
 	// animate the path we formed
+	SDL_Color c_finish = Color::LIGHT_GREEN;
+
+	SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
+
+	for (auto itr = path.rbegin(); itr != path.rend(); ++itr){
+		const SDL_Point pt = *itr;
+		const SDL_Rect rect = { LEFT_PANE_W + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H };
+		SDL_RenderFillRect(renderer, &rect);
+		SDL_Delay(10);
+		SDL_RenderPresent(renderer);
+	}
+
+
 	return path;
 }
 
