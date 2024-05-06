@@ -3,16 +3,17 @@
 #include "ui.hh"
 
 #include <iostream>
-#include <stack>
-
+#include <map>
 #include <set>
+#include <queue>
 #include <utility>
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
+static std::vector<SDL_Point> dfs(World& world);
+static std::vector<SDL_Point> bfs(World& world);
 
-std::vector<SDL_Point> dfs(World& world){
-	std::cout << "dfs was called\n";
-	
+// TODO: Improve this so that path finders will animate the pathfinding process
+static std::vector<SDL_Point> dfs(World& world){
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 
@@ -51,11 +52,68 @@ std::vector<SDL_Point> dfs(World& world){
 	return path;
 }
 
+static std::vector<SDL_Point> bfs(World& world){
+	std::vector<SDL_Point> path;
+	std::set<std::pair<int,int>> vis;
+	std::map<std::pair<int,int>, SDL_Point> parent;
+
+	std::function<void(SDL_Point, World&, std::vector<SDL_Point>, std::vector<SDL_Point>&,
+			std::set<std::pair<int,int>>&)> bfs_helper;
+
+	SDL_Point start = world.getPlayerPos();
+	SDL_Point goal = world.getEndPos();
+	
+	std::queue<SDL_Point> q; // <curr_node, parent>
+	q.push(start);
+	parent[std::make_pair(start.x, start.y)] = {-1,-1};
+
+	while (!q.empty()){
+		size_t breadth = q.size();
+		while (breadth--){
+			SDL_Point pos = q.front();
+			q.pop();
+
+			printf("(%i,%i)\n", pos.x, pos.y);
+			if (pos.x == goal.x && pos.y == goal.y){
+				// reconstruct the traversed path
+				std::pair<int,int> crawl = std::make_pair(pos.x, pos.y);
+				while (crawl.first != start.x || crawl.second != start.y){
+					SDL_Point c = { crawl.first, crawl.second };
+					path.push_back(c);
+					SDL_Point p = parent[crawl];
+					crawl.first = p.x, crawl.second = p.y;
+				}
+
+				// remove starter node in path (player is already on here)
+				if (path.size() > 0)
+					path.erase(path.begin());
+				std::reverse(path.begin(), path.end());
+				return path;
+			}
+
+			for (const SDL_Point& moves : s_moves){
+				SDL_Point n = {pos.x + moves.x, pos.y + moves.y};
+				std::pair<int,int> pr = std::make_pair(n.x, n.y);
+				if (world.inBounds(n.x, n.y) &&
+						(world.getPos(n.x, n.y) == ENT_NONE || world.getPos(n.x, n.y) == ENT_END) 
+						&& vis.find(pr) == vis.end()){
+					q.push(n);
+					parent[std::make_pair(n.x, n.y)] = pos;
+					vis.insert(std::make_pair(n.x, n.y)); // mark as visited
+				}
+			}
+		}
+	}
+
+
+	return {}; // no path found
+}
+
 class DFSBtn : public UI::Button {
 	public:
 		~DFSBtn() = default;
 		DFSBtn(World& world,
-				std::vector<SDL_Point> &path,
+				std::vector<SDL_Point>& path,
 				SDL_Renderer* &renderer): 
 			Button("DFS",
 					5, 5,
@@ -66,13 +124,13 @@ class DFSBtn : public UI::Button {
 
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
-				event.type == SDL_MOUSEBUTTONDOWN &&
-				event.button.button == SDL_BUTTON_LEFT){
+					event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
 				std::cout << "Finding path with DFS!\n";
-				
+
 				_world.setPlayerMoveFlag(false);
 				_path = dfs(_world); 
-				
+
 				if (_path.size() == 0){
 					std::cout << "No path found!\n";
 				} else {
@@ -89,49 +147,69 @@ class DFSBtn : public UI::Button {
 };
 
 class BFSBtn : public UI::Button {
-public:
-	BFSBtn(SDL_Renderer* &renderer):
-		Button("BFS", 
-				5, 60, 
-				130, 50,
-				renderer){}
+	public:
+		~BFSBtn() = default;
+		BFSBtn(World& world,
+				std::vector<SDL_Point>& path,
+				SDL_Renderer* &renderer):
+			Button("BFS", 
+					5, 60, 
+					130, 50,
+					renderer),
+			_world(world),
+			_path(path){}
+
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
-				event.type == SDL_MOUSEBUTTONDOWN &&
-				event.button.button == SDL_BUTTON_LEFT){
+					event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
 				std::cout << "Finding path with BFS!\n";
-				// do BFS logic hurr
+
+				_world.setPlayerMoveFlag(false);
+				_path = bfs(_world); 
+
+				if (_path.size() == 0){
+					std::cout << "No path found!\n";
+				} else {
+					std::cout << "Path: \n";
+					for (const SDL_Point& pt : _path)
+						printf("(%i,%i) -> ", pt.x, pt.y);
+					std::cout << "\n";
+				}
+			}
+		}
+	private:
+		World& _world;
+		std::vector<SDL_Point>& _path;
+};
+
+class AStarBtn : public UI::Button {
+	public:
+		AStarBtn(SDL_Renderer* &renderer):
+			Button("A*", 
+					5, 115, 
+					130, 50,
+					renderer){}
+		void handleInputs(SDL_Event event) override {
+			if (isMouseOver() && 
+					event.type == SDL_MOUSEBUTTONDOWN &&
+					event.button.button == SDL_BUTTON_LEFT){
+				std::cout << "Finding path with A* search!\n";
+				// do a* logic hurr
 			}
 		}
 };
 
-class AStarBtn : public UI::Button {
-public:
-	AStarBtn(SDL_Renderer* &renderer):
-		Button("A*", 
-				5, 115, 
-				130, 50,
-				renderer){}
-	void handleInputs(SDL_Event event) override {
-		if (isMouseOver() && 
-			event.type == SDL_MOUSEBUTTONDOWN &&
-			event.button.button == SDL_BUTTON_LEFT){
-			std::cout << "Finding path with A* search!\n";
-			// do a* logic hurr
-		}
-	}
-};
-
 Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer){
 
-		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer));
-		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(renderer));
-		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
+	std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer));
+	std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer));
+	std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
 
-		addWidget(std::move(btn_dfs));
-		addWidget(std::move(btn_bfs));
-		addWidget(std::move(btn_astar));
-	};
+	addWidget(std::move(btn_dfs));
+	addWidget(std::move(btn_bfs));
+	addWidget(std::move(btn_astar));
+};
 
 bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
@@ -149,7 +227,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 	SDL_Point g = { (mouse_pos.x - LEFT_PANE_W) / BLOCK_W, mouse_pos.y / BLOCK_H };
 
 	static bool lmb_down = false, rmb_down = false;
-	
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event)){
 		switch(event.type){
@@ -224,7 +302,7 @@ void Game::drawWorld(SDL_Renderer* &renderer) {
 bool Game::movePlayer(int dx, int dy){
 	SDL_Point pos = _world.getPlayerPos();
 	_world.movePlayer(pos.x + dx, pos.y + dy); // internally handles boundary checks
-	// return true if new player position is not the same as original	
+											   // return true if new player position is not the same as original	
 	return (pos.x != _world.getPlayerPos().x ||
 			pos.y != _world.getPlayerPos().y);
 }
