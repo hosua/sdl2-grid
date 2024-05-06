@@ -1,10 +1,8 @@
 # sdl2-pathfinder
 
+A fun little project that demonstrates different path-finding algorithms with pretty visuals, made with SDL2 and C++.
+
 https://github.com/hosua/sdl2-grid/assets/22788738/6a682d61-5d16-410e-a766-e598570c0d8b
-
-A fun little project that demonstrates different path-finding algorithms with pretty visuals.
-
-Made using SDL2 and C++.
 
 # Compilation Instructions
 ```
