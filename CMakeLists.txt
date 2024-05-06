@@ -50,6 +50,9 @@ target_compile_options(grid-game PRIVATE
     -Wpedantic
 )
 
+# Add debugging flag
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+
 set (symlink_src "${CMAKE_SOURCE_DIR}/assets")
 set (symlink_dest "${CMAKE_CURRENT_BINARY_DIR}/assets")
 add_custom_command(

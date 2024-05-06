@@ -1,11 +1,16 @@
 #include "world.hh"
-#include "defs.hh"
-World::World(uint16_t rows, uint16_t cols)
-	: _rows(rows), _cols(cols),
-		_grid(std::vector<std::vector<EntType>>(rows, std::vector<EntType>(cols, ENT_NONE))){
-	
+
+const int WORLD_W = WINDOW_W - LEFT_PANE_W;
+const int WORLD_H = WINDOW_H;
+
+World::World(){
+
+	_rows = WORLD_H / BLOCK_H;
+	_cols = WORLD_W / BLOCK_W;
+
+	_grid = std::vector<std::vector<EntType>>(_rows, std::vector<EntType>(_cols, ENT_NONE));
 	_start = { 0, 0 };
-	_end = { cols-1, rows-1 };
+	_end = { _cols-1, _rows-1 };
 	_player = { 1, 1 };
 
 	_grid[_start.y][_start.x] = ENT_START;
@@ -24,18 +29,18 @@ void World::draw(SDL_Renderer* renderer){
 			EntType ent_type = _grid[y][x];
 			const SDL_Color& c = ENT_COLOR_MAP[ent_type];
 			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
-			rect = { x * BLOCK_W, y * BLOCK_H, BLOCK_W, BLOCK_H };
+			rect = { LEFT_PANE_W + (x * BLOCK_W), y * BLOCK_H, BLOCK_W, BLOCK_H };
 			SDL_RenderFillRect(renderer, &rect);
 		}
 	}
-
+	
 	// draw gridlines above the entities
 	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
 	// draw horizontal
 	for (int y = 0; y < _rows * BLOCK_H; y += BLOCK_H)
-		SDL_RenderDrawLine(renderer, 0, y, WINDOW_W, y);
+		SDL_RenderDrawLine(renderer, LEFT_PANE_W, y, LEFT_PANE_W + (_cols * BLOCK_W), y);
 	// draw vertical
-	for (int x = 0; x < _cols * BLOCK_W; x += BLOCK_W)
+	for (int x = LEFT_PANE_W; x <= LEFT_PANE_W + (_cols * BLOCK_W); x += BLOCK_W)
 		SDL_RenderDrawLine(renderer, x, 0, x, WINDOW_H);
 }
 

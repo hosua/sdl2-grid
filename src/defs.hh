@@ -5,6 +5,8 @@
 #define WINDOW_W 1280
 #define WINDOW_H 720
 
+#define LEFT_PANE_W 140
+
 #define BLOCK_W 40
 #define BLOCK_H 40
 

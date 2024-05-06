@@ -8,8 +8,8 @@ class FirstBtn : public UI::Button {
 		~FirstBtn() = default;
 		FirstBtn(SDL_Renderer* &renderer): 
 			Button("First",
-					200, 200,
-					150, 50,
+					0, 200,
+					140, 50,
 					renderer){}
 
 		void handleInputs(SDL_Event event) override {
@@ -25,8 +25,8 @@ class SecondBtn : public UI::Button {
 public:
 	SecondBtn(SDL_Renderer* &renderer):
 		Button("Second", 
-				200, 405, 
-				150, 50,
+				0, 405, 
+				140, 50,
 				renderer){}
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && 
@@ -37,8 +37,7 @@ public:
 		}
 };
 
-Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer), 
-	_world(WINDOW_H / BLOCK_H, WINDOW_W / BLOCK_W){
+Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer){
 		std::unique_ptr<FirstBtn> btn_1 = std::unique_ptr<FirstBtn>(new FirstBtn(renderer));
 		std::unique_ptr<SecondBtn> btn_2 = std::unique_ptr<SecondBtn>(new SecondBtn(renderer));
 		addWidget(std::move(btn_1));
@@ -54,7 +53,7 @@ bool Game::render(SDL_Renderer* &renderer) {
 };
 
 void Game::handleInputs(SDL_Point& mouse_pos){
-	SDL_Point g = { mouse_pos.x / BLOCK_W, mouse_pos.y / BLOCK_H };
+	SDL_Point g = { (mouse_pos.x - LEFT_PANE_W) / BLOCK_W, mouse_pos.y / BLOCK_H };
 
 	static bool lmb_down = false, rmb_down = false;
 	
@@ -93,6 +92,7 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 
 	if (lmb_down) _world.spawnWall(g.x, g.y);
 	if (rmb_down) _world.deleteWall(g.x, g.y);
+
 	SDL_PumpEvents();
 	const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
 	if (kb_state[SDL_SCANCODE_ESCAPE]){

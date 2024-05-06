@@ -4,6 +4,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -25,6 +26,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -46,6 +48,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -67,6 +70,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -88,6 +92,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -109,6 +114,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -130,6 +136,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -151,6 +158,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",
@@ -172,6 +180,7 @@
   "arguments": [
    "/usr/bin/c++",
    "-I/home/hoswoo/Desktop/git/Github/sdl2-grid/src",
+   "-g",
    "-std=gnu++17",
    "-Wall",
    "-Wextra",

@@ -1,12 +1,16 @@
 #pragma once
 
+#include <vector>
+
 #include "entity.hh"
 #include "defs.hh"
-#include <vector>
+
+extern const int WORLD_W;
+extern const int WORLD_H;
 
 class World {
 public:
-	World(uint16_t rows, uint16_t cols);
+	World();
 	~World() = default;
 	void draw(SDL_Renderer* renderer);
 	void movePlayer(int x, int y);
