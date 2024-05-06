@@ -15,7 +15,7 @@ namespace UI {
 			virtual void render() = 0;
 			virtual void handleInputs(SDL_Point mouse_pos, const uint8_t* kb_state);
 			
-			bool isMouseOver(SDL_Point mouse_pos);
+			bool isMouseOver();
 			uint32_t getID();
 
 		protected:

@@ -22,8 +22,8 @@ public:
 
 	void renderAndHandleWidgetInputs();
 
-	SDL_Renderer* &m_renderer;
 private:
 	const std::string& _key;
 	UI::WidgetManager _widget_mgr;
+	SDL_Renderer* &_renderer;
 };

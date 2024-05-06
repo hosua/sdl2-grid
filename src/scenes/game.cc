@@ -1,6 +1,8 @@
 #include "game.hh"
 #include "ui.hh"
 
+#include <iostream>
+
 class FirstBtn : public UI::Button {
 	public:
 		~FirstBtn() = default;
@@ -11,12 +13,15 @@ class FirstBtn : public UI::Button {
 					renderer){}
 
 		void onClick(void){
+			if (isMouseOver()){
+				std::cout << "Clicked the button!\n";
+			}
 		}
 };
 
 Game::Game(SDL_Renderer* &renderer): Scene("GAME", renderer), 
 	_world(WINDOW_H / BLOCK_H, WINDOW_W / BLOCK_W){
-		std::unique_ptr<FirstBtn> btn = std::unique_ptr<FirstBtn>(new FirstBtn(m_renderer));
+		std::unique_ptr<FirstBtn> btn = std::unique_ptr<FirstBtn>(new FirstBtn(renderer));
 		addWidget(std::move(btn));
 	};
 
@@ -24,7 +29,7 @@ bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	drawWorld(renderer);
-
+	renderAndHandleWidgetInputs();
 	return true;
 };
 

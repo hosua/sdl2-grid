@@ -14,13 +14,15 @@ namespace UI {
 	}
 
 	void Widget::handleInputs(SDL_Point mouse_pos, const uint8_t* kb_state){
-		if (isMouseOver(mouse_pos)){
+		if (isMouseOver()){
 			std::cout << "Widget has no input action\n";
 		}
 		// kb_state not needed here but can be used in overriden functions if needed
 	}
 
-	bool Widget::isMouseOver(SDL_Point mouse_pos){
+	bool Widget::isMouseOver(){
+		SDL_Point mouse_pos;
+		SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 		return SDL_PointInRect(&mouse_pos, &_rect);
 	}
 
@@ -113,7 +115,7 @@ namespace UI {
 	void Button::render(){
 		SDL_Point mouse_pos;
 		SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
-		SDL_Color c = (isMouseOver(mouse_pos)) ? _hover_color : _bg_color;
+		SDL_Color c = (isMouseOver()) ? _hover_color : _bg_color;
 		SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
 		SDL_RenderFillRect(_renderer, &_rect);
 		_text.render();
