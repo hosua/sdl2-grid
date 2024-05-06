@@ -41,9 +41,6 @@ std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 			printf("(%i,%i) -> ", pos.x, pos.y);
 			q.pop();
 			SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
-			
-			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.a, 128);
-			SDL_RenderFillRect(renderer, &rect);
 
 			// animate & reconstruct the path we formed when we reach the goal
 			if (pos.x == goal.x && pos.y == goal.y){
@@ -51,11 +48,11 @@ std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 				SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
 				// reconstruct
 				pair<int,int> crawl = make_pair(pos.x, pos.y);
-				SDL_Point c = { crawl.first, crawl.second };
-				path.push_back(c);
+				SDL_Point node = { crawl.first, crawl.second };
+				path.push_back(node);
 				while (crawl.first != start.x || crawl.second != start.y){
-					c = { crawl.first, crawl.second };
-					path.push_back(c);
+					node = { crawl.first, crawl.second };
+					path.push_back(node);
 					SDL_Point p = parent[crawl];
 					crawl.first = p.x, crawl.second = p.y;
 					rect = { LEFT_PANE_W + p.x * BLOCK_W, p.y * BLOCK_H, BLOCK_W, BLOCK_H };
@@ -71,6 +68,14 @@ std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 				return path;
 			}
 
+			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
+			SDL_RenderFillRect(renderer, &rect);
+			// half ms accurate delay
+			// auto start_time = std::chrono::steady_clock::now();
+			// while ((std::chrono::steady_clock::now() - start_time) < std::chrono::nanoseconds((int)1e5)) 
+			// 	continue;
+			SDL_Delay(7); // add some delay to the animation
+			SDL_RenderPresent(renderer);
 
 			for (const SDL_Point& moves : s_moves){
 				SDL_Point n = {pos.x + moves.x, pos.y + moves.y};
@@ -84,15 +89,6 @@ std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
 				}
 			}
 
-			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
-			SDL_RenderFillRect(renderer, &rect);
-
-			// half ms accurate delay
-			// auto start_time = std::chrono::steady_clock::now();
-			// while ((std::chrono::steady_clock::now() - start_time) < std::chrono::nanoseconds((int)1e5)) 
-			// 	continue;
-			SDL_Delay(5); // add some delay to the animation
-			SDL_RenderPresent(renderer);
 
 		}
 	}
