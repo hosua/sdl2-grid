@@ -14,11 +14,8 @@ namespace UI {
 	}
 
 	void Widget::handleInputs(SDL_Event event){
-		if (isMouseOver() &&
-				event.type == SDL_MOUSEBUTTONDOWN &&
-				event.button.button == SDL_BUTTON_LEFT){
+		if (isMouseOver() && isClicked(event))
 			std::cout << "Widget has no input action\n";
-		}
 	}
 
 	bool Widget::isMouseOver(){
@@ -27,12 +24,16 @@ namespace UI {
 		return SDL_PointInRect(&mouse_pos, &_rect);
 	}
 
+	bool Widget::isClicked(SDL_Event event){
+		return (event.type == SDL_MOUSEBUTTONDOWN &&
+		event.button.button == SDL_BUTTON_LEFT);
+	}
+
 	uint32_t Widget::getID(){
 		return _id;
 	}
 
-	WidgetManager::WidgetManager(){
-	}
+	WidgetManager::WidgetManager(){}
 	
 	bool WidgetManager::addWidget(std::unique_ptr<Widget> widget){ // true if add sucessful
 		_widgets.push_back(std::move(widget));	
@@ -65,7 +66,10 @@ namespace UI {
 	Text::Text(const std::string& text, 
 			int x, int y, 
 			SDL_Renderer* &renderer, 
-			TTF_Font* font) : Widget(x, y, renderer) {
+			TTF_Font* font) : 
+		Widget(x, y, renderer),
+		_font(font),
+		_renderer(renderer){
 		_surface = TTF_RenderText_Blended(font, text.c_str(), Color::WHITE);
 		_texture = SDL_CreateTextureFromSurface(renderer, _surface);
 		_rect = { x, y, _surface->w, _surface->h };
@@ -86,6 +90,12 @@ namespace UI {
 
 	void Text::setPos(int x, int y){
 		_rect.x = x, _rect.y = y;
+	}
+
+	void Text::setText(const std::string& text){
+		_surface = TTF_RenderText_Blended(_font, text.c_str(), Color::WHITE);
+		_texture = SDL_CreateTextureFromSurface(_renderer, _surface);
+		_rect = { _rect.x, _rect.y, _surface->w, _surface->h };
 	}
 
 	/* ======== Button ======== */
@@ -128,7 +138,22 @@ namespace UI {
 			SDL_Color hover_color)
 	: Widget(x, y, renderer), 
 	_text("0", 0, 0, renderer, font),
-	_val(val), _min_val(min_val), _max_val(max_val) {}
+	_val(val), _min_val(min_val), _max_val(max_val) {
+			
+		_inc_btn = std::make_unique<Button>(
+				"+",
+					x, y,
+					w, h/3,
+					renderer);
+		SDL_Rect td = _text.getSize();
+		_text.setPos(x + (w/2) - (td.w/2), y + h/3);
+
+		_dec_btn = std::make_unique<Button>(
+				"-",
+					x, y + 2*h/3,
+					w, h/3,
+					renderer);
+	}
 
 	SDL_Rect Spinner::getSize(){
 		return _rect;
@@ -139,10 +164,30 @@ namespace UI {
 	}
 
 	void Spinner::incVal(){
+		std::cout << "Incrementing value\n";
 		_val = std::clamp<int>(++_val, _min_val, _max_val);
+		_text.setText(std::to_string(_val));
+		// TODO Adjust text position after changing text
 	}
 
 	void Spinner::decVal(){
+		std::cout << "Decrementing value\n";
 		_val = std::clamp<int>(--_val, _min_val, _max_val);
+		_text.setText(std::to_string(_val));
+		// TODO Adjust text position after changing text
 	}
+
+	void Spinner::render(){
+		_inc_btn->render();
+		_text.render();
+		_dec_btn->render();
+	}
+
+	void Spinner::handleInputs(SDL_Event event){
+		if (_inc_btn->isMouseOver() && _inc_btn->isClicked(event))
+			incVal();
+		if (_dec_btn->isMouseOver() && _dec_btn->isClicked(event))
+			decVal();
+	}
+
 }

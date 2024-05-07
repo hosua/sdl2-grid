@@ -10,7 +10,7 @@
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> bfs(World& world, SDL_Renderer* &renderer){
+std::vector<SDL_Point> PathFinder::bfs(World& world, SDL_Renderer* &renderer){
 	using std::vector, std::function,
 		  std::map, std::pair, std::make_pair;
 

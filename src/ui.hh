@@ -16,6 +16,7 @@ namespace UI {
 			virtual void handleInputs(SDL_Event event);
 			
 			bool isMouseOver();
+			bool isClicked(SDL_Event event);
 			uint32_t getID();
 
 		protected:
@@ -51,36 +52,14 @@ namespace UI {
 
 			SDL_Rect getSize();
 			void setPos(int x, int y);
-
-			void render();
+			void setText(const std::string& text);
+			void render() override;
 		private:
 			std::string _text;	
 			SDL_Surface* _surface;
 			SDL_Texture* _texture;
-	};
-
-	
-	// TODO: Maybe make this a template to be usable with floats & doubles latewr
-	class Spinner : Widget {
-		public:
-			~Spinner() = default;
-			Spinner(int& val,
-					int x, int y,
-					int w, int h,
-					SDL_Renderer* &renderer,
-					int min_val = 0, int max_val = 10,
-					TTF_Font* font = Font::openSansMedium,
-					SDL_Color bg_color = Color::DARK_GREY,
-					SDL_Color hover_color = Color::LIGHT_GREY);
-
-			SDL_Rect getSize();
-			void setPos(int x, int y);
-			void incVal();
-			void decVal();
-
-		private:
-			Text _text;
-			int _val, _min_val, _max_val;
+			TTF_Font* _font;
+			SDL_Renderer* &_renderer;
 	};
 
 	class Button : public Widget {
@@ -98,10 +77,36 @@ namespace UI {
 			
 			// override handleInputs from Widget class for input events
 			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;
-			void render();
+			void render() override;
 		private:
 			Text _text;
 			SDL_Color _bg_color, _hover_color;
 	};
 
+	// TODO: Maybe make this a template to be usable with floats & doubles latewr
+	class Spinner : public Widget {
+		public:
+			~Spinner() = default;
+			Spinner(int& val,
+					int x, int y,
+					int w, int h,
+					SDL_Renderer* &renderer,
+					int min_val = 0, int max_val = 10,
+					TTF_Font* font = Font::openSansMedium,
+					SDL_Color bg_color = Color::DARK_GREY,
+					SDL_Color hover_color = Color::LIGHT_GREY);
+
+			SDL_Rect getSize();
+			void setPos(int x, int y);
+			void incVal();
+			void decVal();
+
+			void render() override;
+			virtual void handleInputs(SDL_Event event) override;
+			
+		private:
+			Text _text;
+			int _val, _min_val, _max_val;
+			std::unique_ptr<Button> _inc_btn, _dec_btn;
+	};
 }

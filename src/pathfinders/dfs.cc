@@ -7,7 +7,7 @@
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer){
+std::vector<SDL_Point> PathFinder::dfs(World& world, SDL_Renderer* &renderer){
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 

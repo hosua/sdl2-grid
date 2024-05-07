@@ -48,6 +48,8 @@ bool App::initSDL(){
 			WINDOW_W, WINDOW_H, 
 			0);
 
+	SDL_SetWindowBordered(_window, SDL_FALSE); // remove window border
+
 	if (!_window){
 		std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << '\n';
 		return false;
