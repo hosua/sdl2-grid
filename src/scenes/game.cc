@@ -205,11 +205,12 @@ Game::Game(SDL_Renderer* &renderer):
 		std::unique_ptr<DFSBtn> btn_dfs = std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer, _render_path_flag));
 		std::unique_ptr<BFSBtn> btn_bfs = std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer, _render_path_flag));
 		std::unique_ptr<AStarBtn> btn_astar = std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
-		std::unique_ptr<ExitBtn> btn_exit = std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
 
 		std::unique_ptr<SelectEntPlayerBtn> btn_player = std::unique_ptr<SelectEntPlayerBtn>(new SelectEntPlayerBtn(renderer, _entity_type));
 		std::unique_ptr<SelectEntWallBtn> btn_wall = std::unique_ptr<SelectEntWallBtn>(new SelectEntWallBtn(renderer, _entity_type));
 		std::unique_ptr<SelectEntEndBtn> btn_end = std::unique_ptr<SelectEntEndBtn>(new SelectEntEndBtn(renderer, _entity_type));
+
+		std::unique_ptr<ExitBtn> btn_exit = std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
 
 		addWidget(std::move(btn_dfs));
 		addWidget(std::move(btn_bfs));

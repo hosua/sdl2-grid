@@ -29,6 +29,7 @@ App::~App(){
 void App::addScene(std::unique_ptr<Scene> scene){
 	_scene_manager.addScene(std::move(scene));
 }
+
 bool App::renderScenes(){
 	return _scene_manager.renderScenes();
 }
