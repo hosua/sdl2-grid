@@ -36,7 +36,7 @@ namespace Font {
 	extern TTF_Font* openSansMedium;
 	extern TTF_Font* openSansLarge;
 
-	void init();
+	bool init(); // return false on failure
 	void closeAll();
 }
 

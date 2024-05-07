@@ -204,7 +204,8 @@ Game::Game(SDL_Renderer* &renderer):
 		std::unique_ptr<SelectEntEndBtn> btn_end = 
 			std::unique_ptr<SelectEntEndBtn>(new SelectEntEndBtn(renderer, _entity_type));
 
-		std::unique_ptr<ExitBtn> btn_exit = std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
+		std::unique_ptr<ExitBtn> btn_exit = 
+			std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
 		
 		std::unique_ptr<UI::Spinner> test_spinner = 
 			std::unique_ptr<UI::Spinner>(new UI::Spinner(test_val, 5, 400, 130, 150, renderer, 0, 10));

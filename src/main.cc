@@ -13,6 +13,9 @@ int main(){
 	srand(time(NULL));
 
 	App* app = App::getInstance();
+	// if isRunning is false at this point, something bad happened, abort!
+	if (!app->isRunning())
+		return EXIT_FAILURE;
 
 	std::unique_ptr<Game> game_scene = std::make_unique<Game>(app->getRenderer());
 	app->addScene(std::move(game_scene));

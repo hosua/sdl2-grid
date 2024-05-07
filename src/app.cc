@@ -10,8 +10,7 @@ App* App::_instance = nullptr;
 
 App::App():
 	_scene_manager(_renderer) { 
-	_running = initSDL(); 
-	Font::init();
+	_running = initSDL() && Font::init();
 }
 
 App::~App(){

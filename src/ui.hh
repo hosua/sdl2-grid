@@ -83,7 +83,8 @@ namespace UI {
 			SDL_Color _bg_color, _hover_color;
 	};
 
-	// TODO: Maybe make this a template to be usable with floats & doubles latewr
+	// TODO: Maybe make this a template to be usable with floats & doubles later
+	// TODO: Make spinner colors customizable
 	class Spinner : public Widget {
 		public:
 			~Spinner() = default;
@@ -93,7 +94,7 @@ namespace UI {
 					SDL_Renderer* &renderer,
 					int min_val = 0, int max_val = 10,
 					TTF_Font* font = Font::openSansMedium,
-					SDL_Color bg_color = Color::DARK_GREY,
+					SDL_Color bg_color = Color::GREY,
 					SDL_Color hover_color = Color::LIGHT_GREY);
 
 			SDL_Rect getSize();
@@ -107,6 +108,7 @@ namespace UI {
 		private:
 			Text _text;
 			int _val, _min_val, _max_val;
+			SDL_Color _bg_color, _hover_color;
 			std::unique_ptr<Button> _inc_btn, _dec_btn;
 	};
 }

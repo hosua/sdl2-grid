@@ -138,15 +138,16 @@ namespace UI {
 			SDL_Color hover_color)
 	: Widget(x, y, renderer), 
 	_text("0", 0, 0, renderer, font),
-	_val(val), _min_val(min_val), _max_val(max_val) {
-			
+	_val(val), _min_val(min_val), _max_val(max_val),
+	_bg_color(bg_color), _hover_color(hover_color) {
+		_rect = { x, y, w, h };		
 		_inc_btn = std::make_unique<Button>(
 				"+",
 					x, y,
 					w, h/3,
 					renderer);
-		SDL_Rect td = _text.getSize();
-		_text.setPos(x + (w/2) - (td.w/2), y + h/3);
+		SDL_Rect t_sz = _text.getSize();
+		_text.setPos(x + (_rect.w/2) - (t_sz.w/2), _rect.y + (_rect.h/2) - (t_sz.h/2));
 
 		_dec_btn = std::make_unique<Button>(
 				"-",
@@ -168,6 +169,8 @@ namespace UI {
 		_val = std::clamp<int>(++_val, _min_val, _max_val);
 		_text.setText(std::to_string(_val));
 		// TODO Adjust text position after changing text
+		SDL_Rect t_sz = _text.getSize();
+		_text.setPos(_rect.x + (_rect.w/2) - (t_sz.w/2), _rect.y + (_rect.h/2) - (t_sz.h/2));
 	}
 
 	void Spinner::decVal(){
@@ -175,9 +178,15 @@ namespace UI {
 		_val = std::clamp<int>(--_val, _min_val, _max_val);
 		_text.setText(std::to_string(_val));
 		// TODO Adjust text position after changing text
+		SDL_Rect t_sz = _text.getSize();
+		_text.setPos(_rect.x + (_rect.w/2) - (t_sz.w/2), _rect.y + (_rect.h/2) - (t_sz.h/2));
 	}
 
 	void Spinner::render(){
+		SDL_Color c = _bg_color;
+		SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, 255);
+		SDL_RenderFillRect(_renderer, &_rect);
+
 		_inc_btn->render();
 		_text.render();
 		_dec_btn->render();

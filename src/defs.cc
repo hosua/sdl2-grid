@@ -1,5 +1,7 @@
 #include "defs.hh"
 
+#include <iostream>
+
 SDL_Point POS_ZERO = { 0, 0 };
 
 namespace Color {
@@ -22,12 +24,17 @@ namespace Font {
 	TTF_Font* openSansMedium = nullptr;
 	TTF_Font* openSansLarge = nullptr;
 	
-	void init(){
-		// error checking here would probably be wise but im too lazy
-		openSansTiny = TTF_OpenFont(FONT_OPENSANS, 8);
-		openSansSmall = TTF_OpenFont(FONT_OPENSANS, 16);
-		openSansMedium = TTF_OpenFont(FONT_OPENSANS, 32);
-		openSansLarge = TTF_OpenFont(FONT_OPENSANS, 64);
+	bool init(){
+		if ((openSansTiny = TTF_OpenFont(FONT_OPENSANS, 8)) == nullptr)
+			std::cerr << SDL_GetError() << '\n';
+		if ((openSansSmall = TTF_OpenFont(FONT_OPENSANS, 16)) == nullptr)
+			std::cerr << SDL_GetError() << '\n';
+		if ((openSansMedium = TTF_OpenFont(FONT_OPENSANS, 32)) == nullptr)
+			std::cerr << SDL_GetError() << '\n';
+		if ((openSansLarge = TTF_OpenFont(FONT_OPENSANS, 64)) == nullptr)
+			std::cerr << SDL_GetError() << '\n';
+
+		return (openSansTiny && openSansMedium && openSansMedium && openSansLarge);
 	}
 
 	void closeAll(){
