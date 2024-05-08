@@ -2,6 +2,8 @@
 #include <set>
 #include <queue>
 #include <utility>
+#include <thread>
+#include <future>
 
 #include "game.hh"
 #include "defs.hh"
@@ -9,9 +11,12 @@
 void DFSBtn::handleInputs(SDL_Event event) {
 	if (isMouseOver() && isClicked(event)){
 		std::cout << "Finding path with DFS!\n";
-
-		_path = PathFinder::dfs(_world, _search_speed, _renderer); 
+		_search_markers.clear();
+		_path.clear();
+		auto future = std::async(std::launch::async,
+				&PathFinder::dfs, std::ref(_world), _search_speed, std::ref(_search_markers)); 
 		_render_path_flag = true;
+		// _path = future.get();
 
 		if (_path.size() == 0){
 			std::cout << "No path found!\n";
@@ -78,13 +83,13 @@ Game::Game(SDL_Renderer* &renderer):
 	IScene("GAME", renderer), _world(_render_path_flag) {
 
 		std::unique_ptr<DFSBtn> btn_dfs = 
-			std::make_unique<DFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
+			std::make_unique<DFSBtn>(_world, _path, _search_markers, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_dfs));
 
 		std::unique_ptr<BFSBtn> btn_bfs = 
 			std::make_unique<BFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_bfs));
-		
+
 		// TODO: Removed while still unimplemented
 		// std::unique_ptr<AStarBtn> btn_astar = 
 		// 	std::make_unique<AStarBtn>(renderer);
@@ -105,7 +110,7 @@ Game::Game(SDL_Renderer* &renderer):
 		std::unique_ptr<ExitBtn> btn_exit = 
 			std::make_unique<ExitBtn>(renderer, _end_game);
 		addWidget(std::move(btn_exit));
-		
+
 		// vertical spinner
 		// std::unique_ptr<UI::Spinner<int>> test_spinner = 
 		// 	std::make_unique<UI::Spinner<int>>(_search_speed, 
@@ -114,13 +119,13 @@ Game::Game(SDL_Renderer* &renderer):
 		// 				renderer,
 		// 				UI::ST_VERTICAL
 		// 			);
-		
+
 		// search speed label
 		std::unique_ptr<UI::Text> search_speed_lbl =
 			std::make_unique<UI::Text>("Search Speed",
-						18, 380,
-						renderer,
-						Font::openSansSmall
+					18, 380,
+					renderer,
+					Font::openSansSmall
 					);
 
 		addWidget(std::move(search_speed_lbl));
@@ -128,24 +133,57 @@ Game::Game(SDL_Renderer* &renderer):
 		// search speed spinner
 		std::unique_ptr<UI::Spinner<int>> search_speed_spnr =
 			std::make_unique<UI::Spinner<int>>(_search_speed,
-						40, 400,
-						65, 25,
-						0, 10, 1,
-						renderer,
-						UI::ST_HORIZONTAL
+					40, 400,
+					65, 25,
+					0, 10, 1,
+					renderer,
+					UI::ST_HORIZONTAL
 					);
 		addWidget(std::move(search_speed_spnr));
 
 
 	};
 
+// 1. Render the _search_markers if the vector length is greater than 0
+// 2. Render the _path if the vector length is greater than 0
+// 3. When the _path vector is finished rendering, the _search_markers
+// should either be emptied or not rendered.
+//
+// When actions that can happen should we stop rendering the search_markers/path?
+// 		a) If a wall is spawned while a search is being ran, it could
+//			invalidate the path if the player creates a wall that was
+//			searched.
+//		b) If the player moves their position while a path is being
+//			searched for, this will also create an invalid path, since the
+//			player is no longer where they started.
+//		
+//		To get around these issues, we can simply just disable player
+//		movement and entity placement while a search is running. Then
+//		we can also add a button that stops any search and clears the
+//		_path, as well as the _search_markers.
+//
+//		c) If a path cannot be found, the _path and _search_markers should be cleared
+
 bool Game::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	drawWorld(renderer);
-
-	if (_world.getRenderPathFlag())
-		renderPath(renderer);
+	
+	// if (_world.getRenderPathFlag())
+	// 	renderPath(renderer);
+	std::cout << "Game Scene is rendering\n";
+	std::cout << "_search_markers size: " << _search_markers.size() << '\n';
+	if (_search_markers.size() > 0){
+		// render the current search state
+		SDL_Color c = Color::GREEN;
+		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
+		SDL_RenderFillRects(renderer, &_search_markers[0], _search_markers.size());
+		// for (const SDL_Rect& r : _search_markers){
+		// 	printf("(%i,%i,%i,%i), ", r.x, r.y, r.w, r.h);
+		// }
+		// printf("\n------------------------------------------\n");
+		// SDL_RenderFillRect(renderer, &rect);
+	}
 
 	renderSelectedEntityType(renderer); // render selected rect around entity button
 	renderWidgets();
@@ -267,13 +305,8 @@ bool Game::movePlayer(int dx, int dy){
 			pos.y != _world.getPlayerPos().y);
 }
 
-// gets and stores the path from player -> goal in _path.
-// helper() is a function that uses the world to find the path. It does not
-// modify world in any shape or form. helper() returns false when no path is found
-// returns false if no path is found
-bool Game::getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper){ 
-	_path = helper(_world, _path);
-	return _path.size() > 0;
+std::vector<SDL_Point> Game::getPath() const {
+	return _path;
 } 
 
 // renders _path (if one can be formed)

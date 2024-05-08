@@ -19,8 +19,8 @@ public:
 
 	void drawWorld(SDL_Renderer* &renderer);
 	
-	// gets and stores the path from player -> goal in _path.
-	bool getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
+	// returns the SDL_Point vector to reconstruct the path
+	std::vector<SDL_Point> getPath() const;
 	void renderPath(SDL_Renderer* &renderer); // renders _path (if one can be formed)
 	// move player relative to current pos, returns true if player moved
 	bool movePlayer(int dx, int dy); 
@@ -33,8 +33,9 @@ private:
 	bool _render_path_flag = false;
 	World _world;
 	std::vector<SDL_Point> _path;
+	std::vector<SDL_Rect> _search_markers;
 	EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
-	int _search_speed = 5; // the speed of the pathfinding search
+	int _search_speed = 10; // the speed of the pathfinding search
 };
 
 /* UI elements specifically defined for the game scene */
@@ -43,15 +44,18 @@ class DFSBtn : public UI::Button {
 		~DFSBtn() = default;
 		DFSBtn(World& world,
 				std::vector<SDL_Point>& path,
+				std::vector<SDL_Rect>& search_markers,
 				SDL_Renderer* &renderer,
 				bool& render_path_flag,
-				const int& search_speed):
+				const int& search_speed
+				):
 			Button("DFS",
 					5, 5,
 					130, 50,
 					renderer),
 			_world(world),
 			_path(path),
+			_search_markers(search_markers),
 			_renderer(renderer),
 			_render_path_flag(render_path_flag),
 			_search_speed(search_speed) {}
@@ -60,6 +64,7 @@ class DFSBtn : public UI::Button {
 	private:
 		World& _world;
 		std::vector<SDL_Point>& _path;
+		std::vector<SDL_Rect>& _search_markers;
 		SDL_Renderer* &_renderer;
 		bool& _render_path_flag;
 		const int& _search_speed;

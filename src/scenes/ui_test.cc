@@ -31,7 +31,7 @@ class ExitBtn : public UI::Button {
 		bool& _end_game;
 };
 
-TestUI::TestUI(SDL_Renderer* &renderer):
+Test::Test(SDL_Renderer* &renderer):
 	IScene("UI_TEST", renderer){
 
 	// vertical spinner	
@@ -62,14 +62,14 @@ TestUI::TestUI(SDL_Renderer* &renderer):
 };
 
 
-bool TestUI::render(SDL_Renderer* &renderer) {
+bool Test::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	renderWidgets();
 	return true;
 };
 
-void TestUI::handleInputs(SDL_Point& mouse_pos){
+void Test::handleInputs(SDL_Point& mouse_pos){
 	SDL_Event event;
 	while (SDL_PollEvent(&event)){
 		handleWidgetInputs(event);

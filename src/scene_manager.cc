@@ -1,6 +1,9 @@
 #include "scene_manager.hh"
 #include <algorithm>
 
+#include <thread>
+#include <future>
+
 
 SceneManager::SceneManager(SDL_Renderer* &renderer): _renderer(renderer) {};	
 
@@ -30,6 +33,7 @@ bool SceneManager::renderScenes(){
 	SDL_Point mouse_pos;
 	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 	drawClear();
+
 	for (auto itr = _scenes.begin(); itr != _scenes.end(); ++itr){
 		IScene* scene = itr->get();
 		if (!scene->render(_renderer))

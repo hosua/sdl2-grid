@@ -18,7 +18,7 @@ int main(){
 	std::unique_ptr<Game> game_scene = std::make_unique<Game>(app->getRenderer());
 	app->addScene(std::move(game_scene));
 
-	// std::unique_ptr<TestUI> ui_test_scene = std::make_unique<TestUI>(app->getRenderer());
+	// std::unique_ptr<Test> ui_test_scene = std::make_unique<Test>(app->getRenderer());
 	// app->addScene(std::move(ui_test_scene));
 
 	while (app->isRunning()){
