@@ -4,73 +4,87 @@
 #include <utility>
 
 #include "game.hh"
-#include "defs.hh"
+#include "../defs.hh"
 
-void DFSBtn::handleInputs(SDL_Event event) {
-	if (isMouseOver() && isClicked(event)){
-		std::cout << "Finding path with DFS!\n";
+void DFSBtn::handleInputs() {
+	for (const SDL_Event& event : GetFrameEvents()){
+		if (isMouseOver() && isClicked(event)){
+			std::cout << "Finding path with DFS!\n";
 
-		_path = PathFinder::dfs(_world, _search_speed, _renderer); 
-		_render_path_flag = true;
+			_path = PathFinder::dfs(_world, _search_speed, _renderer); 
+			_render_path_flag = true;
 
-		if (_path.size() == 0){
-			std::cout << "No path found!\n";
-		} else {
-			std::cout << "Path: \n";
-			for (const SDL_Point& pt : _path)
-				printf("(%i,%i) -> ", pt.x, pt.y);
-			std::cout << "\n";
+			if (_path.size() == 0){
+				std::cout << "No path found!\n";
+			} else {
+				std::cout << "Path: \n";
+				for (const SDL_Point& pt : _path)
+					printf("(%i,%i) -> ", pt.x, pt.y);
+				std::cout << "\n";
+			}
 		}
 	}
 }
 
-void BFSBtn::handleInputs(SDL_Event event) {
-	if (isMouseOver() && isClicked(event)){
-		std::cout << "Finding path with BFS!\n";
+void BFSBtn::handleInputs() {
+	for (const SDL_Event& event : GetFrameEvents()){
+		if (isMouseOver() && isClicked(event)){
+			std::cout << "Finding path with BFS!\n";
 
-		_path = PathFinder::bfs(_world, _search_speed, _renderer); 
-		_render_path_flag = true;
+			_path = PathFinder::bfs(_world, _search_speed, _renderer); 
+			_render_path_flag = true;
 
-		if (_path.size() == 0){
-			std::cout << "No path found!\n";
-		} else {
-			std::cout << "Path: \n";
-			for (const SDL_Point& pt : _path)
-				printf("(%i,%i) -> ", pt.x, pt.y);
-			std::cout << "\n";
+			if (_path.size() == 0){
+				std::cout << "No path found!\n";
+			} else {
+				std::cout << "Path: \n";
+				for (const SDL_Point& pt : _path)
+					printf("(%i,%i) -> ", pt.x, pt.y);
+				std::cout << "\n";
+			}
 		}
 	}
 }
 
-void AStarBtn::handleInputs(SDL_Event event) {
-	if (isMouseOver() && isClicked(event)){
-		std::cout << "A* not yet implemented!\n";
-		// do a* logic hurr
+void AStarBtn::handleInputs() {
+	for (const SDL_Event& event : GetFrameEvents()){
+		if (isMouseOver() && isClicked(event)){
+			std::cout << "A* not yet implemented!\n";
+			// do a* logic hurr
+		}
 	}
 }
 
-void SelectEntWallBtn::handleInputs(SDL_Event event) {
-	if (isMouseOver() && isClicked(event)){
-		_ent_type = ENT_WALL;
+void SelectEntWallBtn::handleInputs() {
+	for (const SDL_Event& event : GetFrameEvents()){
+		if (isMouseOver() && isClicked(event)){
+			_ent_type = ENT_WALL;
+		}
 	}
 }
 
-void SelectEntPlayerBtn::handleInputs(SDL_Event event) {
-	if (isMouseOver() && isClicked(event)){
-		_ent_type = ENT_PLAYER;
+void SelectEntPlayerBtn::handleInputs() {
+	for (const SDL_Event& event : GetFrameEvents()){
+		if (isMouseOver() && isClicked(event)){
+			_ent_type = ENT_PLAYER;
+		}
 	}
 }
 
-void SelectEntEndBtn::handleInputs(SDL_Event event) {
-	if (isMouseOver() && isClicked(event)){
-		_ent_type = ENT_END;
+void SelectEntEndBtn::handleInputs() {
+	for (const SDL_Event& event : GetFrameEvents()){
+		if (isMouseOver() && isClicked(event)){
+			_ent_type = ENT_END;
+		}
 	}
 }
 
-void ExitBtn::handleInputs(SDL_Event event) {
-	if (isMouseOver() && isClicked(event)){
-		std::cout << "Exiting the game.\n";
-		_end_game = true;
+void ExitBtn::handleInputs() {
+	for (const SDL_Event& event : GetFrameEvents()){
+		if (isMouseOver() && isClicked(event)){
+			std::cout << "Exiting the game.\n";
+			_end_game = true;
+		}
 	}
 }	
 
@@ -174,13 +188,12 @@ void Game::renderSelectedEntityType(SDL_Renderer* &renderer){
 	SDL_RenderDrawRect(renderer, &r);
 }
 
-void Game::handleInputs(SDL_Point& mouse_pos){
-	SDL_Point g = { (mouse_pos.x - LEFT_PANE_W) / BLOCK_W, mouse_pos.y / BLOCK_H };
-
+static uint32_t s_player_last_moved = 0;
+void Game::handleInputs(){
+	
+	const SDL_Point& mouse_pos = GetMousePos();
 	static bool lmb_down = false, rmb_down = false;
-
-	SDL_Event event;
-	while (SDL_PollEvent(&event)){
+	for (const SDL_Event& event : GetFrameEvents()){
 		switch(event.type){
 			case SDL_MOUSEBUTTONDOWN:
 				{
@@ -201,39 +214,29 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 			case SDL_KEYDOWN:
 				{
 					// if (event.key.keysym.scancode == SDL_SCANCODE_P)
-					if (event.key.keysym.scancode == SDL_SCANCODE_M)
-						fprintf(stdout, "Mouse: (%i,%i)\n", mouse_pos.x, mouse_pos.y);
+
+					if (event.key.keysym.scancode == SDL_SCANCODE_1)
+						setEntityType(ENT_WALL);
+					if (event.key.keysym.scancode == SDL_SCANCODE_2)
+						setEntityType(ENT_PLAYER);
+					if (event.key.keysym.scancode == SDL_SCANCODE_3)
+						setEntityType(ENT_END);
 					break;
 				}
 			default:
 				break;
 		}
-
-		handleWidgetInputs(event);
 	}
+	handleWidgetInputs();
 
+	SDL_Point g = { (mouse_pos.x - LEFT_PANE_W) / BLOCK_W, mouse_pos.y / BLOCK_H };
 	if (lmb_down) _world.spawnEntity(_entity_type, g.x, g.y);
 	if (rmb_down) _world.deleteWall(g.x, g.y);
 
-	SDL_PumpEvents();
+	// SDL_PumpEvents();
 	const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
-	if (kb_state[SDL_SCANCODE_ESCAPE]){
-		_end_game = true;
-		return;
-	} 
 
-	if (kb_state[SDL_SCANCODE_1])
-		setEntityType(ENT_WALL);
-
-	if (kb_state[SDL_SCANCODE_2])
-		setEntityType(ENT_PLAYER);
-
-	if (kb_state[SDL_SCANCODE_3])
-		setEntityType(ENT_END);
-
-	static uint32_t playerLastMoved = 0;
-
-	if (playerLastMoved == 0){ // add some delay between movement g_events
+	if (s_player_last_moved == 0){ // add some delay between movement events
 		bool moved = false;
 		if (kb_state[SDL_SCANCODE_UP] || kb_state[SDL_SCANCODE_W])
 			moved |= movePlayer(0, -1);
@@ -246,11 +249,11 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 
 		// if the player moved, reset the delay timer
 		if (moved){ 
-			playerLastMoved = PLAYER_MOVE_DELAY;
+			s_player_last_moved = PLAYER_MOVE_DELAY;
 			_world.setRenderPathFlag(false);
 		}
 	} else {
-		playerLastMoved--;
+		s_player_last_moved--;
 	}
 
 }

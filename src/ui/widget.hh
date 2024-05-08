@@ -8,7 +8,7 @@ namespace UI {
 			IWidget(int x, int y, SDL_Renderer* &renderer);
 			~IWidget() = default;
 			virtual void render() = 0;
-			virtual void handleInputs(SDL_Event event);
+			virtual void handleInputs();
 			
 			bool isMouseOver() const;
 			bool isMouseScrolledUp(SDL_Event event) const;

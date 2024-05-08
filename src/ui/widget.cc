@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "../defs.hh"
+
 static uint32_t s_widget_counter = 0; // for assigning unique ID to each widget
 
 namespace UI {
@@ -13,9 +15,11 @@ namespace UI {
 		_renderer(renderer),
 		_id(s_widget_counter++) {}
 
-	void IWidget::handleInputs(SDL_Event event){
-		if (isMouseOver() && isClicked(event))
-			std::cout << "Widget has no input event!\n";
+	void IWidget::handleInputs(){
+		for (const SDL_Event& event : GetFrameEvents()){
+			if (isMouseOver() && isClicked(event))
+				std::cout << "Widget has no input event!\n";
+		}
 	}
 
 	bool IWidget::isMouseOver() const {

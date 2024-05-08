@@ -21,6 +21,8 @@ class App {
 		void addScene(std::unique_ptr<IScene> scene);
 		bool renderScenes();
 
+		void mainLoop();
+
 		void handleInputs();
 		bool initSDL();
 

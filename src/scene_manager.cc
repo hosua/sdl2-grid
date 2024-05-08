@@ -34,7 +34,7 @@ bool SceneManager::renderScenes(){
 		IScene* scene = itr->get();
 		if (!scene->render(_renderer))
 			return false;
-		scene->handleInputs(mouse_pos);
+		scene->handleInputs();
 	}
 	drawPresent();
 	return true;
@@ -50,3 +50,8 @@ void SceneManager::drawPresent() const {
 	SDL_RenderPresent(_renderer);
 }
 
+void SceneManager::handleAllSceneInputs(){
+	for (std::unique_ptr<IScene>& scene : _scenes){
+		scene->handleInputs();
+	}
+}

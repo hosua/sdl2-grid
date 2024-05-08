@@ -15,7 +15,7 @@ public:
 	~Game() = default;
 
 	bool render(SDL_Renderer* &renderer) override;
-	void handleInputs(SDL_Point& mouse_pos) override;
+	void handleInputs() override;
 
 	void drawWorld(SDL_Renderer* &renderer);
 	
@@ -56,7 +56,7 @@ class DFSBtn : public UI::Button {
 			_render_path_flag(render_path_flag),
 			_search_speed(search_speed) {}
 
-		void handleInputs(SDL_Event event) override;
+		void handleInputs() override;
 	private:
 		World& _world;
 		std::vector<SDL_Point>& _path;
@@ -83,7 +83,7 @@ class BFSBtn : public UI::Button {
 			_render_path_flag(render_path_flag) ,
 			_search_speed(search_speed) {}
 
-		void handleInputs(SDL_Event event) override;
+		void handleInputs() override;
 
 	private:
 		World& _world;
@@ -100,7 +100,7 @@ class AStarBtn : public UI::Button {
 					5, 115, 
 					130, 50,
 					renderer){}
-		void handleInputs(SDL_Event event) override;
+		void handleInputs() override;
 };
 
 
@@ -114,7 +114,7 @@ class SelectEntWallBtn : public UI::Button {
 				Font::openSansSmall,
 				Color::GREY),
 		_ent_type(ent_type) {}
-		void handleInputs(SDL_Event event) override;
+		void handleInputs() override;
 	private:
 		EntType& _ent_type;
 };
@@ -129,7 +129,7 @@ class SelectEntPlayerBtn : public UI::Button {
 				Font::openSansSmall,
 				Color::BLUE),
 		_ent_type(ent_type) {}
-		void handleInputs(SDL_Event event) override;
+		void handleInputs() override;
 	private:
 		EntType& _ent_type;
 };
@@ -144,7 +144,7 @@ class SelectEntEndBtn : public UI::Button {
 				Font::openSansSmall,
 				Color::RED),
 		_ent_type(ent_type) {}
-		void handleInputs(SDL_Event event) override;
+		void handleInputs() override;
 	private:
 		EntType& _ent_type;
 };
@@ -159,7 +159,7 @@ class ExitBtn : public UI::Button {
 					Font::openSansSmall,
 					Color::RED),
 				_end_game(end_game) {}
-		void handleInputs(SDL_Event event) override;
+		void handleInputs() override;
 	private:
 		bool& _end_game;
 };

@@ -20,8 +20,9 @@ const std::string& IScene::getKey() const {
 void IScene::renderWidgets(){
 	_widget_mgr.renderWidgets();
 }
-void IScene::handleWidgetInputs(SDL_Event event){
-	_widget_mgr.handleWidgetInputs(event);
+
+void IScene::handleWidgetInputs(){
+	_widget_mgr.handleWidgetInputs();
 }
 
 

@@ -16,6 +16,8 @@ public:
 	void addScene(std::unique_ptr<IScene> scene);
 	bool removeScene(size_t index);
 	bool removeScene(const std::string& key);
+	
+	void handleAllSceneInputs();
 
 	void drawClear(const SDL_Color& color = Color::BLACK) const; // always call at the beginning of game loop iteration
 	void drawPresent() const; // always call at the end of game loop iteration

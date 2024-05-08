@@ -17,7 +17,7 @@ namespace UI {
 		bool removeWidget(uint32_t id); // true if remove successful
 
 		void renderWidgets();
-		void handleWidgetInputs(SDL_Event event);
+		void handleWidgetInputs();
 
 	private:
 		std::vector<std::unique_ptr<IWidget>> _widgets;

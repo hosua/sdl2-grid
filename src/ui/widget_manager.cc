@@ -26,9 +26,9 @@ namespace UI {
 			wg->render();
 	}
 
-	void WidgetManager::handleWidgetInputs(SDL_Event event){
+	void WidgetManager::handleWidgetInputs(){
 		for (std::unique_ptr<IWidget>& wg : _widgets)
-			wg->handleInputs(event);
+			wg->handleInputs();
 	}
 
 }

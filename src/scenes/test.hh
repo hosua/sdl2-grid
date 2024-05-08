@@ -7,13 +7,14 @@
 
 #include "ui/all.hh"
 
-class TestUI : public IScene {
+class Test : public IScene {
 public:
-	~TestUI() = default;
-	TestUI(SDL_Renderer* &renderer);
+	~Test() = default;
+	Test(SDL_Renderer* &renderer);
 
 	bool render(SDL_Renderer* &renderer) override;
-	void handleInputs(SDL_Point& mouse_pos) override;
+
+	void handleInputs() override;
 
 private:
 	bool _end_game = false;

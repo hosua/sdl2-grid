@@ -50,7 +50,7 @@ namespace UI {
 			void decVal();
 
 			void render() override;
-			void handleInputs(SDL_Event event) override;
+			void handleInputs() override;
 			
 		private:
 			Text _text;
