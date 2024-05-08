@@ -67,7 +67,6 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, SDL_Renderer* &renderer){
 	SDL_Point start = world.getPlayerPos();
 	std::vector<SDL_Point> temp_path;
 
-
 	// find the path
 	dfs_helper(start, world, temp_path, path, vis);
 

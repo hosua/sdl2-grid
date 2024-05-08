@@ -111,7 +111,6 @@ namespace UI {
 
 	template<typename T>
 	void Spinner<T>::handleInputs(SDL_Event event){
-		IWidget::handleInputs(event);
 		if (isMouseScrolledUp(event) || _inc_btn->isClicked(event))
 			incVal();
 		if (isMouseScrolledDown(event) || _dec_btn->isClicked(event))
