@@ -1,4 +1,3 @@
-#include <iostream>
 #include <map>
 #include <set>
 #include <queue>
@@ -6,184 +5,74 @@
 
 #include "game.hh"
 #include "defs.hh"
-#include "ui/all.hh"
 
-#include "pathfinders/dfs.hh"
-#include "pathfinders/bfs.hh"
+void DFSBtn::handleInputs(SDL_Event event) {
+	if (isMouseOver() && isClicked(event)){
+		std::cout << "Finding path with DFS!\n";
 
-class DFSBtn : public UI::Button {
-	public:
-		~DFSBtn() = default;
-		DFSBtn(World& world,
-				std::vector<SDL_Point>& path,
-				SDL_Renderer* &renderer,
-				bool& render_path_flag):
-			Button("DFS",
-					5, 5,
-					130, 50,
-					renderer),
-			_world(world),
-			_path(path),
-			_renderer(renderer),
-			_render_path_flag(render_path_flag){}
+		_path = PathFinder::dfs(_world, _renderer); 
+		_render_path_flag = true;
 
-		void handleInputs(SDL_Event event) override {
-			if (isMouseOver() && isClicked(event)){
-				std::cout << "Finding path with DFS!\n";
-
-				_path = PathFinder::dfs(_world, _renderer); 
-				_render_path_flag = true;
-
-				if (_path.size() == 0){
-					std::cout << "No path found!\n";
-				} else {
-					std::cout << "Path: \n";
-					for (const SDL_Point& pt : _path)
-						printf("(%i,%i) -> ", pt.x, pt.y);
-					std::cout << "\n";
-				}
-			}
+		if (_path.size() == 0){
+			std::cout << "No path found!\n";
+		} else {
+			std::cout << "Path: \n";
+			for (const SDL_Point& pt : _path)
+				printf("(%i,%i) -> ", pt.x, pt.y);
+			std::cout << "\n";
 		}
-	private:
-		World& _world;
-		std::vector<SDL_Point>& _path;
-		SDL_Renderer* &_renderer;
-		bool& _render_path_flag;
-};
+	}
+}
 
-class BFSBtn : public UI::Button {
-	public:
-		~BFSBtn() = default;
-		BFSBtn(World& world,
-				std::vector<SDL_Point>& path,
-				SDL_Renderer* &renderer,
-				bool& render_path_flag):
-			Button("BFS", 
-					5, 60, 
-					130, 50,
-					renderer),
-			_world(world),
-			_path(path),
-			_renderer(renderer),
-			_render_path_flag(render_path_flag) {}
+void BFSBtn::handleInputs(SDL_Event event) {
+	if (isMouseOver() && isClicked(event)){
+		std::cout << "Finding path with BFS!\n";
 
-		void handleInputs(SDL_Event event) override {
-			if (isMouseOver() && isClicked(event)){
-				std::cout << "Finding path with BFS!\n";
+		_path = PathFinder::bfs(_world, _renderer); 
+		_render_path_flag = true;
 
-				_path = PathFinder::bfs(_world, _renderer); 
-				_render_path_flag = true;
-
-				if (_path.size() == 0){
-					std::cout << "No path found!\n";
-				} else {
-					std::cout << "Path: \n";
-					for (const SDL_Point& pt : _path)
-						printf("(%i,%i) -> ", pt.x, pt.y);
-					std::cout << "\n";
-				}
-			}
+		if (_path.size() == 0){
+			std::cout << "No path found!\n";
+		} else {
+			std::cout << "Path: \n";
+			for (const SDL_Point& pt : _path)
+				printf("(%i,%i) -> ", pt.x, pt.y);
+			std::cout << "\n";
 		}
+	}
+}
 
-	private:
-		World& _world;
-		std::vector<SDL_Point>& _path;
-		SDL_Renderer* &_renderer;
-		bool& _render_path_flag;
-};
+void AStarBtn::handleInputs(SDL_Event event) {
+	if (isMouseOver() && isClicked(event)){
+		std::cout << "A* not yet implemented!\n";
+		// do a* logic hurr
+	}
+}
 
-class AStarBtn : public UI::Button {
-	public:
-		AStarBtn(SDL_Renderer* &renderer):
-			Button("A*", 
-					5, 115, 
-					130, 50,
-					renderer){}
-		void handleInputs(SDL_Event event) override {
-			if (isMouseOver() && isClicked(event)){
-				std::cout << "A* not yet implemented!\n";
-				// do a* logic hurr
-			}
-		}
-};
+void SelectEntWallBtn::handleInputs(SDL_Event event) {
+	if (isMouseOver() && isClicked(event)){
+		_ent_type = ENT_WALL;
+	}
+}
 
+void SelectEntPlayerBtn::handleInputs(SDL_Event event) {
+	if (isMouseOver() && isClicked(event)){
+		_ent_type = ENT_PLAYER;
+	}
+}
 
-class SelectEntWallBtn : public UI::Button {
-	public:
-		SelectEntWallBtn(SDL_Renderer* &renderer, EntType &ent_type):
-		Button("1",
-				5, 170,
-				40, 40,
-				renderer,
-				Font::openSansSmall,
-				Color::GREY),
-		_ent_type(ent_type) {}
-		void handleInputs(SDL_Event event) override {
-			if (isMouseOver() && isClicked(event)){
-				_ent_type = ENT_WALL;
-			}
-		}
-	private:
-		EntType& _ent_type;
-};
+void SelectEntEndBtn::handleInputs(SDL_Event event) {
+	if (isMouseOver() && isClicked(event)){
+		_ent_type = ENT_END;
+	}
+}
 
-class SelectEntPlayerBtn : public UI::Button {
-	public:
-		SelectEntPlayerBtn(SDL_Renderer* &renderer, EntType &ent_type):
-		Button("2",
-				50, 170,
-				40, 40,
-				renderer,
-				Font::openSansSmall,
-				Color::BLUE),
-		_ent_type(ent_type) {}
-		void handleInputs(SDL_Event event) override {
-			if (isMouseOver() && isClicked(event)){
-				_ent_type = ENT_PLAYER;
-			}
-		}
-	private:
-		EntType& _ent_type;
-};
-
-class SelectEntEndBtn : public UI::Button {
-	public:
-		SelectEntEndBtn(SDL_Renderer* &renderer, EntType &ent_type):
-		Button("3",
-				95, 170,
-				40, 40,
-				renderer,
-				Font::openSansSmall,
-				Color::RED),
-		_ent_type(ent_type) {}
-		void handleInputs(SDL_Event event) override {
-			if (isMouseOver() && isClicked(event)){
-				_ent_type = ENT_END;
-			}
-		}
-	private:
-		EntType& _ent_type;
-};
-
-class ExitBtn : public UI::Button {
-	public:
-		ExitBtn(SDL_Renderer* &renderer, bool& end_game):
-			Button("Exit",
-					5, WINDOW_H - 55,
-					130, 50,
-					renderer, 
-					Font::openSansSmall,
-					Color::RED),
-				_end_game(end_game) {}
-		void handleInputs(SDL_Event event) override {
-			if (isMouseOver() && isClicked(event)){
-				std::cout << "Exiting the game.\n";
-				_end_game = true;
-			}
-		}	
-	private:
-		bool& _end_game;
-};
+void ExitBtn::handleInputs(SDL_Event event) {
+	if (isMouseOver() && isClicked(event)){
+		std::cout << "Exiting the game.\n";
+		_end_game = true;
+	}
+}	
 
 Game::Game(SDL_Renderer* &renderer):
 	Scene("GAME", renderer), _world(_render_path_flag) {
@@ -206,11 +95,10 @@ Game::Game(SDL_Renderer* &renderer):
 			std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
 		
 		// vertical spinner
-		// std::unique_ptr<UI::Spinner> test_spinner = 
-		// 	std::unique_ptr<UI::Spinner>(new UI::Spinner(_search_speed, 
-		// 				5, 400, 
-		// 				40, 100, 
-		// 				0, 10, 
+		// std::unique_ptr<UI::Spinner<int>> test_spinner = 
+		// 	std::unique_ptr<UI::Spinner<int>>(new UI::Spinner(_search_speed, 
+		// 				5, 400,		// 				40, 100, 
+		// 				0, 10, 1
 		// 				renderer,
 		// 				UI::ST_VERTICAL)
 		// 			);
@@ -219,7 +107,7 @@ Game::Game(SDL_Renderer* &renderer):
 		std::unique_ptr<UI::Spinner<int>> test_spinner =
 			std::make_unique<UI::Spinner<int>>(_search_speed,
 						5, 400,
-						100, 25,
+						65, 25,
 						0, 10, 1,
 						renderer,
 						UI::ST_HORIZONTAL

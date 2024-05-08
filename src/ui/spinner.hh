@@ -31,6 +31,7 @@ namespace UI {
 					T min_val, T max_val, T interval,
 					SDL_Renderer* &renderer,
 					SpinnerType spinner_type,
+					float btn_scalar = .25, 
 					TTF_Font* font = Font::openSansSmall,
 					SDL_Color bg_color = Color::GREY,
 					SDL_Color btn_color = Color::DARK_GREY,
@@ -47,6 +48,7 @@ namespace UI {
 		private:
 			Text _text;
 			T _val, _min_val, _max_val, _interval;
+			float _btn_scalar; // the relative size of the buttons in the spinner, should be a value between 0.0-1.0
 			SDL_Color _bg_color, _btn_color, _btn_hover_color;
 			std::unique_ptr<Button> _inc_btn, _dec_btn;
 			SpinnerType _type; 

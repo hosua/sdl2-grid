@@ -9,6 +9,7 @@ namespace UI {
 			T min_val, T max_val, T interval,
 			SDL_Renderer* &renderer,
 			SpinnerType spinner_type,
+			float btn_scalar, 
 			TTF_Font* font,
 			SDL_Color bg_color,
 			SDL_Color btn_color,
@@ -16,38 +17,40 @@ namespace UI {
 		: IWidget(x, y, renderer), 
 		_text(std::to_string(val), 0, 0, renderer, font),
 		_val(val), _min_val(min_val), _max_val(max_val), _interval(interval),
+		_btn_scalar(btn_scalar),
 		_bg_color(bg_color), _btn_color(btn_color), _btn_hover_color(btn_hover_color),
 		_type(spinner_type) {
 			static_assert(std::is_arithmetic<T>::value, "Error: UI::Spinner template must be numeric type.");
 			_rect = { x, y, w, h };		
+			const float s = _btn_scalar; // btn size relative to spinner
 			if (_type == ST_VERTICAL){
 				// vertical configuration
 				_inc_btn = std::make_unique<Button>(
 						"+",
 						x, y,
-						w, h/3,
+						w, h * s,
 						renderer, 
 						font);
 
 				_dec_btn = std::make_unique<Button>(
 						"-",
-						x, y + 2*h/3+1,
-						w, h/3,
+						x, y + (1/s - 1)*h*s+1,
+						w, h*s,
 						renderer, 
 						font);
 			} else { 
 				// horizontal configuration
 				_inc_btn = std::make_unique<Button>(
 						"+",
-						x + 2*w/3+1, y,
-						w/3, h,
+						x + (1/s - 1)*w*s+1, y,
+						w*s, h,
 						renderer, 
 						font);
 
 				_dec_btn = std::make_unique<Button>(
 						"-",
 						x, y,
-						w/3, h,
+						w*s, h,
 						renderer, 
 						font);
 				
@@ -59,8 +62,6 @@ namespace UI {
 
 	// Note: I do not understand why, but it is necessary to specify these
 	// templates when overriding virtual methods.
-	template class UI::Spinner<short>;
-	template class UI::Spinner<unsigned short>;
 	template class UI::Spinner<int>;
 	template class UI::Spinner<unsigned int>;
 	template class UI::Spinner<long>;
@@ -80,7 +81,7 @@ namespace UI {
 
 	template<typename T>
 	void Spinner<T>::incVal(){
-		_val = std::clamp<int>(_val + _interval, _min_val, _max_val);
+		_val = std::clamp<T>(_val + _interval, _min_val, _max_val);
 		_text.setText(std::to_string(_val));
 		// re-center the text
 		SDL_Rect t_sz = _text.getSize();

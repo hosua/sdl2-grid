@@ -1,8 +1,13 @@
 #pragma once
+#include <functional>
+#include <iostream>
+
 #include "../scene.hh"
 #include "../world.hh"
+#include "ui/all.hh"
 
-#include <functional>
+#include "pathfinders/dfs.hh"
+#include "pathfinders/bfs.hh"
 
 class Game : public Scene {
 public:
@@ -30,3 +35,125 @@ private:
 	EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
 	int _search_speed = 5; // the speed of the pathfinding search
 };
+
+/* UI elements specifically defined for the game scene */
+class DFSBtn : public UI::Button {
+	public:
+		~DFSBtn() = default;
+		DFSBtn(World& world,
+				std::vector<SDL_Point>& path,
+				SDL_Renderer* &renderer,
+				bool& render_path_flag):
+			Button("DFS",
+					5, 5,
+					130, 50,
+					renderer),
+			_world(world),
+			_path(path),
+			_renderer(renderer),
+			_render_path_flag(render_path_flag){}
+
+		void handleInputs(SDL_Event event) override;
+	private:
+		World& _world;
+		std::vector<SDL_Point>& _path;
+		SDL_Renderer* &_renderer;
+		bool& _render_path_flag;
+};
+
+class BFSBtn : public UI::Button {
+	public:
+		~BFSBtn() = default;
+		BFSBtn(World& world,
+				std::vector<SDL_Point>& path,
+				SDL_Renderer* &renderer,
+				bool& render_path_flag):
+			Button("BFS", 
+					5, 60, 
+					130, 50,
+					renderer),
+			_world(world),
+			_path(path),
+			_renderer(renderer),
+			_render_path_flag(render_path_flag) {}
+
+		void handleInputs(SDL_Event event) override;
+
+	private:
+		World& _world;
+		std::vector<SDL_Point>& _path;
+		SDL_Renderer* &_renderer;
+		bool& _render_path_flag;
+};
+
+class AStarBtn : public UI::Button {
+	public:
+		AStarBtn(SDL_Renderer* &renderer):
+			Button("A*", 
+					5, 115, 
+					130, 50,
+					renderer){}
+		void handleInputs(SDL_Event event) override;
+};
+
+
+class SelectEntWallBtn : public UI::Button {
+	public:
+		SelectEntWallBtn(SDL_Renderer* &renderer, EntType &ent_type):
+		Button("1",
+				5, 170,
+				40, 40,
+				renderer,
+				Font::openSansSmall,
+				Color::GREY),
+		_ent_type(ent_type) {}
+		void handleInputs(SDL_Event event) override;
+	private:
+		EntType& _ent_type;
+};
+
+class SelectEntPlayerBtn : public UI::Button {
+	public:
+		SelectEntPlayerBtn(SDL_Renderer* &renderer, EntType &ent_type):
+		Button("2",
+				50, 170,
+				40, 40,
+				renderer,
+				Font::openSansSmall,
+				Color::BLUE),
+		_ent_type(ent_type) {}
+		void handleInputs(SDL_Event event) override;
+	private:
+		EntType& _ent_type;
+};
+
+class SelectEntEndBtn : public UI::Button {
+	public:
+		SelectEntEndBtn(SDL_Renderer* &renderer, EntType &ent_type):
+		Button("3",
+				95, 170,
+				40, 40,
+				renderer,
+				Font::openSansSmall,
+				Color::RED),
+		_ent_type(ent_type) {}
+		void handleInputs(SDL_Event event) override;
+	private:
+		EntType& _ent_type;
+};
+
+class ExitBtn : public UI::Button {
+	public:
+		ExitBtn(SDL_Renderer* &renderer, bool& end_game):
+			Button("Exit",
+					5, WINDOW_H - 55,
+					130, 50,
+					renderer, 
+					Font::openSansSmall,
+					Color::RED),
+				_end_game(end_game) {}
+		void handleInputs(SDL_Event event) override;
+	private:
+		bool& _end_game;
+};
+
