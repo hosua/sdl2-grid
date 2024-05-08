@@ -33,15 +33,15 @@
    "-Wpedantic",
    "-MD",
    "-MT",
-   "CMakeFiles/grid-game.dir/src/defs.cc.o",
+   "CMakeFiles/grid-game.dir/src/color.cc.o",
    "-MF",
-   "CMakeFiles/grid-game.dir/src/defs.cc.o.d",
+   "CMakeFiles/grid-game.dir/src/color.cc.o.d",
    "-o",
-   "CMakeFiles/grid-game.dir/src/defs.cc.o",
+   "CMakeFiles/grid-game.dir/src/color.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/defs.cc"
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/color.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/defs.cc"
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/color.cc"
  },
  {
   "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
@@ -55,15 +55,15 @@
    "-Wpedantic",
    "-MD",
    "-MT",
-   "CMakeFiles/grid-game.dir/src/entity.cc.o",
+   "CMakeFiles/grid-game.dir/src/font.cc.o",
    "-MF",
-   "CMakeFiles/grid-game.dir/src/entity.cc.o.d",
+   "CMakeFiles/grid-game.dir/src/font.cc.o.d",
    "-o",
-   "CMakeFiles/grid-game.dir/src/entity.cc.o",
+   "CMakeFiles/grid-game.dir/src/font.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/entity.cc"
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/font.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/entity.cc"
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/font.cc"
  },
  {
   "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",

@@ -1,12 +1,22 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <unordered_map>
 #include <vector>
-
-#include "entity.hh"
-#include "defs.hh"
 
 extern const int WORLD_W;
 extern const int WORLD_H;
+
+// The entity types that can be placed in the world
+typedef enum {
+	ENT_NONE,
+	ENT_END,
+	ENT_WALL,
+	ENT_PLAYER,
+} EntType;
+
+// The mapping for each entity and what color they will be rendered as
+extern std::unordered_map<EntType, SDL_Color> ENT_COLOR_MAP;
 
 class World {
 public:

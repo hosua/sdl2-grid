@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "defs.hh"
+#include "color.hh"
 #include "scene.hh"
 
 class SceneManager {

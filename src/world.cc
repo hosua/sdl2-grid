@@ -1,7 +1,16 @@
 #include "world.hh"
+#include "defs.hh"
+#include "color.hh"
 
 const int WORLD_W = WINDOW_W - LEFT_PANE_W;
 const int WORLD_H = WINDOW_H;
+
+std::unordered_map<EntType, SDL_Color> ENT_COLOR_MAP = {
+	{ ENT_NONE, Color::BLACK },
+	{ ENT_END, Color::RED },
+	{ ENT_WALL, Color::GREY },
+	{ ENT_PLAYER, Color::BLUE },
+};
 
 World::World(bool& render_path_flag): _render_path_flag(render_path_flag) {
 	_rows = WORLD_H / BLOCK_H;
@@ -17,7 +26,7 @@ World::World(bool& render_path_flag): _render_path_flag(render_path_flag) {
 }
 
 void World::draw(SDL_Renderer* renderer){
-	const SDL_Color& c = Color::LIGHT_GREY;
+	const SDL_Color& c = Color::Light::GREY;
 
 	// draw entities in grid
 	SDL_Rect rect;

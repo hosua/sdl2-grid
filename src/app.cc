@@ -1,9 +1,12 @@
-#include "app.hh"
-#include "defs.hh"
-
 #include <algorithm>
 #include <memory>
 #include <iostream>
+
+#include "app.hh"
+#include "defs.hh"
+#include "color.hh"
+#include "font.hh"
+
 
 App* App::_instance = nullptr;
 
@@ -19,7 +22,7 @@ App::~App(){
 	_surface = nullptr;
 	SDL_DestroyWindow(_window);
 	_window = nullptr;
-	Font::closeAll();
+	Font::close();
 	SDL_Quit();
 }
 

@@ -6,6 +6,8 @@
 #include <memory>
 
 #include "defs.hh"
+#include "font.hh"
+#include "color.hh"
 #include "widget.hh"
 #include "text.hh"
 #include "button.hh"
@@ -34,8 +36,8 @@ namespace UI {
 					float btn_scalar = .25, 
 					TTF_Font* font = Font::openSansSmall,
 					SDL_Color bg_color = Color::GREY,
-					SDL_Color btn_color = Color::DARK_GREY,
-					SDL_Color btn_hover_color = Color::LIGHT_GREY);
+					SDL_Color btn_color = Color::Dark::GREY,
+					SDL_Color btn_hover_color = Color::Light::GREY);
 
 			SDL_Rect getSize();
 			void setPos(int x, int y);

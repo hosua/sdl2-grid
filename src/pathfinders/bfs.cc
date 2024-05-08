@@ -1,4 +1,3 @@
-#include "bfs.hh"
 
 #include <chrono>
 #include <map>
@@ -7,6 +6,10 @@
 #include <queue>
 #include <functional>
 #include <vector>
+
+#include "bfs.hh"
+#include "defs.hh"
+#include "color.hh"
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
@@ -44,7 +47,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, SDL_Renderer* &renderer){
 
 			// animate & reconstruct the path we formed when we reach the goal
 			if (pos.x == goal.x && pos.y == goal.y){
-				SDL_Color c_finish = Color::LIGHT_GREEN;
+				SDL_Color c_finish = Color::Light::GREEN;
 				SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
 				// reconstruct
 				pair<int,int> crawl = make_pair(pos.x, pos.y);

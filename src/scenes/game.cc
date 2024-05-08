@@ -79,20 +79,32 @@ Game::Game(SDL_Renderer* &renderer):
 
 		std::unique_ptr<DFSBtn> btn_dfs = 
 			std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer, _render_path_flag));
+		addWidget(std::move(btn_dfs));
+
 		std::unique_ptr<BFSBtn> btn_bfs = 
 			std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer, _render_path_flag));
-		std::unique_ptr<AStarBtn> btn_astar = 
-			std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
+		addWidget(std::move(btn_bfs));
+		
+		// TODO: Removed while still unimplemented
+		// std::unique_ptr<AStarBtn> btn_astar = 
+		// 	std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
+		// addWidget(std::move(btn_astar));
 
 		std::unique_ptr<SelectEntPlayerBtn> btn_player = 
 			std::unique_ptr<SelectEntPlayerBtn>(new SelectEntPlayerBtn(renderer, _entity_type));
+		addWidget(std::move(btn_player));
+
 		std::unique_ptr<SelectEntWallBtn> btn_wall = 
 			std::unique_ptr<SelectEntWallBtn>(new SelectEntWallBtn(renderer, _entity_type));
+		addWidget(std::move(btn_wall));
+
 		std::unique_ptr<SelectEntEndBtn> btn_end = 
 			std::unique_ptr<SelectEntEndBtn>(new SelectEntEndBtn(renderer, _entity_type));
+		addWidget(std::move(btn_end));
 
 		std::unique_ptr<ExitBtn> btn_exit = 
 			std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
+		addWidget(std::move(btn_exit));
 		
 		// vertical spinner
 		// std::unique_ptr<UI::Spinner<int>> test_spinner = 
@@ -114,13 +126,6 @@ Game::Game(SDL_Renderer* &renderer):
 					);
 		addWidget(std::move(test_spinner));
 
-		addWidget(std::move(btn_dfs));
-		addWidget(std::move(btn_bfs));
-		addWidget(std::move(btn_astar));
-		addWidget(std::move(btn_player));
-		addWidget(std::move(btn_wall));
-		addWidget(std::move(btn_end));
-		addWidget(std::move(btn_exit));
 
 	};
 
@@ -132,9 +137,32 @@ bool Game::render(SDL_Renderer* &renderer) {
 	if (_world.getRenderPathFlag())
 		renderPath(renderer);
 
+	renderSelectedEntityType(renderer); // render selected rect around entity button
 	renderWidgets();
 	return true;
 };
+
+void Game::renderSelectedEntityType(SDL_Renderer* &renderer){
+	SDL_Rect r;
+	switch (_entity_type){
+		case ENT_WALL: // 1st
+			r = { 4, 169, 42, 42 };
+			break;
+		case ENT_PLAYER: // second
+			r = { 49, 169, 42, 42 };
+			break;
+		case ENT_END: // third
+			r = { 94, 169, 42, 42 };
+			break;
+		case ENT_NONE:
+			r = { 0, 0, 0, 0 };
+			std::cerr << "Warning: ENT_NONE is selected as the entity type, but this should not be possible.\n";
+			break;
+	}
+	SDL_Color c = Color::Light::GREEN;
+	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+	SDL_RenderDrawRect(renderer, &r);
+}
 
 void Game::handleInputs(SDL_Point& mouse_pos){
 	SDL_Point g = { (mouse_pos.x - LEFT_PANE_W) / BLOCK_W, mouse_pos.y / BLOCK_H };
@@ -243,7 +271,7 @@ bool Game::getPath(std::function<std::vector<SDL_Point>(World& world, std::vecto
 
 // renders _path (if one can be formed)
 void Game::renderPath(SDL_Renderer* &renderer){
-	SDL_Color c = Color::LIGHT_BLUE;
+	SDL_Color c = Color::Light::BLUE;
 	// render transparent square
 	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 	for (const SDL_Point pt : _path){

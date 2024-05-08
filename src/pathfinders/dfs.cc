@@ -1,9 +1,13 @@
-#include "dfs.hh"
-
+#include <functional>
 #include <set>
 #include <utility>
-#include <functional>
 #include <vector>
+
+#include "dfs.hh"
+
+#include "defs.hh"
+#include "color.hh"
+
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
@@ -68,7 +72,7 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, SDL_Renderer* &renderer){
 	dfs_helper(start, world, temp_path, path, vis);
 
 	// animate the path we formed
-	SDL_Color c_finish = Color::LIGHT_GREEN;
+	SDL_Color c_finish = Color::Light::GREEN;
 	SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
 	for (auto itr = path.rbegin(); itr != path.rend(); ++itr){
 		const SDL_Point pt = *itr;

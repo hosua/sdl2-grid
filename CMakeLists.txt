@@ -11,8 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Define source files
 set(SOURCES
 	src/app.cc
-	src/defs.cc
-	src/entity.cc
+	src/color.cc
+	src/font.cc
     src/main.cc
 	src/world.cc
 	src/scene.cc

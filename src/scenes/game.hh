@@ -25,7 +25,8 @@ public:
 	// move player relative to current pos, returns true if player moved
 	bool movePlayer(int dx, int dy); 
 
-	void setEntityType(EntType entity_type);
+	void setEntityType(EntType entity_type); // sets the entity type that the player will emplace when clicking on the world
+	void renderSelectedEntityType(SDL_Renderer* &renderer); // renders a rect behind the button of which entity type is currently selected
 
 private:
 	bool _end_game = false;
@@ -100,7 +101,7 @@ class AStarBtn : public UI::Button {
 class SelectEntWallBtn : public UI::Button {
 	public:
 		SelectEntWallBtn(SDL_Renderer* &renderer, EntType &ent_type):
-		Button("1",
+		Button("",
 				5, 170,
 				40, 40,
 				renderer,
@@ -115,7 +116,7 @@ class SelectEntWallBtn : public UI::Button {
 class SelectEntPlayerBtn : public UI::Button {
 	public:
 		SelectEntPlayerBtn(SDL_Renderer* &renderer, EntType &ent_type):
-		Button("2",
+		Button("",
 				50, 170,
 				40, 40,
 				renderer,
@@ -130,7 +131,7 @@ class SelectEntPlayerBtn : public UI::Button {
 class SelectEntEndBtn : public UI::Button {
 	public:
 		SelectEntEndBtn(SDL_Renderer* &renderer, EntType &ent_type):
-		Button("3",
+		Button("",
 				95, 170,
 				40, 40,
 				renderer,

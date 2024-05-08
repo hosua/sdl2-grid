@@ -5,7 +5,8 @@
 
 #include <string>
 
-#include "defs.hh"
+#include "font.hh"
+#include "color.hh"
 #include "widget.hh"
 #include "text.hh"
 
@@ -17,8 +18,8 @@ class Button : public IWidget {
 					int w, int h,
 					SDL_Renderer* &renderer,
 					TTF_Font* font = Font::openSansMedium,
-					SDL_Color bg_color = Color::DARK_GREY,
-					SDL_Color hover_color = Color::LIGHT_GREY
+					SDL_Color bg_color = Color::Dark::GREY,
+					SDL_Color hover_color = Color::Light::GREY
 				  );
 
 			~Button() = default;
