@@ -5,7 +5,7 @@ Scene::Scene(const std::string& key, SDL_Renderer* &renderer):
 	_key(key), 
 	_renderer(renderer) {};
 
-bool Scene::addWidget(std::unique_ptr<UI::Widget> widget){
+bool Scene::addWidget(std::unique_ptr<UI::IWidget> widget){
 	return _widget_mgr.addWidget(std::move(widget));
 }
 

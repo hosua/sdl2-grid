@@ -10,7 +10,6 @@
 #include <queue>
 #include <utility>
 
-
 class DFSBtn : public UI::Button {
 	public:
 		~DFSBtn() = default;
@@ -101,7 +100,7 @@ class AStarBtn : public UI::Button {
 					renderer){}
 		void handleInputs(SDL_Event event) override {
 			if (isMouseOver() && isClicked(event)){
-				std::cout << "Finding path with A* search!\n";
+				std::cout << "A* not yet implemented!\n";
 				// do a* logic hurr
 			}
 		}
@@ -185,8 +184,6 @@ class ExitBtn : public UI::Button {
 		bool& _end_game;
 };
 
-int test_val = 0;
-
 Game::Game(SDL_Renderer* &renderer):
 	Scene("GAME", renderer), _world(_render_path_flag) {
 
@@ -207,8 +204,24 @@ Game::Game(SDL_Renderer* &renderer):
 		std::unique_ptr<ExitBtn> btn_exit = 
 			std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
 		
-		std::unique_ptr<UI::Spinner> test_spinner = 
-			std::unique_ptr<UI::Spinner>(new UI::Spinner(test_val, 5, 400, 130, 150, renderer, 0, 10));
+		// vertical spinner
+		// std::unique_ptr<UI::Spinner> test_spinner = 
+		// 	std::unique_ptr<UI::Spinner>(new UI::Spinner(_search_speed, 
+		// 				5, 400, 
+		// 				40, 100, 
+		// 				0, 10, 
+		// 				renderer)
+		// 			);
+		
+		//	horizontal spinner
+		std::unique_ptr<UI::Spinner> test_spinner =
+			std::unique_ptr<UI::Spinner>(new UI::Spinner(_search_speed,
+						5, 400,
+						100, 25,
+						0, 10,
+						renderer,
+						UI::ST_HORIZONTAL)
+					);
 
 		addWidget(std::move(btn_dfs));
 		addWidget(std::move(btn_bfs));
@@ -341,12 +354,12 @@ bool Game::getPath(std::function<std::vector<SDL_Point>(World& world, std::vecto
 // renders _path (if one can be formed)
 void Game::renderPath(SDL_Renderer* &renderer){
 	SDL_Color c = Color::LIGHT_BLUE;
+	// render transparent square
 	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 	for (const SDL_Point pt : _path){
 		SDL_Rect rect = {
 			LEFT_PANE_W + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H
 		};
-		// render transparent square
 		SDL_RenderFillRect(renderer, &rect);
 	}
 }

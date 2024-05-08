@@ -28,4 +28,5 @@ private:
 	World _world;
 	std::vector<SDL_Point> _path;
 	EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
+	int _search_speed = 5; // the speed of the pathfinding search
 };

@@ -17,7 +17,7 @@ public:
 	virtual bool render(SDL_Renderer* &renderer) = 0;
 	virtual void handleInputs(SDL_Point& mouse_pos) = 0;
 	
-	bool addWidget(std::unique_ptr<UI::Widget> widget); 
+	bool addWidget(std::unique_ptr<UI::IWidget> widget); 
 	bool removeWidget(uint32_t id);
 	
 	void renderWidgets();

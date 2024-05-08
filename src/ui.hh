@@ -7,17 +7,20 @@
 #include <vector>
 #include "defs.hh"
 
+
 namespace UI {
-	class Widget { // UI element base class
+	class IWidget { // Interface for all UI objects
 		public:
-			Widget(int x, int y, SDL_Renderer* &renderer);
-			~Widget() = default;
+			IWidget(int x, int y, SDL_Renderer* &renderer);
+			~IWidget() = default;
 			virtual void render() = 0;
 			virtual void handleInputs(SDL_Event event);
 			
-			bool isMouseOver();
-			bool isClicked(SDL_Event event);
-			uint32_t getID();
+			bool isMouseOver() const;
+			bool isMouseScrolledUp(SDL_Event event) const;
+			bool isMouseScrolledDown(SDL_Event event) const;
+			bool isClicked(SDL_Event event) const;
+			uint32_t getID() const;
 
 		protected:
 			SDL_Rect _rect; // destination rect
@@ -30,18 +33,18 @@ namespace UI {
 		~WidgetManager() = default;
 		WidgetManager();
 		
-		bool addWidget(std::unique_ptr<Widget> widget); // true if add sucessful
+		bool addWidget(std::unique_ptr<IWidget> widget); // true if add sucessful
 		bool removeWidget(uint32_t id); // true if remove successful
 
 		void renderWidgets();
 		void handleWidgetInputs(SDL_Event event);
 
 	private:
-		std::vector<std::unique_ptr<Widget>> _widgets;
+		std::vector<std::unique_ptr<IWidget>> _widgets;
 		int _widget_count = 0;
 	};
 
-	class Text : Widget {
+	class Text : IWidget {
 		public:
 			~Text();
 			Text(const std::string& text, 
@@ -62,7 +65,7 @@ namespace UI {
 			SDL_Renderer* &_renderer;
 	};
 
-	class Button : public Widget {
+	class Button : public IWidget {
 		public:
 			Button(const std::string& text, 
 					int x, int y, 
@@ -75,7 +78,7 @@ namespace UI {
 
 			~Button() = default;
 			
-			// override handleInputs from Widget class for input events
+			// override handleInputs from IWidget class for input events
 			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;
 			void render() override;
 		private:
@@ -83,17 +86,23 @@ namespace UI {
 			SDL_Color _bg_color, _hover_color;
 	};
 
+	typedef enum {
+		ST_VERTICAL,
+		ST_HORIZONTAL,
+	} SpinnerType;
+
 	// TODO: Maybe make this a template to be usable with floats & doubles later
 	// TODO: Make spinner colors customizable
-	class Spinner : public Widget {
+	class Spinner : public IWidget {
 		public:
 			~Spinner() = default;
 			Spinner(int& val,
 					int x, int y,
 					int w, int h,
+					int min_val, int max_val,
 					SDL_Renderer* &renderer,
-					int min_val = 0, int max_val = 10,
-					TTF_Font* font = Font::openSansMedium,
+					SpinnerType spinner_type,
+					TTF_Font* font = Font::openSansSmall,
 					SDL_Color bg_color = Color::GREY,
 					SDL_Color hover_color = Color::LIGHT_GREY);
 
@@ -110,5 +119,6 @@ namespace UI {
 			int _val, _min_val, _max_val;
 			SDL_Color _bg_color, _hover_color;
 			std::unique_ptr<Button> _inc_btn, _dec_btn;
+			SpinnerType _type; 
 	};
 }
