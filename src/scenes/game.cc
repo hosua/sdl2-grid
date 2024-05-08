@@ -4,6 +4,7 @@
 #include "pathfinders/dfs.hh"
 #include "pathfinders/bfs.hh"
 
+#include <ios>
 #include <iostream>
 #include <map>
 #include <set>
@@ -210,18 +211,20 @@ Game::Game(SDL_Renderer* &renderer):
 		// 				5, 400, 
 		// 				40, 100, 
 		// 				0, 10, 
-		// 				renderer)
+		// 				renderer,
+		// 				UI::ST_VERTICAL)
 		// 			);
 		
 		//	horizontal spinner
-		std::unique_ptr<UI::Spinner> test_spinner =
-			std::unique_ptr<UI::Spinner>(new UI::Spinner(_search_speed,
+		std::unique_ptr<UI::Spinner<int>> test_spinner =
+			std::make_unique<UI::Spinner<int>>(_search_speed,
 						5, 400,
 						100, 25,
-						0, 10,
+						0, 10, 1,
 						renderer,
-						UI::ST_HORIZONTAL)
+						UI::ST_HORIZONTAL
 					);
+		addWidget(std::move(test_spinner));
 
 		addWidget(std::move(btn_dfs));
 		addWidget(std::move(btn_bfs));
@@ -231,7 +234,6 @@ Game::Game(SDL_Renderer* &renderer):
 		addWidget(std::move(btn_end));
 		addWidget(std::move(btn_exit));
 
-		addWidget(std::move(test_spinner));
 	};
 
 bool Game::render(SDL_Renderer* &renderer) {

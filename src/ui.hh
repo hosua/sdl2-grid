@@ -90,21 +90,25 @@ namespace UI {
 		ST_VERTICAL,
 		ST_HORIZONTAL,
 	} SpinnerType;
-
-	// TODO: Maybe make this a template to be usable with floats & doubles later
-	// TODO: Make spinner colors customizable
+	
+	// TODO: I really want to be able to support all arithmetic types (uint8_t,
+	// short, long, etc). However, I can't get the implementation to work. For
+	// now, casting any of these types should work fine but look into this
+	// again later.
+	template<typename T>
 	class Spinner : public IWidget {
 		public:
 			~Spinner() = default;
-			Spinner(int& val,
+			Spinner(T& val,
 					int x, int y,
 					int w, int h,
-					int min_val, int max_val,
+					T min_val, T max_val, T interval,
 					SDL_Renderer* &renderer,
 					SpinnerType spinner_type,
 					TTF_Font* font = Font::openSansSmall,
 					SDL_Color bg_color = Color::GREY,
-					SDL_Color hover_color = Color::LIGHT_GREY);
+					SDL_Color btn_color = Color::DARK_GREY,
+					SDL_Color btn_hover_color = Color::LIGHT_GREY);
 
 			SDL_Rect getSize();
 			void setPos(int x, int y);
@@ -112,12 +116,12 @@ namespace UI {
 			void decVal();
 
 			void render() override;
-			virtual void handleInputs(SDL_Event event) override;
+			void handleInputs(SDL_Event event) override;
 			
 		private:
 			Text _text;
-			int _val, _min_val, _max_val;
-			SDL_Color _bg_color, _hover_color;
+			T _val, _min_val, _max_val, _interval;
+			SDL_Color _bg_color, _btn_color, _btn_hover_color;
 			std::unique_ptr<Button> _inc_btn, _dec_btn;
 			SpinnerType _type; 
 	};
