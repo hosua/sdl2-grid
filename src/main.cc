@@ -4,9 +4,6 @@
 #include <memory>
 
 #include "app.hh"
-#include "defs.hh"
-#include "ui.hh"
-
 #include "scenes/game.hh"
 
 int main(){

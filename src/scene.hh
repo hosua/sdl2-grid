@@ -5,7 +5,8 @@
 #include <vector>
 #include <string>
 
-#include "ui.hh"
+#include "ui/widget_manager.hh"
+#include "ui/widget.hh"
 
 class Scene {
 public:

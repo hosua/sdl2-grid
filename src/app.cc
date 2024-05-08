@@ -1,6 +1,5 @@
 #include "app.hh"
 #include "defs.hh"
-#include "ui.hh"
 
 #include <algorithm>
 #include <memory>

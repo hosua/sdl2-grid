@@ -99,28 +99,6 @@
    "-Wpedantic",
    "-MD",
    "-MT",
-   "CMakeFiles/grid-game.dir/src/ui.cc.o",
-   "-MF",
-   "CMakeFiles/grid-game.dir/src/ui.cc.o.d",
-   "-o",
-   "CMakeFiles/grid-game.dir/src/ui.cc.o",
-   "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui.cc"
-  ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui.cc"
- },
- {
-  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
-  "arguments": [
-   "/usr/bin/c++",
-   "-I/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src",
-   "-g",
-   "-std=gnu++17",
-   "-Wall",
-   "-Wextra",
-   "-Wpedantic",
-   "-MD",
-   "-MT",
    "CMakeFiles/grid-game.dir/src/world.cc.o",
    "-MF",
    "CMakeFiles/grid-game.dir/src/world.cc.o.d",
@@ -240,5 +218,115 @@
    "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/pathfinders/bfs.cc"
   ],
   "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/pathfinders/bfs.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/ui/widget_manager.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/ui/widget_manager.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/ui/widget_manager.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/widget_manager.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/widget_manager.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/ui/widget.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/ui/widget.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/ui/widget.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/widget.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/widget.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/ui/text.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/ui/text.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/ui/text.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/text.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/text.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/ui/button.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/ui/button.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/ui/button.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/button.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/button.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
+   "CMakeFiles/grid-game.dir/src/ui/spinner.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/ui/spinner.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/ui/spinner.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/spinner.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/ui/spinner.cc"
  }
 ]

@@ -1,15 +1,15 @@
-#include "game.hh"
-#include "defs.hh"
-#include "ui.hh"
-#include "pathfinders/dfs.hh"
-#include "pathfinders/bfs.hh"
-
-#include <ios>
 #include <iostream>
 #include <map>
 #include <set>
 #include <queue>
 #include <utility>
+
+#include "game.hh"
+#include "defs.hh"
+#include "ui/all.hh"
+
+#include "pathfinders/dfs.hh"
+#include "pathfinders/bfs.hh"
 
 class DFSBtn : public UI::Button {
 	public:
