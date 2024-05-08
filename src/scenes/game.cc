@@ -75,7 +75,7 @@ void ExitBtn::handleInputs(SDL_Event event) {
 }	
 
 Game::Game(SDL_Renderer* &renderer):
-	Scene("GAME", renderer), _world(_render_path_flag) {
+	IScene("GAME", renderer), _world(_render_path_flag) {
 
 		std::unique_ptr<DFSBtn> btn_dfs = 
 			std::make_unique<DFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);

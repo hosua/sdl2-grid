@@ -13,7 +13,7 @@ public:
 	SceneManager(SDL_Renderer* &renderer);	
 	~SceneManager() = default;
 	
-	void addScene(std::unique_ptr<Scene> scene);
+	void addScene(std::unique_ptr<IScene> scene);
 	bool removeScene(size_t index);
 	bool removeScene(const std::string& key);
 
@@ -24,7 +24,7 @@ public:
 	bool renderScenes();
 
 private:
-	std::vector<std::unique_ptr<Scene>> _scenes;
+	std::vector<std::unique_ptr<IScene>> _scenes;
 	SDL_Renderer* &_renderer;
 };
 

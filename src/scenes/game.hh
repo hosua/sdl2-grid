@@ -9,7 +9,7 @@
 #include "pathfinders/dfs.hh"
 #include "pathfinders/bfs.hh"
 
-class Game : public Scene {
+class Game : public IScene {
 public:
 	Game(SDL_Renderer* &renderer);
 	~Game() = default;

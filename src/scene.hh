@@ -8,10 +8,10 @@
 #include "ui/widget_manager.hh"
 #include "ui/widget.hh"
 
-class Scene {
+class IScene {
 public:
-	Scene(const std::string& key, SDL_Renderer* &renderer);
-	~Scene() = default;
+	IScene(const std::string& key, SDL_Renderer* &renderer);
+	~IScene() = default;
 
 	const std::string& getKey() const; 
 	// render returns false if the game should shutdown

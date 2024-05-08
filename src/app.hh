@@ -18,7 +18,7 @@ class App {
 			return _instance;
 		}
 
-		void addScene(std::unique_ptr<Scene> scene);
+		void addScene(std::unique_ptr<IScene> scene);
 		bool renderScenes();
 
 		void handleInputs();

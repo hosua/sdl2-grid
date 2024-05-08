@@ -4,7 +4,7 @@
 
 SceneManager::SceneManager(SDL_Renderer* &renderer): _renderer(renderer) {};	
 
-void SceneManager::addScene(std::unique_ptr<Scene> scene){
+void SceneManager::addScene(std::unique_ptr<IScene> scene){
 	_scenes.push_back(std::move(scene));
 };
 
@@ -17,7 +17,7 @@ bool SceneManager::removeScene(size_t index){
 
 bool SceneManager::removeScene(const std::string& key){
 	auto itr = std::remove_if(_scenes.begin(), _scenes.end(), 
-			[&](const std::unique_ptr<Scene>& scene){
+			[&](const std::unique_ptr<IScene>& scene){
 				return key == scene->getKey();
 			});
 	if (itr == _scenes.end())
@@ -31,7 +31,7 @@ bool SceneManager::renderScenes(){
 	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 	drawClear();
 	for (auto itr = _scenes.begin(); itr != _scenes.end(); ++itr){
-		Scene* scene = itr->get();
+		IScene* scene = itr->get();
 		if (!scene->render(_renderer))
 			return false;
 		scene->handleInputs(mouse_pos);

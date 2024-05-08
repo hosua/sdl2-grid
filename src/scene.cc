@@ -1,26 +1,26 @@
 #include "scene.hh"
 #include <algorithm>
 
-Scene::Scene(const std::string& key, SDL_Renderer* &renderer): 
+IScene::IScene(const std::string& key, SDL_Renderer* &renderer): 
 	_key(key), 
 	_renderer(renderer) {};
 
-bool Scene::addWidget(std::unique_ptr<UI::IWidget> widget){
+bool IScene::addWidget(std::unique_ptr<UI::IWidget> widget){
 	return _widget_mgr.addWidget(std::move(widget));
 }
 
-bool Scene::removeWidget(uint32_t id){
+bool IScene::removeWidget(uint32_t id){
 	return _widget_mgr.removeWidget(id);
 }
 
-const std::string& Scene::getKey() const { 
+const std::string& IScene::getKey() const { 
 	return _key;
 }
 
-void Scene::renderWidgets(){
+void IScene::renderWidgets(){
 	_widget_mgr.renderWidgets();
 }
-void Scene::handleWidgetInputs(SDL_Event event){
+void IScene::handleWidgetInputs(SDL_Event event){
 	_widget_mgr.handleWidgetInputs(event);
 }
 
