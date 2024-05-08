@@ -10,7 +10,7 @@ void DFSBtn::handleInputs(SDL_Event event) {
 	if (isMouseOver() && isClicked(event)){
 		std::cout << "Finding path with DFS!\n";
 
-		_path = PathFinder::dfs(_world, _renderer); 
+		_path = PathFinder::dfs(_world, _search_speed, _renderer); 
 		_render_path_flag = true;
 
 		if (_path.size() == 0){
@@ -28,7 +28,7 @@ void BFSBtn::handleInputs(SDL_Event event) {
 	if (isMouseOver() && isClicked(event)){
 		std::cout << "Finding path with BFS!\n";
 
-		_path = PathFinder::bfs(_world, _renderer); 
+		_path = PathFinder::bfs(_world, _search_speed, _renderer); 
 		_render_path_flag = true;
 
 		if (_path.size() == 0){
@@ -78,53 +78,63 @@ Game::Game(SDL_Renderer* &renderer):
 	Scene("GAME", renderer), _world(_render_path_flag) {
 
 		std::unique_ptr<DFSBtn> btn_dfs = 
-			std::unique_ptr<DFSBtn>(new DFSBtn(_world, _path, renderer, _render_path_flag));
+			std::make_unique<DFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_dfs));
 
 		std::unique_ptr<BFSBtn> btn_bfs = 
-			std::unique_ptr<BFSBtn>(new BFSBtn(_world, _path, renderer, _render_path_flag));
+			std::make_unique<BFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_bfs));
 		
 		// TODO: Removed while still unimplemented
 		// std::unique_ptr<AStarBtn> btn_astar = 
-		// 	std::unique_ptr<AStarBtn>(new AStarBtn(renderer));
+		// 	std::make_unique<AStarBtn>(renderer);
 		// addWidget(std::move(btn_astar));
 
 		std::unique_ptr<SelectEntPlayerBtn> btn_player = 
-			std::unique_ptr<SelectEntPlayerBtn>(new SelectEntPlayerBtn(renderer, _entity_type));
+			std::make_unique<SelectEntPlayerBtn>(renderer, _entity_type);
 		addWidget(std::move(btn_player));
 
 		std::unique_ptr<SelectEntWallBtn> btn_wall = 
-			std::unique_ptr<SelectEntWallBtn>(new SelectEntWallBtn(renderer, _entity_type));
+			std::make_unique<SelectEntWallBtn>(renderer, _entity_type);
 		addWidget(std::move(btn_wall));
 
 		std::unique_ptr<SelectEntEndBtn> btn_end = 
-			std::unique_ptr<SelectEntEndBtn>(new SelectEntEndBtn(renderer, _entity_type));
+			std::make_unique<SelectEntEndBtn>(renderer, _entity_type);
 		addWidget(std::move(btn_end));
 
 		std::unique_ptr<ExitBtn> btn_exit = 
-			std::unique_ptr<ExitBtn>(new ExitBtn(renderer, _end_game));
+			std::make_unique<ExitBtn>(renderer, _end_game);
 		addWidget(std::move(btn_exit));
 		
 		// vertical spinner
 		// std::unique_ptr<UI::Spinner<int>> test_spinner = 
-		// 	std::unique_ptr<UI::Spinner<int>>(new UI::Spinner(_search_speed, 
+		// 	std::make_unique<UI::Spinner<int>>(_search_speed, 
 		// 				5, 400,		// 				40, 100, 
 		// 				0, 10, 1
 		// 				renderer,
-		// 				UI::ST_VERTICAL)
+		// 				UI::ST_VERTICAL
 		// 			);
 		
-		//	horizontal spinner
-		std::unique_ptr<UI::Spinner<int>> test_spinner =
+		// search speed label
+		std::unique_ptr<UI::Text> search_speed_lbl =
+			std::make_unique<UI::Text>("Search Speed",
+						18, 380,
+						renderer,
+						Font::openSansSmall
+					);
+
+		addWidget(std::move(search_speed_lbl));
+
+		// search speed spinner
+		std::unique_ptr<UI::Spinner<int>> search_speed_spnr =
 			std::make_unique<UI::Spinner<int>>(_search_speed,
-						5, 400,
+						40, 400,
 						65, 25,
 						0, 10, 1,
 						renderer,
 						UI::ST_HORIZONTAL
 					);
-		addWidget(std::move(test_spinner));
+		addWidget(std::move(search_speed_spnr));
 
 
 	};
@@ -212,17 +222,14 @@ void Game::handleInputs(SDL_Point& mouse_pos){
 		return;
 	} 
 
-	if (kb_state[SDL_SCANCODE_1]){
+	if (kb_state[SDL_SCANCODE_1])
 		setEntityType(ENT_WALL);
-	}
 
-	if (kb_state[SDL_SCANCODE_2]){
+	if (kb_state[SDL_SCANCODE_2])
 		setEntityType(ENT_PLAYER);
-	}
 
-	if (kb_state[SDL_SCANCODE_3]){
+	if (kb_state[SDL_SCANCODE_3])
 		setEntityType(ENT_END);
-	}
 
 	static uint32_t playerLastMoved = 0;
 

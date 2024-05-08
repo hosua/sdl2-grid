@@ -49,7 +49,7 @@ namespace UI {
 			
 		private:
 			Text _text;
-			T _val, _min_val, _max_val, _interval;
+			T& _val, _min_val, _max_val, _interval;
 			float _btn_scalar; // the relative size of the buttons in the spinner, should be a value between 0.0-1.0
 			SDL_Color _bg_color, _btn_color, _btn_hover_color;
 			std::unique_ptr<Button> _inc_btn, _dec_btn;

@@ -187,6 +187,28 @@
    "-Wpedantic",
    "-MD",
    "-MT",
+   "CMakeFiles/grid-game.dir/src/pathfinders/defs.cc.o",
+   "-MF",
+   "CMakeFiles/grid-game.dir/src/pathfinders/defs.cc.o.d",
+   "-o",
+   "CMakeFiles/grid-game.dir/src/pathfinders/defs.cc.o",
+   "-c",
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/pathfinders/defs.cc"
+  ],
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/pathfinders/defs.cc"
+ },
+ {
+  "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",
+  "arguments": [
+   "/usr/bin/c++",
+   "-I/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src",
+   "-g",
+   "-std=gnu++17",
+   "-Wall",
+   "-Wextra",
+   "-Wpedantic",
+   "-MD",
+   "-MT",
    "CMakeFiles/grid-game.dir/src/pathfinders/dfs.cc.o",
    "-MF",
    "CMakeFiles/grid-game.dir/src/pathfinders/dfs.cc.o.d",

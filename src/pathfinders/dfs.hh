@@ -4,7 +4,6 @@
 #include "../world.hh"
 
 namespace PathFinder {
-
-	std::vector<SDL_Point> dfs(World& world, SDL_Renderer* &renderer);
+	std::vector<SDL_Point> dfs(World& world, const int& search_speed, SDL_Renderer* &renderer);
 
 }

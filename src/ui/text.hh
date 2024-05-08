@@ -8,7 +8,7 @@
 #include <string>
 
 namespace UI {
-	class Text : IWidget {
+	class Text : public IWidget {
 		public:
 			~Text();
 			Text(const std::string& text, 

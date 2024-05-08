@@ -8,21 +8,24 @@
 #include <vector>
 
 #include "bfs.hh"
-#include "defs.hh"
+#include "../defs.hh"
+#include "pathfinders/defs.hh"
 #include "color.hh"
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> PathFinder::bfs(World& world, SDL_Renderer* &renderer){
+std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SDL_Renderer* &renderer){
 	using std::vector, std::function,
 		  std::map, std::pair, std::make_pair;
-
 	vector<SDL_Point> path;
 	std::set<pair<int,int>> vis;
 	map<pair<int,int>, SDL_Point> parent;
 
 	function<void(SDL_Point, World&, vector<SDL_Point>, vector<SDL_Point>&,
 			std::set<pair<int,int>>&)> bfs_helper;
+	
+	// TODO: Would be wise to ensure the search_speed is a valid value but I'm too lazy rn
+	const int search_delay = SEARCH_SPEED_MAP[search_speed];
 
 	SDL_Point start = world.getPlayerPos();
 	SDL_Point goal = world.getEndPos();
@@ -60,7 +63,9 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, SDL_Renderer* &renderer){
 					crawl.first = p.x, crawl.second = p.y;
 					rect = { LEFT_PANE_W + p.x * BLOCK_W, p.y * BLOCK_H, BLOCK_W, BLOCK_H };
 					SDL_RenderFillRect(renderer, &rect);
-					SDL_Delay(7); // add some delay to the animation
+
+					// add some delay to the path reconstructing animation
+					SDL_Delay(7); 
 					SDL_RenderPresent(renderer);
 				}
 
@@ -73,11 +78,8 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, SDL_Renderer* &renderer){
 
 			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 			SDL_RenderFillRect(renderer, &rect);
-			// half ms accurate delay
-			// auto start_time = std::chrono::steady_clock::now();
-			// while ((std::chrono::steady_clock::now() - start_time) < std::chrono::nanoseconds((int)1e5)) 
-			// 	continue;
-			SDL_Delay(7); // add some delay to the animation
+			// add some delay to the path search animation
+			delayHighRes(search_delay);
 			SDL_RenderPresent(renderer);
 
 			for (const SDL_Point& moves : s_moves){

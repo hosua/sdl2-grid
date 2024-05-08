@@ -44,7 +44,8 @@ class DFSBtn : public UI::Button {
 		DFSBtn(World& world,
 				std::vector<SDL_Point>& path,
 				SDL_Renderer* &renderer,
-				bool& render_path_flag):
+				bool& render_path_flag,
+				const int& search_speed):
 			Button("DFS",
 					5, 5,
 					130, 50,
@@ -52,7 +53,8 @@ class DFSBtn : public UI::Button {
 			_world(world),
 			_path(path),
 			_renderer(renderer),
-			_render_path_flag(render_path_flag){}
+			_render_path_flag(render_path_flag),
+			_search_speed(search_speed) {}
 
 		void handleInputs(SDL_Event event) override;
 	private:
@@ -60,6 +62,7 @@ class DFSBtn : public UI::Button {
 		std::vector<SDL_Point>& _path;
 		SDL_Renderer* &_renderer;
 		bool& _render_path_flag;
+		const int& _search_speed;
 };
 
 class BFSBtn : public UI::Button {
@@ -68,7 +71,8 @@ class BFSBtn : public UI::Button {
 		BFSBtn(World& world,
 				std::vector<SDL_Point>& path,
 				SDL_Renderer* &renderer,
-				bool& render_path_flag):
+				bool& render_path_flag,
+				const int& search_speed):
 			Button("BFS", 
 					5, 60, 
 					130, 50,
@@ -76,7 +80,8 @@ class BFSBtn : public UI::Button {
 			_world(world),
 			_path(path),
 			_renderer(renderer),
-			_render_path_flag(render_path_flag) {}
+			_render_path_flag(render_path_flag) ,
+			_search_speed(search_speed) {}
 
 		void handleInputs(SDL_Event event) override;
 
@@ -85,6 +90,7 @@ class BFSBtn : public UI::Button {
 		std::vector<SDL_Point>& _path;
 		SDL_Renderer* &_renderer;
 		bool& _render_path_flag;
+		const int& _search_speed;
 };
 
 class AStarBtn : public UI::Button {

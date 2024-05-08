@@ -42,6 +42,7 @@ class App {
 
 		bool _running = false;
 		SDL_Point _mouse_pos;
+		// TODO: Make these shared_ptr. It would have made more sense but I'm kind of an idiot
 		SDL_Window* _window = nullptr;
 		SDL_Surface* _surface = nullptr;
 		SDL_Renderer* _renderer = nullptr;

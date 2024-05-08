@@ -1,22 +1,26 @@
 #include <functional>
+#include <iostream>
 #include <set>
 #include <utility>
 #include <vector>
 
 #include "dfs.hh"
 
-#include "defs.hh"
+#include "../defs.hh"
+#include "pathfinders/defs.hh"
 #include "color.hh"
-
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> PathFinder::dfs(World& world, SDL_Renderer* &renderer){
+std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SDL_Renderer* &renderer){
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 
 	std::function<void(SDL_Point, World&, std::vector<SDL_Point>, std::vector<SDL_Point>&,
 			std::set<std::pair<int,int>>&)> dfs_helper;
+
+	// TODO: Would be wise to ensure the search_speed is a valid value but I'm too lazy rn
+	const int search_delay = SEARCH_SPEED_MAP[search_speed];
 
 	SDL_Point goal = world.getEndPos();
 
@@ -34,11 +38,12 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, SDL_Renderer* &renderer){
 
 		SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
 		search_markers.push_back(rect);
-
+		
+		std::cout << "Search speed: " << search_speed << "\n";
 		// render the current search
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 		SDL_RenderFillRect(renderer, &rect);
-		SDL_Delay(10); // add some delay to the animation
+		PathFinder::delayHighRes(search_delay);
 		SDL_RenderPresent(renderer);
 
 
@@ -70,7 +75,7 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, SDL_Renderer* &renderer){
 	// find the path
 	dfs_helper(start, world, temp_path, path, vis);
 
-	// animate the path we formed
+	// animate the path reconstruction formed
 	SDL_Color c_finish = Color::Light::GREEN;
 	SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
 	for (auto itr = path.rbegin(); itr != path.rend(); ++itr){
