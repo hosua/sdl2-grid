@@ -5,6 +5,7 @@
 
 #include "app.hh"
 #include "scenes/game.hh"
+#include "scenes/ui_test.hh"
 
 int main(){
 	srand(time(NULL));
@@ -16,6 +17,9 @@ int main(){
 
 	std::unique_ptr<Game> game_scene = std::make_unique<Game>(app->getRenderer());
 	app->addScene(std::move(game_scene));
+
+	// std::unique_ptr<TestUI> ui_test_scene = std::make_unique<TestUI>(app->getRenderer());
+	// app->addScene(std::move(ui_test_scene));
 
 	while (app->isRunning()){
 		if (!app->renderScenes())

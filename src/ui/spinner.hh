@@ -12,6 +12,11 @@
 #include "text.hh"
 #include "button.hh"
 
+// TODO: We might want to make this possible to define in the API.
+// This value represents how many decimals places to render for spinners that
+// use floats/doubles.
+#define SPINNER_PRECISION 2
+
 namespace UI {
 	typedef enum {
 		ST_VERTICAL,

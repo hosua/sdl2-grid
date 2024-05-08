@@ -1,5 +1,15 @@
 #include "spinner.hh"
 #include <algorithm>
+#include <sstream>
+
+// TODO: I should put this in something like utils, or in the global defs.
+template <typename T>
+std::string to_string_with_precision(const T val, const int n){
+	std::ostringstream out;
+	out.precision(n);
+	out << std::fixed << val;
+	return std::move(out).str();
+}
 
 namespace UI {
 	template<typename T>
@@ -15,7 +25,7 @@ namespace UI {
 			SDL_Color btn_color,
 			SDL_Color btn_hover_color)
 		: IWidget(x, y, renderer), 
-		_text(std::to_string(val), 0, 0, renderer, font),
+		_text(to_string_with_precision(val, SPINNER_PRECISION), 0, 0, renderer, font),
 		_val(val), _min_val(min_val), _max_val(max_val), _interval(interval),
 		_btn_scalar(btn_scalar),
 		_bg_color(bg_color), _btn_color(btn_color), _btn_hover_color(btn_hover_color),
@@ -82,7 +92,7 @@ namespace UI {
 	template<typename T>
 	void Spinner<T>::incVal(){
 		_val = std::clamp<T>(_val + _interval, _min_val, _max_val);
-		_text.setText(std::to_string(_val));
+		_text.setText(to_string_with_precision(_val, SPINNER_PRECISION));
 		// re-center the text
 		SDL_Rect t_sz = _text.getSize();
 		_text.setPos(_rect.x + (_rect.w/2) - (t_sz.w/2), _rect.y + (_rect.h/2) - (t_sz.h/2));
@@ -91,7 +101,7 @@ namespace UI {
 	template<typename T>
 	void Spinner<T>::decVal(){
 		_val = std::clamp<T>(_val - _interval, _min_val, _max_val);
-		_text.setText(std::to_string(_val));
+		_text.setText(to_string_with_precision(_val, SPINNER_PRECISION));
 		// re-center the text
 		SDL_Rect t_sz = _text.getSize();
 		_text.setPos(_rect.x + (_rect.w/2) - (t_sz.w/2), _rect.y + (_rect.h/2) - (t_sz.h/2));

@@ -29,7 +29,7 @@ public:
 	void renderSelectedEntityType(SDL_Renderer* &renderer); // renders a rect behind the button of which entity type is currently selected
 
 private:
-	bool _end_game = false;
+	bool _end_game = false; // TODO: Might make more scene to put this in base class?
 	bool _render_path_flag = false;
 	World _world;
 	std::vector<SDL_Point> _path;
