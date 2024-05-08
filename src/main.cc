@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+
+#include <chrono>
 #include <iostream>
 #include <random>
 #include <memory>
@@ -37,3 +39,12 @@ const SDL_Point& GetMousePos(){
 	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 	return mouse_pos;
 }
+
+
+void DelayHighRes(float ms){
+	int ns = (ms * (float)1e6);
+	auto start_time = std::chrono::steady_clock::now();
+	while ((std::chrono::steady_clock::now() - start_time) < std::chrono::nanoseconds(ns))
+		continue;
+}
+

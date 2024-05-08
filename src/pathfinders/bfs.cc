@@ -9,7 +9,7 @@
 
 #include "bfs.hh"
 #include "../defs.hh"
-#include "pathfinders/defs.hh"
+#include "pathfinder_shared.hh"
 #include "color.hh"
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
@@ -24,8 +24,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 	function<void(SDL_Point, World&, vector<SDL_Point>, vector<SDL_Point>&,
 			std::set<pair<int,int>>&)> bfs_helper;
 	
-	// TODO: Would be wise to ensure the search_speed is a valid value but I'm too lazy rn
-	const int search_delay = SEARCH_SPEED_MAP[search_speed];
+	const int search_delay = SEARCH_SPEED_MAP.at(search_speed);
 
 	SDL_Point start = world.getPlayerPos();
 	SDL_Point goal = world.getEndPos();
@@ -79,7 +78,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 			SDL_RenderFillRect(renderer, &rect);
 			// add some delay to the path search animation
-			delayHighRes(search_delay);
+			DelayHighRes(search_delay);
 			SDL_RenderPresent(renderer);
 
 			for (const SDL_Point& moves : s_moves){

@@ -5,8 +5,18 @@
 #include "ui/all.hh"
 #include "ui/spinner.hh"
 
-int v_val = 0;
-float h_val = 0.0;
+bool Test::render(SDL_Renderer* &renderer) {
+	if (_end_game)
+		return false;
+	renderWidgets();
+	return true;
+};
+
+void Test::handleInputs(){
+	handleWidgetInputs();
+}
+
+
 
 class ExitBtn : public UI::Button {
 	public:
@@ -32,6 +42,10 @@ class ExitBtn : public UI::Button {
 	private:
 		bool& _end_game;
 };
+
+
+int v_val = 0; 
+float h_val = 0.0;
 
 Test::Test(SDL_Renderer* &renderer):
 	IScene("UI_TEST", renderer){
@@ -62,16 +76,4 @@ Test::Test(SDL_Renderer* &renderer):
 		std::make_unique<ExitBtn>(renderer, _end_game);
 	addWidget(std::move(btn_exit));
 };
-
-
-bool Test::render(SDL_Renderer* &renderer) {
-	if (_end_game)
-		return false;
-	renderWidgets();
-	return true;
-};
-
-void Test::handleInputs(){
-	handleWidgetInputs();
-}
 
