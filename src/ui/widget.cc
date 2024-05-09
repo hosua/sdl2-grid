@@ -16,10 +16,8 @@ namespace UI {
 		_id(s_widget_counter++) {}
 
 	void IWidget::handleInputs(){
-		for (const SDL_Event& event : GetFrameEvents()){
-			if (isMouseOver() && isClicked(event))
-				std::cout << "Widget has no input event!\n";
-		}
+		if (isMouseOver() && isClicked())
+			std::cout << "Widget has no input event!\n";
 	}
 
 	bool IWidget::isMouseOver() const {
@@ -28,20 +26,25 @@ namespace UI {
 		return SDL_PointInRect(&mouse_pos, &_rect);
 	}
 
-	bool IWidget::isMouseScrolledUp(SDL_Event event) const {
-		return (isMouseOver() && 
-				event.type == SDL_MOUSEWHEEL && event.wheel.y > 0);
+	bool IWidget::isMouseScrolledUp() const {
+		for (const SDL_Event& event : GetFrameEvents())
+			if (isMouseOver() && event.type == SDL_MOUSEWHEEL && event.wheel.y > 0)
+				return true;
+		return false;
 	}
 
-	bool IWidget::isMouseScrolledDown(SDL_Event event) const {
-		return (isMouseOver() 
-				&& event.type == SDL_MOUSEWHEEL && event.wheel.y < 0);
+	bool IWidget::isMouseScrolledDown() const {
+		for (const SDL_Event& event : GetFrameEvents())
+			if (isMouseOver() && event.type == SDL_MOUSEWHEEL && event.wheel.y < 0)
+				return true;
+		return false;
 	}
 
-	bool IWidget::isClicked(SDL_Event event) const {
-		return (isMouseOver() 
-				&& event.type == SDL_MOUSEBUTTONDOWN &&
-				event.button.button == SDL_BUTTON_LEFT);
+	bool IWidget::isClicked() const {
+		for (const SDL_Event& event : GetFrameEvents())
+			if (isMouseOver() && event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+				return true;
+		return false;
 	}
 
 	uint32_t IWidget::getID() const {

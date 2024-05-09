@@ -11,9 +11,9 @@ namespace UI {
 			virtual void handleInputs();
 			
 			bool isMouseOver() const;
-			bool isMouseScrolledUp(SDL_Event event) const;
-			bool isMouseScrolledDown(SDL_Event event) const;
-			bool isClicked(SDL_Event event) const;
+			bool isMouseScrolledUp() const;
+			bool isMouseScrolledDown() const;
+			bool isClicked() const;
 			uint32_t getID() const;
 
 		protected:

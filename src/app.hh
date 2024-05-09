@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "scene.hh"
 #include "scene_manager.hh"
 
@@ -28,15 +29,18 @@ class App {
 
 		bool isRunning() const;
 		void setRunning(bool flag){ _running = flag; }
+		bool& getRunningRef(){ return std::ref(_running); }
 
 		SDL_Renderer* & getRenderer(){ return _renderer; }
+		
+		SceneManager& getSceneManager() { return _scene_mgr; }
 
 		// move player relative to current pos, returns true if player moved
 		bool movePlayer(int dx, int dy); 
 
 		App(App* const) = delete;			 // Don't implement
 		App& operator=(App const&) = delete; // Don't implement
-
+		
 	private:
 		static App* _instance;
 		App();
@@ -48,5 +52,5 @@ class App {
 		SDL_Window* _window = nullptr;
 		SDL_Surface* _surface = nullptr;
 		SDL_Renderer* _renderer = nullptr;
-		SceneManager _scene_manager;
+		SceneManager _scene_mgr;
 };

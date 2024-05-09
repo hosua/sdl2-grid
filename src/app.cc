@@ -8,7 +8,7 @@
 App* App::_instance = nullptr;
 
 App::App():
-	_scene_manager(_renderer) { 
+	_scene_mgr(_renderer) { 
 	_running = initSDL() && Font::init();
 }
 
@@ -25,7 +25,7 @@ App::~App(){
 
 
 void App::addScene(std::unique_ptr<IScene> scene){
-	_scene_manager.addScene(std::move(scene));
+	_scene_mgr.addScene(std::move(scene));
 }
 
 void App::mainLoop(){
@@ -51,7 +51,7 @@ void App::mainLoop(){
 			}
 		}
 
-		_scene_manager.handleAllSceneInputs();
+		_scene_mgr.handleAllSceneInputs();
 
 		GetFrameEvents().clear();
 		SDL_Delay(17);
@@ -59,7 +59,7 @@ void App::mainLoop(){
 }
 
 bool App::renderScenes(){
-	return _scene_manager.renderScenes();
+	return _scene_mgr.renderScenes();
 }
 
 bool App::isRunning() const { return _running; }

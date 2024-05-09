@@ -18,6 +18,7 @@ set(SOURCES
 	src/scene.cc
 	src/scene_manager.cc
 	src/scenes/game.cc
+	src/scenes/main_menu.cc
 	src/scenes/test.cc
 	src/pathfinders/dfs.cc
 	src/pathfinders/bfs.cc

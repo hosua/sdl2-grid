@@ -8,6 +8,10 @@
  * not modify this file directly. 
  */
 
+Example::Example(SDL_Renderer* &renderer):
+	IScene("EXAMPLE", renderer){
+};
+
 bool Example::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
@@ -16,10 +20,16 @@ bool Example::render(SDL_Renderer* &renderer) {
 };
 
 void Example::handleInputs(){
+	const SDL_Point& mouse_pos = GetMousePos();
+	static bool lmb_down = false, rmb_down = false;
+	for (const SDL_Event& event : GetFrameEvents()){
+		switch(event.type){
+			// Handle input events here
+			default:
+				break;
+		}
+	}
+
+
 	handleWidgetInputs();
 }
-Example::Example(SDL_Renderer* &renderer):
-	IScene("EXAMPLE", renderer){
-};
-
-

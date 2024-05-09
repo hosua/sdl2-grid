@@ -121,12 +121,10 @@ namespace UI {
 
 	template<typename T>
 	void Spinner<T>::handleInputs(){
-		for (const SDL_Event& event : GetFrameEvents()){
-			if (isMouseScrolledUp(event) || _inc_btn->isClicked(event))
-				incVal();
-			if (isMouseScrolledDown(event) || _dec_btn->isClicked(event))
-				decVal();
-		}
+		if (isMouseScrolledUp() || _inc_btn->isClicked())
+			incVal();
+		if (isMouseScrolledDown() || _dec_btn->isClicked())
+			decVal();
 	}
 
 }

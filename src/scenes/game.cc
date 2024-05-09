@@ -6,97 +6,17 @@
 #include "game.hh"
 #include "../defs.hh"
 
-void DFSBtn::handleInputs() {
-	for (const SDL_Event& event : GetFrameEvents()){
-		if (isMouseOver() && isClicked(event)){
-			std::cout << "Finding path with DFS!\n";
+Game::Game(SDL_Renderer* &renderer, bool &running):
+	IScene("GAME", renderer), 
+	_running(running),
+	_world(_render_path_flag) {
 
-			_path = PathFinder::dfs(_world, _search_speed, _renderer); 
-			_render_path_flag = true;
-
-			if (_path.size() == 0){
-				std::cout << "No path found!\n";
-			} else {
-				std::cout << "Path: \n";
-				for (const SDL_Point& pt : _path)
-					printf("(%i,%i) -> ", pt.x, pt.y);
-				std::cout << "\n";
-			}
-		}
-	}
-}
-
-void BFSBtn::handleInputs() {
-	for (const SDL_Event& event : GetFrameEvents()){
-		if (isMouseOver() && isClicked(event)){
-			std::cout << "Finding path with BFS!\n";
-
-			_path = PathFinder::bfs(_world, _search_speed, _renderer); 
-			_render_path_flag = true;
-
-			if (_path.size() == 0){
-				std::cout << "No path found!\n";
-			} else {
-				std::cout << "Path: \n";
-				for (const SDL_Point& pt : _path)
-					printf("(%i,%i) -> ", pt.x, pt.y);
-				std::cout << "\n";
-			}
-		}
-	}
-}
-
-void AStarBtn::handleInputs() {
-	for (const SDL_Event& event : GetFrameEvents()){
-		if (isMouseOver() && isClicked(event)){
-			std::cout << "A* not yet implemented!\n";
-			// do a* logic hurr
-		}
-	}
-}
-
-void SelectEntWallBtn::handleInputs() {
-	for (const SDL_Event& event : GetFrameEvents()){
-		if (isMouseOver() && isClicked(event)){
-			_ent_type = ENT_WALL;
-		}
-	}
-}
-
-void SelectEntPlayerBtn::handleInputs() {
-	for (const SDL_Event& event : GetFrameEvents()){
-		if (isMouseOver() && isClicked(event)){
-			_ent_type = ENT_PLAYER;
-		}
-	}
-}
-
-void SelectEntEndBtn::handleInputs() {
-	for (const SDL_Event& event : GetFrameEvents()){
-		if (isMouseOver() && isClicked(event)){
-			_ent_type = ENT_END;
-		}
-	}
-}
-
-void ExitBtn::handleInputs() {
-	for (const SDL_Event& event : GetFrameEvents()){
-		if (isMouseOver() && isClicked(event)){
-			std::cout << "Exiting the game.\n";
-			_end_game = true;
-		}
-	}
-}	
-
-Game::Game(SDL_Renderer* &renderer):
-	IScene("GAME", renderer), _world(_render_path_flag) {
-
-		std::unique_ptr<DFSBtn> btn_dfs = 
-			std::make_unique<DFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
+		std::unique_ptr<GameWidgets::DFSBtn> btn_dfs = 
+			std::make_unique<GameWidgets::DFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_dfs));
 
-		std::unique_ptr<BFSBtn> btn_bfs = 
-			std::make_unique<BFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
+		std::unique_ptr<GameWidgets::BFSBtn> btn_bfs = 
+			std::make_unique<GameWidgets::BFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_bfs));
 		
 		// TODO: Removed while still unimplemented
@@ -104,30 +24,21 @@ Game::Game(SDL_Renderer* &renderer):
 		// 	std::make_unique<AStarBtn>(renderer);
 		// addWidget(std::move(btn_astar));
 
-		std::unique_ptr<SelectEntPlayerBtn> btn_player = 
-			std::make_unique<SelectEntPlayerBtn>(renderer, _entity_type);
+		std::unique_ptr<GameWidgets::SelectEntPlayerBtn> btn_player = 
+			std::make_unique<GameWidgets::SelectEntPlayerBtn>(renderer, _entity_type);
 		addWidget(std::move(btn_player));
 
-		std::unique_ptr<SelectEntWallBtn> btn_wall = 
-			std::make_unique<SelectEntWallBtn>(renderer, _entity_type);
+		std::unique_ptr<GameWidgets::SelectEntWallBtn> btn_wall = 
+			std::make_unique<GameWidgets::SelectEntWallBtn>(renderer, _entity_type);
 		addWidget(std::move(btn_wall));
 
-		std::unique_ptr<SelectEntEndBtn> btn_end = 
-			std::make_unique<SelectEntEndBtn>(renderer, _entity_type);
+		std::unique_ptr<GameWidgets::SelectEntEndBtn> btn_end = 
+			std::make_unique<GameWidgets::SelectEntEndBtn>(renderer, _entity_type);
 		addWidget(std::move(btn_end));
 
-		std::unique_ptr<ExitBtn> btn_exit = 
-			std::make_unique<ExitBtn>(renderer, _end_game);
+		std::unique_ptr<GameWidgets::ExitBtn> btn_exit = 
+			std::make_unique<GameWidgets::ExitBtn>(renderer, _running);
 		addWidget(std::move(btn_exit));
-		
-		// vertical spinner
-		// std::unique_ptr<UI::Spinner<int>> test_spinner = 
-		// 	std::make_unique<UI::Spinner<int>>(_search_speed, 
-		// 				5, 400,		// 				40, 100, 
-		// 				0, 10, 1
-		// 				renderer,
-		// 				UI::ST_VERTICAL
-		// 			);
 		
 		// search speed label
 		std::unique_ptr<UI::Text> search_speed_lbl =
@@ -154,8 +65,6 @@ Game::Game(SDL_Renderer* &renderer):
 	};
 
 bool Game::render(SDL_Renderer* &renderer) {
-	if (_end_game)
-		return false;
 	drawWorld(renderer);
 
 	if (_world.getRenderPathFlag())
@@ -163,7 +72,7 @@ bool Game::render(SDL_Renderer* &renderer) {
 
 	renderSelectedEntityType(renderer); // render selected rect around entity button
 	renderWidgets();
-	return true;
+	return _running;
 };
 
 void Game::renderSelectedEntityType(SDL_Renderer* &renderer){
@@ -233,7 +142,6 @@ void Game::handleInputs(){
 	if (lmb_down) _world.spawnEntity(_entity_type, g.x, g.y);
 	if (rmb_down) _world.deleteWall(g.x, g.y);
 
-	// SDL_PumpEvents();
 	const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
 
 	if (s_player_last_moved == 0){ // add some delay between movement events
@@ -294,4 +202,71 @@ void Game::renderPath(SDL_Renderer* &renderer){
 
 void Game::setEntityType(EntType entity_type){
 	_entity_type = entity_type;
+}
+
+namespace GameWidgets {
+	void DFSBtn::handleInputs() {
+		if (isMouseOver() && isClicked()){
+			std::cout << "Finding path with DFS!\n";
+
+			_path = PathFinder::dfs(_world, _search_speed, _renderer); 
+			_render_path_flag = true;
+
+			if (_path.size() == 0){
+				std::cout << "No path found!\n";
+			} else {
+				std::cout << "Path: \n";
+				for (const SDL_Point& pt : _path)
+					printf("(%i,%i) -> ", pt.x, pt.y);
+				std::cout << "\n";
+			}
+		}
+	}
+
+	void BFSBtn::handleInputs() {
+		if (isMouseOver() && isClicked()){
+			std::cout << "Finding path with BFS!\n";
+
+			_path = PathFinder::bfs(_world, _search_speed, _renderer); 
+			_render_path_flag = true;
+
+			if (_path.size() == 0){
+				std::cout << "No path found!\n";
+			} else {
+				std::cout << "Path: \n";
+				for (const SDL_Point& pt : _path)
+					printf("(%i,%i) -> ", pt.x, pt.y);
+				std::cout << "\n";
+			}
+		}
+	}
+
+	void AStarBtn::handleInputs() {
+		if (isMouseOver() && isClicked()){
+			std::cout << "A* not yet implemented!\n";
+			// do a* logic hurr
+		}
+	}
+
+	void SelectEntWallBtn::handleInputs() {
+		if (isMouseOver() && isClicked())
+			_ent_type = ENT_WALL;
+	}
+
+	void SelectEntPlayerBtn::handleInputs() {
+		if (isMouseOver() && isClicked())
+			_ent_type = ENT_PLAYER;
+	}
+
+	void SelectEntEndBtn::handleInputs() {
+		if (isMouseOver() && isClicked())
+			_ent_type = ENT_END;
+	}
+
+	void ExitBtn::handleInputs() {
+		if (isMouseOver() && isClicked()){
+			std::cout << "Exiting the game.\n";
+			_running = false;
+		}
+	}	
 }

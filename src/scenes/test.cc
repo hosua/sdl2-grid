@@ -13,9 +13,19 @@ bool Test::render(SDL_Renderer* &renderer) {
 };
 
 void Test::handleInputs(){
+	const SDL_Point& mouse_pos = GetMousePos();
+	static bool lmb_down = false, rmb_down = false;
+	for (const SDL_Event& event : GetFrameEvents()){
+		switch(event.type){
+			// Handle input events here
+			default:
+				break;
+		}
+	}
+	const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
+
 	handleWidgetInputs();
 }
-
 
 
 class ExitBtn : public UI::Button {
@@ -27,14 +37,12 @@ class ExitBtn : public UI::Button {
 					renderer, 
 					Font::openSansSmall,
 					Color::RED),
-				_end_game(end_game){}
+			_end_game(end_game){}
 
 		void handleInputs() override {
-			for (const SDL_Event& event : GetFrameEvents()){
-				if (isMouseOver() && isClicked(event)){
-					std::cout << "Exiting the game.\n";
-					_end_game = true;
-				}
+			if (isMouseOver() && isClicked()){
+				std::cout << "Exiting the game.\n";
+				_end_game = true;
 			}
 		}
 
@@ -50,30 +58,30 @@ float h_val = 0.0;
 Test::Test(SDL_Renderer* &renderer):
 	IScene("UI_TEST", renderer){
 
-	// vertical spinner	
-	std::unique_ptr<UI::Spinner<int>> v_spnr =
-		std::make_unique<UI::Spinner<int>>(v_val,
+		// vertical spinner	
+		std::unique_ptr<UI::Spinner<int>> v_spnr =
+			std::make_unique<UI::Spinner<int>>(v_val,
 					400, 400,
 					26, 65,
 					0, 100, 1,
 					renderer,
 					UI::ST_VERTICAL
-				);
-	addWidget(std::move(v_spnr));	
+					);
+		addWidget(std::move(v_spnr));	
 
-	// horizontal spinner
-	std::unique_ptr<UI::Spinner<float>> h_spnr =
-		std::make_unique<UI::Spinner<float>>(h_val,
+		// horizontal spinner
+		std::unique_ptr<UI::Spinner<float>> h_spnr =
+			std::make_unique<UI::Spinner<float>>(h_val,
 					450, 400,
 					65, 25,
 					0., 1., .01,
 					renderer,
 					UI::ST_HORIZONTAL
-				);
-	addWidget(std::move(h_spnr));
+					);
+		addWidget(std::move(h_spnr));
 
-	std::unique_ptr<ExitBtn> btn_exit = 
-		std::make_unique<ExitBtn>(renderer, _end_game);
-	addWidget(std::move(btn_exit));
-};
+		std::unique_ptr<ExitBtn> btn_exit = 
+			std::make_unique<ExitBtn>(renderer, _end_game);
+		addWidget(std::move(btn_exit));
+	};
 
