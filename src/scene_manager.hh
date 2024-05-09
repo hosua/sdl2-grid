@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <initializer_list>
 #include <memory>
 #include <vector>
 
@@ -15,6 +16,7 @@ public:
 	void addScene(std::unique_ptr<IScene> scene);
 	bool removeScene(size_t index);
 	bool removeScene(const std::string& key);
+	void clearScenes(); /*!< Deletes all scenes from existence */
 	
 	void handleAllSceneInputs();
 
@@ -23,9 +25,13 @@ public:
 	
 	// disables all scenes (input and rendering) except for the scene being switched to
 	bool switchScene(const std::string& key);
-	bool pushScene(const std::string& key);
+	// enables rendering and inputs management for the scene being launched but
+	// does not modify the flags for the other scenes.
+	bool launchScene(const std::string& key);
 
-	// renderScenes returns false if the game should shutdown
+	/** \brief Renders all scenes that have been added with App::addScene().
+	 *
+	 */
 	bool renderScenes();
 
 private:

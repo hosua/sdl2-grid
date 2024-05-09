@@ -6,10 +6,6 @@
 
 #include "ui/all.hh"
 
-/* Use this file to copy the boilerplate code to use for new scenes. Do
- * not modify this file directly. 
- */
-
 class MainMenu : public IScene {
 public:
 	~MainMenu() = default;

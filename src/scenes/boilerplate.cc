@@ -4,20 +4,21 @@
 
 #include "ui/all.hh"
 
-/* Use this file to copy the boilerplate code to use for new scenes. Do
+/** Use this file to copy the boilerplate code to use for new scenes. Do
  * not modify this file directly. 
+ *
+ * This file is ommitted from the build process.
  */
 
 Example::Example(SDL_Renderer* &renderer):
-	IScene("EXAMPLE", renderer){
-};
+	IScene("EXAMPLE", renderer){}
 
 bool Example::render(SDL_Renderer* &renderer) {
 	if (_end_game)
 		return false;
 	renderWidgets();
 	return true;
-};
+}
 
 void Example::handleInputs(){
 	const SDL_Point& mouse_pos = GetMousePos();

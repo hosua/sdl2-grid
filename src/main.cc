@@ -18,12 +18,12 @@ int main(){
 	if (!app->isRunning())
 		return EXIT_FAILURE;
 
-	// std::unique_ptr<MainMenu> main_menu_scene = 
-	// 	std::make_unique<MainMenu>(app->getRenderer(), app->getSceneManager(), app->getRunningRef());
-	// app->addScene(std::move(main_menu_scene));
+	std::unique_ptr<MainMenu> main_menu_scene = 
+		std::make_unique<MainMenu>(app->getRenderer(), app->getSceneManager(), app->getRunningRef());
+	app->addScene(std::move(main_menu_scene));
 
 	std::unique_ptr<Game> game_scene = 
-			std::make_unique<Game>(app->getRenderer(), app->getRunningRef());
+			std::make_unique<Game>(app->getRenderer(), app->getSceneManager(), app->getRunningRef());
 	app->addScene(std::move(game_scene));
 
 	// std::unique_ptr<Test> test_scene =

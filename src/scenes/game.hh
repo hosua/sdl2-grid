@@ -6,35 +6,35 @@
 #include "../world.hh"
 #include "ui/all.hh"
 
-#include "pathfinders/dfs.hh"
-#include "pathfinders/bfs.hh"
+#include "scene_manager.hh"
 
 class Game : public IScene {
-public:
-	Game(SDL_Renderer* &renderer, bool& running);
-	~Game() = default;
+	public:
+		Game(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool& running);
+		~Game() = default;
 
-	bool render(SDL_Renderer* &renderer) override;
-	void handleInputs() override;
+		bool render(SDL_Renderer* &renderer) override;
+		void handleInputs() override;
 
-	void drawWorld(SDL_Renderer* &renderer);
-	
-	// gets and stores the path from player -> goal in _path.
-	bool getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
-	void renderPath(SDL_Renderer* &renderer); // renders _path (if one can be formed)
-	// move player relative to current pos, returns true if player moved
-	bool movePlayer(int dx, int dy); 
+		void drawWorld(SDL_Renderer* &renderer);
 
-	void setEntityType(EntType entity_type); // sets the entity type that the player will emplace when clicking on the world
-	void renderSelectedEntityType(SDL_Renderer* &renderer); // renders a rect behind the button of which entity type is currently selected
+		// gets and stores the path from player -> goal in _path.
+		bool getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
+		void renderPath(SDL_Renderer* &renderer); // renders _path (if one can be formed)
+												  // move player relative to current pos, returns true if player moved
+		bool movePlayer(int dx, int dy); 
 
-private:
-	bool& _running; 
-	bool _render_path_flag = false;
-	World _world;
-	std::vector<SDL_Point> _path;
-	EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
-	int _search_speed = 5; // the speed of the pathfinding search
+		void setEntityType(EntType entity_type); // sets the entity type that the player will emplace when clicking on the world
+		void renderSelectedEntityType(SDL_Renderer* &renderer); // renders a rect behind the button of which entity type is currently selected
+
+	private:
+		bool& _running; 
+		bool _render_path_flag = false;
+		World _world;
+		std::vector<SDL_Point> _path;
+		SceneManager& _scene_mgr;
+		EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
+		int _search_speed = 5; // the speed of the pathfinding search
 };
 
 
@@ -108,13 +108,13 @@ namespace GameWidgets {
 	class SelectEntWallBtn : public UI::Button {
 		public:
 			SelectEntWallBtn(SDL_Renderer* &renderer, EntType &ent_type):
-			Button("",
-					5, 170,
-					40, 40,
-					renderer,
-					Font::openSansSmall,
-					Color::GREY),
-			_ent_type(ent_type) {}
+				Button("",
+						5, 170,
+						40, 40,
+						renderer,
+						Font::openSansSmall,
+						Color::GREY),
+				_ent_type(ent_type) {}
 			void handleInputs() override;
 		private:
 			EntType& _ent_type;
@@ -123,13 +123,13 @@ namespace GameWidgets {
 	class SelectEntPlayerBtn : public UI::Button {
 		public:
 			SelectEntPlayerBtn(SDL_Renderer* &renderer, EntType &ent_type):
-			Button("",
-					50, 170,
-					40, 40,
-					renderer,
-					Font::openSansSmall,
-					Color::BLUE),
-			_ent_type(ent_type) {}
+				Button("",
+						50, 170,
+						40, 40,
+						renderer,
+						Font::openSansSmall,
+						Color::BLUE),
+				_ent_type(ent_type) {}
 			void handleInputs() override;
 		private:
 			EntType& _ent_type;
@@ -138,16 +138,30 @@ namespace GameWidgets {
 	class SelectEntEndBtn : public UI::Button {
 		public:
 			SelectEntEndBtn(SDL_Renderer* &renderer, EntType &ent_type):
-			Button("",
-					95, 170,
-					40, 40,
-					renderer,
-					Font::openSansSmall,
-					Color::RED),
-			_ent_type(ent_type) {}
+				Button("",
+						95, 170,
+						40, 40,
+						renderer,
+						Font::openSansSmall,
+						Color::RED),
+				_ent_type(ent_type) {}
 			void handleInputs() override;
 		private:
 			EntType& _ent_type;
+	};
+
+	class MainMenuBtn : public UI::Button {
+		public:
+			MainMenuBtn(SDL_Renderer* &renderer, SceneManager& scene_mgr):
+				Button("Main Menu",
+						5, WINDOW_H - 110,
+						130, 50,
+						renderer, 
+						Font::openSansSmall),
+				_scene_mgr(scene_mgr) {}
+			void handleInputs() override;
+		private:
+			SceneManager& _scene_mgr;
 	};
 
 	class ExitBtn : public UI::Button {
@@ -159,7 +173,7 @@ namespace GameWidgets {
 						renderer, 
 						Font::openSansSmall,
 						Color::RED),
-					_running(running) {}
+				_running(running) {}
 			void handleInputs() override;
 		private:
 			bool& _running;

@@ -4,12 +4,15 @@
 #include <utility>
 
 #include "game.hh"
+#include "pathfinders/dfs.hh"
+#include "pathfinders/bfs.hh"
 #include "../defs.hh"
 
-Game::Game(SDL_Renderer* &renderer, bool &running):
+Game::Game(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool &running):
 	IScene("GAME", renderer), 
 	_running(running),
-	_world(_render_path_flag) {
+	_world(_render_path_flag),
+	_scene_mgr(scene_mgr) {
 
 		std::unique_ptr<GameWidgets::DFSBtn> btn_dfs = 
 			std::make_unique<GameWidgets::DFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
@@ -35,6 +38,10 @@ Game::Game(SDL_Renderer* &renderer, bool &running):
 		std::unique_ptr<GameWidgets::SelectEntEndBtn> btn_end = 
 			std::make_unique<GameWidgets::SelectEntEndBtn>(renderer, _entity_type);
 		addWidget(std::move(btn_end));
+
+		std::unique_ptr<GameWidgets::MainMenuBtn> btn_main_menu =
+			std::make_unique<GameWidgets::MainMenuBtn>(renderer, _scene_mgr);
+		addWidget(std::move(btn_main_menu));
 
 		std::unique_ptr<GameWidgets::ExitBtn> btn_exit = 
 			std::make_unique<GameWidgets::ExitBtn>(renderer, _running);
@@ -261,6 +268,11 @@ namespace GameWidgets {
 	void SelectEntEndBtn::handleInputs() {
 		if (isMouseOver() && isClicked())
 			_ent_type = ENT_END;
+	}
+	
+	void MainMenuBtn::handleInputs() {
+		if (isMouseOver() && isClicked())
+			_scene_mgr.switchScene("MAIN_MENU");
 	}
 
 	void ExitBtn::handleInputs() {

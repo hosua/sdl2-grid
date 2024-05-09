@@ -1,14 +1,12 @@
 #include "widget_manager.hh"
 
 #include <algorithm>
+#include <initializer_list>
 
 namespace UI {
 
-	WidgetManager::WidgetManager(){}
-
-	bool WidgetManager::addWidget(std::unique_ptr<IWidget> widget){ // true if add sucessful
+	void WidgetManager::addWidget(std::unique_ptr<IWidget> widget){ 
 		_widgets.push_back(std::move(widget));	
-		return true;
 	} 
 
 	bool WidgetManager::removeWidget(uint32_t id){ // true if remove successful

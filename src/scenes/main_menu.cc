@@ -47,8 +47,10 @@ namespace MainMenuWidgets {
 		_scene_mgr(scene_manager) {}
 
 	void StartBtn::handleInputs() {
-		if (isMouseOver() && isClicked())
+		if (isMouseOver() && isClicked()){
 			std::cout << "Clicked start button.\n";
+			_scene_mgr.switchScene("GAME");
+		}
 	}
 
 	ExitBtn::ExitBtn(SDL_Renderer* &renderer, bool& running):
