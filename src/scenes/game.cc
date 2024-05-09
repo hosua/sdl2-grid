@@ -196,7 +196,7 @@ void Game::renderPath(SDL_Renderer* &renderer){
 	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 	for (const SDL_Point pt : _path){
 		SDL_Rect rect = {
-			World::getRect().x + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H
+			World::getRect().x + (pt.x * BLOCK_W), World::getRect().y + (pt.y * BLOCK_H), BLOCK_W, BLOCK_H
 		};
 		SDL_RenderFillRect(renderer, &rect);
 	}

@@ -37,7 +37,7 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 		curr_path.push_back({pos.x, pos.y}); // add to path
 		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
 
-		SDL_Rect rect = { world.getRect().x + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
+		SDL_Rect rect = { world.getRect().x + (pos.x * BLOCK_W), world.getRect().y + (pos.y * BLOCK_H), BLOCK_W, BLOCK_H };
 		search_markers.push_back(rect);
 		
 		// render the current search
@@ -80,7 +80,7 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 	SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
 	for (auto itr = path.rbegin(); itr != path.rend(); ++itr){
 		const SDL_Point pt = *itr;
-		const SDL_Rect rect = { world.getRect().x + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H };
+		const SDL_Rect rect = { world.getRect().x + pt.x * BLOCK_W, world.getRect().y + (pt.y * BLOCK_H), BLOCK_W, BLOCK_H };
 		SDL_RenderFillRect(renderer, &rect);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(7);
