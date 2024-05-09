@@ -10,13 +10,13 @@
 
 class IScene : public UI::WidgetManager {
 public:
-	IScene(const std::string key, SDL_Renderer* &renderer,
+	IScene(const std::string key,
 			bool is_handling_inputs=false, bool is_rendering=false);
 	~IScene() = default;
 
 	const std::string& getKey() const { return _key; }
 	// render returns false if the game should shutdown
-	virtual void render(SDL_Renderer* &renderer) = 0;
+	virtual void render() = 0;
 	virtual void handleInputs() = 0;
 
 	bool isHandlingInputs() const { return _is_handling_inputs; }
@@ -28,5 +28,4 @@ public:
 private:
 	bool _is_handling_inputs = false, _is_rendering = false;
 	const std::string _key;
-	SDL_Renderer* &_renderer;
 };

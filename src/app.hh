@@ -18,6 +18,13 @@ class App : public SceneManager {
 				_instance = new App();
 			return _instance;
 		}
+		
+		// SDL_event can only be polled once in the main thread
+		std::vector<SDL_Event>& getFrameEvents();
+		const SDL_Point& getMousePos();
+		// Stops the current thread from running for float (ms) time. Converted to
+		// ns for higher resolution.
+		void delayHighRes(float ms);
 
 		void mainLoop();
 
@@ -26,16 +33,18 @@ class App : public SceneManager {
 
 		bool isRunning() const;
 		void setRunning(bool flag){ _running = flag; }
-		bool& getRunningRef(){ return std::ref(_running); }
-
-		SDL_Renderer* &getRenderer(){ return _renderer; }
+		const bool& getRunningRef(){ return std::cref(_running); }
+		
+		SDL_Window* getWindow(){ return _window; }
+		SDL_Surface* getSurface(){ return _surface; }
+		SDL_Renderer* getRenderer(){ return _renderer; }
 
 		// move player relative to current pos, returns true if player moved
 		bool movePlayer(int dx, int dy); 
 
 		App(App* const) = delete;			 // Don't implement
 		App& operator=(App const&) = delete; // Don't implement
-		
+				
 	private:
 		static App* _instance;
 		App();

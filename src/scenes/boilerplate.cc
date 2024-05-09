@@ -3,6 +3,9 @@
 #include <iostream>
 
 #include "ui/all.hh"
+#include "app.hh"
+
+App* app = App::getInstance();
 
 /** Use this file to copy the boilerplate code to use for new scenes. Do
  * not modify this file directly. 
@@ -10,19 +13,17 @@
  * This file is ommitted from the build process.
  */
 
-Example::Example(SDL_Renderer* &renderer, bool& running):
-	IScene("EXAMPLE", renderer),
-	_running(running){}
+Example::Example():
+	IScene("EXAMPLE"){}
 
-bool Example::render(SDL_Renderer* &renderer) {
+void Example::render() {
 	renderWidgets();
-	return _running;
 }
 
 void Example::handleInputs(){
-	const SDL_Point& mouse_pos = GetMousePos();
+	const SDL_Point& mouse_pos = app->getMousePos();
 	static bool lmb_down = false, rmb_down = false;
-	for (const SDL_Event& event : GetFrameEvents()){
+	for (const SDL_Event& event : app->getFrameEvents()){
 		switch(event.type){
 			// Handle input events here
 			default:

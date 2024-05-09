@@ -1,14 +1,37 @@
 #include <algorithm>
+#include <chrono>
 #include <memory>
 #include <iostream>
 
 #include "app.hh"
 #include "defs.hh"
+// Gets a global vector of SDL_Events, which are polled in App::mainLoop().
+// This is necessary to handle events outside of while(SDL_PollEvents()).
+std::vector<SDL_Event>& App::getFrameEvents(){
+	static std::vector<SDL_Event> event_list;
+	return event_list;
+}
+
+const SDL_Point& App::getMousePos(){
+	static SDL_Point mouse_pos;
+	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+	return mouse_pos;
+}
+
+// Stops the current thread from running for float (ms) time. Converted to
+// ns for higher resolution.
+void App::delayHighRes(float ms){
+	int ns = (ms * (float)1e6);
+	auto start_time = std::chrono::steady_clock::now();
+	while ((std::chrono::steady_clock::now() - start_time) < std::chrono::nanoseconds(ns))
+		continue;
+}
+
 
 App* App::_instance = nullptr;
 
 App::App():
-	SceneManager(_renderer) { 
+	SceneManager(){
 	_running = initSDL() && Font::init();
 }
 
@@ -27,10 +50,10 @@ void App::mainLoop(){
 	while (isRunning()){
 		SceneManager::renderScenes();
 		
-		const SDL_Point& mouse_pos = GetMousePos();
+		const SDL_Point& mouse_pos = getMousePos();
 		SDL_Event event;
 		while (SDL_PollEvent(&event)){
-			GetFrameEvents().push_back(event);
+			getFrameEvents().push_back(event);
 			switch(event.type){
 				case SDL_KEYDOWN:
 					{
@@ -49,7 +72,7 @@ void App::mainLoop(){
 
 		SceneManager::handleAllSceneInputs();
 
-		GetFrameEvents().clear();
+		getFrameEvents().clear();
 		SDL_Delay(17);
 	}
 	printf("_running = %i\n", _running);

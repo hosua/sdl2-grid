@@ -7,14 +7,16 @@
 #include "dfs.hh"
 
 #include "../defs.hh"
-#include "color.hh"
+#include "app.hh"
 #include "world.hh"
+
 
 using namespace PathFinder;
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SDL_Renderer* &renderer){
+std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed){
+	SDL_Renderer* renderer = App::getInstance()->getRenderer();
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 
@@ -25,8 +27,8 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 
 	SDL_Point goal = world.getEndPos();
 
-	world.renderClear(renderer);
-	world.draw(renderer);
+	world.renderClear();
+	world.draw();
 
 	// set render color for path search marking
 	SDL_Color c = Color::GREEN;
@@ -43,9 +45,8 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 		// render the current search
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 		SDL_RenderFillRect(renderer, &rect);
-		DelayHighRes(search_delay);
 		SDL_RenderPresent(renderer);
-
+		App::getInstance()->delayHighRes(search_delay);
 
 		if (pos.x == goal.x && pos.y == goal.y){
 			end_path = curr_path;

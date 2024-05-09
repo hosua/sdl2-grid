@@ -21,11 +21,10 @@ namespace PathFinder {
 	class World {
 	public:
 		World(int x, int y,
-				int w, int h, 
-				bool& render_path_flag);
+				int w, int h);
 
 		~World() = default;
-		void draw(SDL_Renderer* renderer);
+		void draw();
 
 		bool movePlayer(int x, int y);  /*!< Moves player directly to (x,y). Returns false if unmoved */
 		
@@ -47,7 +46,7 @@ namespace PathFinder {
 		void setRenderPathFlag(bool flag);
 
 		// clearly renders only the world grid portion of the screen
-		void renderClear(SDL_Renderer* renderer);
+		void renderClear();
 
 		EntType getEntityAt(int x, int y) const; // gets the entity type at the specified position
 
@@ -66,6 +65,6 @@ namespace PathFinder {
 		std::vector<std::vector<EntType>> _grid;
 		SDL_Rect _rect;	
 		SDL_Point _end, _player;
-		bool& _render_path_flag; // if true, path rendering should stop
+		bool _render_path_flag; // if true, path rendering should stop
 	};
 }

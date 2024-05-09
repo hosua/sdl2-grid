@@ -10,82 +10,81 @@
 
 #include "app.hh"
 
-App* app = App::getInstance();
+const int WORLD_X = 140,
+		PLAYER_MOVE_DELAY = 3,
+		WORLD_Y = 5,
+		WORLD_W = WINDOW_W - WORLD_X, 
+		WORLD_H = WINDOW_H;
 
-const int WORLD_X = 140, WORLD_Y = 5, WORLD_W = WINDOW_W - WORLD_X, WORLD_H = WINDOW_H;
-Game::Game(SDL_Renderer* &renderer, SceneManager& scene_mgr):
-	IScene("GAME", renderer), 
-	World(WORLD_X, WORLD_Y, WORLD_W, WORLD_H, _render_path_flag),
-	_scene_mgr(scene_mgr) {
+Game::Game():
+	IScene("GAME"), 
+	World(WORLD_X, WORLD_Y, WORLD_W, WORLD_H){
 
 		std::unique_ptr<GameWidgets::DFSBtn> btn_dfs = 
-			std::make_unique<GameWidgets::DFSBtn>(*this, _path, renderer, _render_path_flag, _search_speed);
+			std::make_unique<GameWidgets::DFSBtn>(*this, _path, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_dfs));
 
 		std::unique_ptr<GameWidgets::BFSBtn> btn_bfs = 
-			std::make_unique<GameWidgets::BFSBtn>(*this, _path, renderer, _render_path_flag, _search_speed);
+			std::make_unique<GameWidgets::BFSBtn>(*this, _path, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_bfs));
-		
+
 		// TODO: Removed while still unimplemented
 		// std::unique_ptr<AStarBtn> btn_astar = 
 		// 	std::make_unique<AStarBtn>(renderer);
 		// addWidget(std::move(btn_astar));
 
 		std::unique_ptr<GameWidgets::SelectEntPlayerBtn> btn_player = 
-			std::make_unique<GameWidgets::SelectEntPlayerBtn>(renderer, _entity_type);
+			std::make_unique<GameWidgets::SelectEntPlayerBtn>(_entity_type);
 		addWidget(std::move(btn_player));
 
 		std::unique_ptr<GameWidgets::SelectEntWallBtn> btn_wall = 
-			std::make_unique<GameWidgets::SelectEntWallBtn>(renderer, _entity_type);
+			std::make_unique<GameWidgets::SelectEntWallBtn>(_entity_type);
 		addWidget(std::move(btn_wall));
 
 		std::unique_ptr<GameWidgets::SelectEntEndBtn> btn_end = 
-			std::make_unique<GameWidgets::SelectEntEndBtn>(renderer, _entity_type);
+			std::make_unique<GameWidgets::SelectEntEndBtn>(_entity_type);
 		addWidget(std::move(btn_end));
 
 		std::unique_ptr<GameWidgets::MainMenuBtn> btn_main_menu =
-			std::make_unique<GameWidgets::MainMenuBtn>(renderer, _scene_mgr);
+			std::make_unique<GameWidgets::MainMenuBtn>();
 		addWidget(std::move(btn_main_menu));
 
 		std::unique_ptr<GameWidgets::ExitBtn> btn_exit = 
-			std::make_unique<GameWidgets::ExitBtn>(renderer);
+			std::make_unique<GameWidgets::ExitBtn>();
 		addWidget(std::move(btn_exit));
-		
+
 		// search speed label
 		std::unique_ptr<UI::Text> search_speed_lbl =
 			std::make_unique<UI::Text>("Search Speed",
-						18, 380,
-						renderer,
-						Font::openSansSmall
-					);
+					18, 380,
+					Font::openSansSmall);
 
 		addWidget(std::move(search_speed_lbl));
 
 		// search speed spinner
 		std::unique_ptr<UI::Spinner<int>> search_speed_spnr =
 			std::make_unique<UI::Spinner<int>>(_search_speed,
-						40, 400,
-						65, 25,
-						0, 10, 1,
-						renderer,
-						UI::ST_HORIZONTAL
-					);
+					40, 400,
+					65, 25,
+					0, 10, 1,
+					UI::ST_HORIZONTAL);
 		addWidget(std::move(search_speed_spnr));
 
 
 	};
 
-void Game::render(SDL_Renderer* &renderer) {
-	drawWorld(renderer);
+void Game::render() {
+	World::draw();
 
 	if (World::getRenderPathFlag())
-		renderPath(renderer);
+		renderPath();
 
-	renderSelectedEntityType(renderer); // render selected rect around entity button
+	renderSelectedEntityType(); // render selected rect around entity button
 	renderWidgets();
 };
 
-void Game::renderSelectedEntityType(SDL_Renderer* &renderer){
+void Game::renderSelectedEntityType(){
+	SDL_Renderer* renderer = App::getInstance()->getRenderer();
 	SDL_Rect r;
 	switch (_entity_type){
 		case ENT_WALL: // 1st
@@ -109,10 +108,10 @@ void Game::renderSelectedEntityType(SDL_Renderer* &renderer){
 
 static uint32_t s_player_last_moved = 0;
 void Game::handleInputs(){
-	
-	const SDL_Point& mouse_pos = GetMousePos();
+	App* app = App::getInstance();
+	const SDL_Point& mouse_pos = app->getMousePos();
 	static bool lmb_down = false, rmb_down = false;
-	for (const SDL_Event& event : GetFrameEvents()){
+	for (const SDL_Event& event : app->getFrameEvents()){
 		switch(event.type){
 			case SDL_MOUSEBUTTONDOWN:
 				{
@@ -176,10 +175,6 @@ void Game::handleInputs(){
 
 }
 
-void Game::drawWorld(SDL_Renderer* &renderer) {
-	World::draw(renderer);
-};
-
 // gets and stores the path from player -> goal in _path.
 // helper() is a function that uses the world to find the path. It does not
 // modify world in any shape or form. helper() returns false when no path is found
@@ -190,7 +185,8 @@ bool Game::getPath(std::function<std::vector<SDL_Point>(World& world, std::vecto
 } 
 
 // renders _path (if one can be formed)
-void Game::renderPath(SDL_Renderer* &renderer){
+void Game::renderPath(){
+	SDL_Renderer* renderer = App::getInstance()->getRenderer();	
 	SDL_Color c = Color::Light::BLUE;
 	// render transparent square
 	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
@@ -207,7 +203,7 @@ namespace GameWidgets {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Finding path with DFS!\n";
 
-			_path = PathFinder::dfs(_world, _search_speed, _renderer); 
+			_path = PathFinder::dfs(_world, _search_speed); 
 			_render_path_flag = true;
 
 			if (_path.size() == 0){
@@ -225,7 +221,7 @@ namespace GameWidgets {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Finding path with BFS!\n";
 
-			_path = PathFinder::bfs(_world, _search_speed, _renderer); 
+			_path = PathFinder::bfs(_world, _search_speed); 
 			_render_path_flag = true;
 
 			if (_path.size() == 0){
@@ -260,16 +256,16 @@ namespace GameWidgets {
 		if (isMouseOver() && isClicked())
 			_ent_type = ENT_END;
 	}
-	
+
 	void MainMenuBtn::handleInputs() {
 		if (isMouseOver() && isClicked())
-			_scene_mgr.switchScene("MAIN_MENU");
+			App::getInstance()->switchScene("MAIN_MENU");
 	}
 
 	void ExitBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Exiting the game.\n";
-			app->setRunning(false);
+			App::getInstance()->setRunning(false);
 		}
 	}	
 }

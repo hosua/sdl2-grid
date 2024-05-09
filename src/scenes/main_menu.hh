@@ -9,36 +9,33 @@
 class MainMenu : public IScene {
 public:
 	~MainMenu() = default;
-	MainMenu(SDL_Renderer* &renderer, SceneManager &scene_mgr, bool &running);
-	void render(SDL_Renderer* &renderer) override;
+	MainMenu();
+	void render() override;
 	void handleInputs() override;
 private:
-	bool _running;
 };
 
 namespace MainMenuWidgets {
 	class StartBtn : public UI::Button {
 	public:
 		~StartBtn() = default;
-		StartBtn(SDL_Renderer* &renderer, SceneManager &scene_manager);
+		StartBtn();
 		void handleInputs() override;
 	private:
-		SceneManager& _scene_mgr;
 	};
 
 	
 	class TestBtn : public UI::Button {
 		public:
-			TestBtn(SDL_Renderer* &renderer, SceneManager& scene_mgr);
+			TestBtn();
 
 			void handleInputs() override;
 		private:
-			SceneManager& _scene_mgr;
 	};
 
 	class ExitBtn : public UI::Button {
 		public:
-			ExitBtn(SDL_Renderer* &renderer);
+			ExitBtn();
 			void handleInputs() override;
 		private:
 	};

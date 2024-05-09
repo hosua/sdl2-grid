@@ -10,7 +10,8 @@
 
 class SceneManager {
 public:
-	SceneManager(SDL_Renderer* &renderer);	
+	
+	SceneManager();
 	~SceneManager() = default;
 	
 	void addScene(std::unique_ptr<IScene> scene);
@@ -36,6 +37,5 @@ public:
 
 private:
 	std::vector<std::unique_ptr<IScene>> _scenes;
-	SDL_Renderer* &_renderer;
 };
 

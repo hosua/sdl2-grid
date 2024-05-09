@@ -5,6 +5,8 @@
 
 #include "defs.hh"
 
+#include "app.hh"
+
 namespace PathFinder {
 	const std::unordered_map<int, float> SEARCH_SPEED_MAP = {
 		{0,  18.0},
@@ -28,10 +30,8 @@ namespace PathFinder {
 	};
 
 	World::World(int x, int y,
-			int w, int h,
-			bool& render_path_flag): 
-			_rect({x,y,w,h}),
-			_render_path_flag(render_path_flag) {
+			int w, int h):
+			_rect({x,y,w,h}){
 
 		_rows = h / BLOCK_H;
 		_cols = w / BLOCK_W;
@@ -46,9 +46,9 @@ namespace PathFinder {
 		_grid[_end.y][_end.x] = ENT_END;
 	}
 
-	void World::draw(SDL_Renderer* renderer){
+	void World::draw(){
 		const SDL_Color& c = Color::Light::GREY;
-
+		SDL_Renderer* renderer = App::getInstance()->getRenderer();
 		// draw entities in grid
 		SDL_Rect rect;
 		for (int y = 0; y < _rows; ++y){
@@ -97,13 +97,14 @@ namespace PathFinder {
 	}
 
 	// clears only the world grid portion of the screen
-	void World::renderClear(SDL_Renderer* renderer){
+	void World::renderClear(){
+		SDL_Renderer* renderer = App::getInstance()->getRenderer();
 		const SDL_Color c = Color::BLACK;
 		// clear world with black color
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 255); 
 		SDL_RenderFillRect(renderer, &_rect);
 		// redraw the world
-		draw(renderer);
+		draw();
 	}
 
 	void World::spawnEntity(const EntType entity_type, int x, int y){

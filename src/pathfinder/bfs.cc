@@ -10,11 +10,15 @@
 #include "bfs.hh"
 #include "../defs.hh"
 
+#include "app.hh"
+
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SDL_Renderer* &renderer){
+std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed){
 	using std::vector, std::function,
 		  std::map, std::pair, std::make_pair;
+
+	SDL_Renderer* renderer = App::getInstance()->getRenderer();
 	vector<SDL_Point> path;
 	std::set<pair<int,int>> vis;
 	map<pair<int,int>, SDL_Point> parent;
@@ -33,8 +37,8 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 
 	std::vector<SDL_Rect> search_markers;
 
-	world.renderClear(renderer);
-	world.draw(renderer);
+	world.renderClear();
+	world.draw();
 
 	const SDL_Color c = Color::GREEN;
 	while (!q.empty()){
@@ -76,7 +80,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 			SDL_RenderFillRect(renderer, &rect);
 			// add some delay to the path search animation
-			DelayHighRes(search_delay);
+			App::getInstance()->delayHighRes(search_delay);
 			SDL_RenderPresent(renderer);
 
 			for (const SDL_Point& moves : s_moves){
@@ -90,7 +94,6 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 					vis.insert(make_pair(n.x, n.y)); // mark as visited
 				}
 			}
-
 
 		}
 	}

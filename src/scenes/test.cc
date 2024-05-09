@@ -5,15 +5,16 @@
 #include "ui/all.hh"
 #include "ui/spinner.hh"
 
+#include "app.hh"
+
 int v_val = 0; 
 float h_val = 0.0;
 
 const int WORLD_X = 200, WORLD_Y = 200, WORLD_W = 400, WORLD_H = 400;
 
-Test::Test(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool& running):
-	IScene("TEST_MENU", renderer),
-	World(WORLD_X, WORLD_Y, WORLD_W, WORLD_H, running),
-	_running(running) {
+Test::Test():
+	IScene("TEST_MENU"),
+	World(WORLD_X, WORLD_Y, WORLD_W, WORLD_H){
 
 		// vertical spinner	
 		std::unique_ptr<UI::Spinner<int>> v_spnr =
@@ -21,7 +22,6 @@ Test::Test(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool& running):
 					50, 50,
 					26, 65,
 					0, 100, 1,
-					renderer,
 					UI::ST_VERTICAL
 					);
 		addWidget(std::move(v_spnr));	
@@ -32,29 +32,29 @@ Test::Test(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool& running):
 					100, 50,
 					65, 25,
 					0., 1., .01,
-					renderer,
 					UI::ST_HORIZONTAL
 					);
 		addWidget(std::move(h_spnr));
 
 		std::unique_ptr<MainMenuBtn> btn_main_menu = 
-			std::make_unique<MainMenuBtn>(renderer, scene_mgr);
+			std::make_unique<MainMenuBtn>();
 		addWidget(std::move(btn_main_menu));
 
 		std::unique_ptr<ExitBtn> btn_exit = 
-			std::make_unique<ExitBtn>(renderer, _running);
+			std::make_unique<ExitBtn>();
 		addWidget(std::move(btn_exit));
 	};
 
-void Test::render(SDL_Renderer* &renderer) {
-	World::draw(renderer);
+void Test::render(){
+	World::draw();
 	renderWidgets();
 };
 
 void Test::handleInputs(){
-	const SDL_Point& mouse_pos = GetMousePos();
+
+	const SDL_Point& mouse_pos = App::getInstance()->getMousePos();
 	static bool lmb_down = false, rmb_down = false;
-	for (const SDL_Event& event : GetFrameEvents()){
+	for (const SDL_Event& event : App::getInstance()->getFrameEvents()){
 		switch(event.type){
 			case SDL_MOUSEBUTTONDOWN:
 				{
@@ -92,33 +92,29 @@ void Test::handleInputs(){
 	handleWidgetInputs();
 }
 
-MainMenuBtn::MainMenuBtn(SDL_Renderer* &renderer, SceneManager& scene_mgr):
+MainMenuBtn::MainMenuBtn():
 	Button("Main Menu",
 			5, WINDOW_H - 110,
 			100, 50, 
-			renderer,
-			Font::openSansSmall),
-	_scene_mgr(scene_mgr) {}
+			Font::openSansSmall){}
 
 void MainMenuBtn::handleInputs(){
 	if (isMouseOver() && isClicked()){
-		_scene_mgr.switchScene("MAIN_MENU");
+		App::getInstance()->SceneManager::switchScene("MAIN_MENU");
 	}
 }
 
-ExitBtn::ExitBtn(SDL_Renderer* &renderer, bool& running):
+ExitBtn::ExitBtn():
 	Button("Exit",
 			5, WINDOW_H - 55,
 			100, 50,
-			renderer, 
 			Font::openSansSmall,
-			Color::RED),
-	_running(running) {}
+			Color::RED){}
 
 void ExitBtn::handleInputs() {
 	if (isMouseOver() && isClicked()){
 		std::cout << "Exiting the game.\n";
-		_running= false;
+		App::getInstance()->setRunning(false);
 	}
 }
 
