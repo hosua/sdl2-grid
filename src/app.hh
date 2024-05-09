@@ -10,7 +10,7 @@
 #include "scene.hh"
 #include "scene_manager.hh"
 
-class App {
+class App : public SceneManager {
 	public:
 		// Singleton. This will ensure that App can only be instantiated once
 		static App* getInstance(){ 
@@ -18,9 +18,6 @@ class App {
 				_instance = new App();
 			return _instance;
 		}
-
-		void addScene(std::unique_ptr<IScene> scene);
-		bool renderScenes();
 
 		void mainLoop();
 
@@ -31,9 +28,7 @@ class App {
 		void setRunning(bool flag){ _running = flag; }
 		bool& getRunningRef(){ return std::ref(_running); }
 
-		SDL_Renderer* & getRenderer(){ return _renderer; }
-		
-		SceneManager& getSceneManager() { return _scene_mgr; }
+		SDL_Renderer* &getRenderer(){ return _renderer; }
 
 		// move player relative to current pos, returns true if player moved
 		bool movePlayer(int dx, int dy); 
@@ -52,5 +47,4 @@ class App {
 		SDL_Window* _window = nullptr;
 		SDL_Surface* _surface = nullptr;
 		SDL_Renderer* _renderer = nullptr;
-		SceneManager _scene_mgr;
 };

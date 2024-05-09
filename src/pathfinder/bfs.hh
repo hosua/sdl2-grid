@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "../world.hh"
+#include "world.hh"
 
 namespace PathFinder {
 

@@ -33,15 +33,14 @@ bool SceneManager::removeScene(const std::string& key){
 	return true;
 };
 
-bool SceneManager::renderScenes(){
+void SceneManager::renderScenes(){
 	SDL_Point mouse_pos;
 	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 	drawClear();
 	for (auto itr = _scenes.begin(); itr != _scenes.end(); ++itr){
 		IScene* scene = itr->get();
 		if (scene->isRendering()){
-			if (!scene->render(_renderer))
-				return false;
+			scene->render(_renderer);
 			
 			// If we're not rendering the scene, we can probably safely assume
 			// that we also don't want to handle its input events.
@@ -50,7 +49,6 @@ bool SceneManager::renderScenes(){
 		}
 	}
 	drawPresent();
-	return true;
 };
 
 void SceneManager::drawClear(const SDL_Color& color) const {

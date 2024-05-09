@@ -3,17 +3,19 @@
 #include <iostream>
 
 #include "../scene.hh"
-#include "../world.hh"
+#include "../pathfinder/world.hh"
 #include "ui/all.hh"
 
 #include "scene_manager.hh"
 
-class Game : public IScene {
+using namespace PathFinder;
+
+class Game : public IScene, public World {
 	public:
-		Game(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool& running);
+		Game(SDL_Renderer* &renderer, SceneManager& scene_mgr);
 		~Game() = default;
 
-		bool render(SDL_Renderer* &renderer) override;
+		void render(SDL_Renderer* &renderer) override;
 		void handleInputs() override;
 
 		void drawWorld(SDL_Renderer* &renderer);
@@ -21,18 +23,17 @@ class Game : public IScene {
 		// gets and stores the path from player -> goal in _path.
 		bool getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
 		void renderPath(SDL_Renderer* &renderer); // renders _path (if one can be formed)
-												  // move player relative to current pos, returns true if player moved
-		bool movePlayer(int dx, int dy); 
 
-		void setEntityType(EntType entity_type); // sets the entity type that the player will emplace when clicking on the world
+		// sets the entity type that the player will emplace when clicking on the world
+		void setEntityType(EntType entity_type){ _entity_type = entity_type; }
+
 		void renderSelectedEntityType(SDL_Renderer* &renderer); // renders a rect behind the button of which entity type is currently selected
 
+	
 	private:
-		bool& _running; 
 		bool _render_path_flag = false;
-		World _world;
-		std::vector<SDL_Point> _path;
 		SceneManager& _scene_mgr;
+		std::vector<SDL_Point> _path;
 		EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
 		int _search_speed = 5; // the speed of the pathfinding search
 };
@@ -166,16 +167,14 @@ namespace GameWidgets {
 
 	class ExitBtn : public UI::Button {
 		public:
-			ExitBtn(SDL_Renderer* &renderer, bool& running):
+			ExitBtn(SDL_Renderer* &renderer):
 				Button("Exit",
 						5, WINDOW_H - 55,
 						130, 50,
 						renderer, 
 						Font::openSansSmall,
-						Color::RED),
-				_running(running) {}
+						Color::RED){}
 			void handleInputs() override;
 		private:
-			bool& _running;
 	};
 }

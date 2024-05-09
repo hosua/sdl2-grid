@@ -16,7 +16,7 @@ public:
 
 	const std::string& getKey() const { return _key; }
 	// render returns false if the game should shutdown
-	virtual bool render(SDL_Renderer* &renderer) = 0;
+	virtual void render(SDL_Renderer* &renderer) = 0;
 	virtual void handleInputs() = 0;
 
 	bool isHandlingInputs() const { return _is_handling_inputs; }

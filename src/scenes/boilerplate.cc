@@ -10,14 +10,13 @@
  * This file is ommitted from the build process.
  */
 
-Example::Example(SDL_Renderer* &renderer):
-	IScene("EXAMPLE", renderer){}
+Example::Example(SDL_Renderer* &renderer, bool& running):
+	IScene("EXAMPLE", renderer),
+	_running(running){}
 
 bool Example::render(SDL_Renderer* &renderer) {
-	if (_end_game)
-		return false;
 	renderWidgets();
-	return true;
+	return _running;
 }
 
 void Example::handleInputs(){

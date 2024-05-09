@@ -14,14 +14,15 @@ set(SOURCES
 	src/color.cc
 	src/font.cc
     src/main.cc
-	src/world.cc
 	src/scene.cc
 	src/scene_manager.cc
 	src/scenes/game.cc
 	src/scenes/main_menu.cc
 	src/scenes/test.cc
-	src/pathfinders/dfs.cc
-	src/pathfinders/bfs.cc
+	src/pathfinder/dfs.cc
+	src/pathfinder/bfs.cc
+	src/pathfinder/astar.cc
+	src/pathfinder/world.cc
 	src/ui/widget_manager.cc
 	src/ui/widget.cc
 	src/ui/text.cc
@@ -33,7 +34,7 @@ set(SOURCES
 set(INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scenes
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathfinders
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathfinder
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui
 )
 

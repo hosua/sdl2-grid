@@ -4,22 +4,26 @@
 #include <utility>
 
 #include "game.hh"
-#include "pathfinders/dfs.hh"
-#include "pathfinders/bfs.hh"
+#include "pathfinder/dfs.hh"
+#include "pathfinder/bfs.hh"
 #include "../defs.hh"
 
-Game::Game(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool &running):
+#include "app.hh"
+
+App* app = App::getInstance();
+
+const int WORLD_X = 140, WORLD_Y = 5, WORLD_W = WINDOW_W - WORLD_X, WORLD_H = WINDOW_H;
+Game::Game(SDL_Renderer* &renderer, SceneManager& scene_mgr):
 	IScene("GAME", renderer), 
-	_running(running),
-	_world(_render_path_flag),
+	World(WORLD_X, WORLD_Y, WORLD_W, WORLD_H, _render_path_flag),
 	_scene_mgr(scene_mgr) {
 
 		std::unique_ptr<GameWidgets::DFSBtn> btn_dfs = 
-			std::make_unique<GameWidgets::DFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
+			std::make_unique<GameWidgets::DFSBtn>(*this, _path, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_dfs));
 
 		std::unique_ptr<GameWidgets::BFSBtn> btn_bfs = 
-			std::make_unique<GameWidgets::BFSBtn>(_world, _path, renderer, _render_path_flag, _search_speed);
+			std::make_unique<GameWidgets::BFSBtn>(*this, _path, renderer, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_bfs));
 		
 		// TODO: Removed while still unimplemented
@@ -44,7 +48,7 @@ Game::Game(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool &running):
 		addWidget(std::move(btn_main_menu));
 
 		std::unique_ptr<GameWidgets::ExitBtn> btn_exit = 
-			std::make_unique<GameWidgets::ExitBtn>(renderer, _running);
+			std::make_unique<GameWidgets::ExitBtn>(renderer);
 		addWidget(std::move(btn_exit));
 		
 		// search speed label
@@ -71,15 +75,14 @@ Game::Game(SDL_Renderer* &renderer, SceneManager& scene_mgr, bool &running):
 
 	};
 
-bool Game::render(SDL_Renderer* &renderer) {
+void Game::render(SDL_Renderer* &renderer) {
 	drawWorld(renderer);
 
-	if (_world.getRenderPathFlag())
+	if (World::getRenderPathFlag())
 		renderPath(renderer);
 
 	renderSelectedEntityType(renderer); // render selected rect around entity button
 	renderWidgets();
-	return _running;
 };
 
 void Game::renderSelectedEntityType(SDL_Renderer* &renderer){
@@ -145,27 +148,27 @@ void Game::handleInputs(){
 	}
 	handleWidgetInputs();
 
-	SDL_Point g = { (mouse_pos.x - LEFT_PANE_W) / BLOCK_W, mouse_pos.y / BLOCK_H };
-	if (lmb_down) _world.spawnEntity(_entity_type, g.x, g.y);
-	if (rmb_down) _world.deleteWall(g.x, g.y);
+	SDL_Point g = { (mouse_pos.x - World::getRect().x) / BLOCK_W, mouse_pos.y / BLOCK_H };
+	if (lmb_down) World::spawnEntity(_entity_type, g.x, g.y);
+	if (rmb_down) World::deleteWall(g.x, g.y);
 
 	const uint8_t* kb_state = SDL_GetKeyboardState(nullptr);
 
 	if (s_player_last_moved == 0){ // add some delay between movement events
 		bool moved = false;
 		if (kb_state[SDL_SCANCODE_UP] || kb_state[SDL_SCANCODE_W])
-			moved |= movePlayer(0, -1);
+			moved |= World::movePlayerRelative(0, -1);
 		if (kb_state[SDL_SCANCODE_DOWN] || kb_state[SDL_SCANCODE_S])
-			moved |= movePlayer(0, +1);
+			moved |= World::movePlayerRelative(0, +1);
 		if (kb_state[SDL_SCANCODE_LEFT] || kb_state[SDL_SCANCODE_A])
-			moved |= movePlayer(-1, 0);
+			moved |= World::movePlayerRelative(-1, 0);
 		if (kb_state[SDL_SCANCODE_RIGHT] || kb_state[SDL_SCANCODE_D])
-			moved |= movePlayer(+1, 0);
+			moved |= World::movePlayerRelative(+1, 0);
 
 		// if the player moved, reset the delay timer
 		if (moved){ 
 			s_player_last_moved = PLAYER_MOVE_DELAY;
-			_world.setRenderPathFlag(false);
+			World::setRenderPathFlag(false);
 		}
 	} else {
 		s_player_last_moved--;
@@ -174,23 +177,15 @@ void Game::handleInputs(){
 }
 
 void Game::drawWorld(SDL_Renderer* &renderer) {
-	_world.draw(renderer);
+	World::draw(renderer);
 };
-
-// returns true if the player moved 
-bool Game::movePlayer(int dx, int dy){
-	SDL_Point pos = _world.getPlayerPos();
-	_world.movePlayer(pos.x + dx, pos.y + dy); // internally handles boundary checks
-	return (pos.x != _world.getPlayerPos().x ||
-			pos.y != _world.getPlayerPos().y);
-}
 
 // gets and stores the path from player -> goal in _path.
 // helper() is a function that uses the world to find the path. It does not
 // modify world in any shape or form. helper() returns false when no path is found
 // returns false if no path is found
 bool Game::getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper){ 
-	_path = helper(_world, _path);
+	_path = helper(*this, _path);
 	return _path.size() > 0;
 } 
 
@@ -201,14 +196,10 @@ void Game::renderPath(SDL_Renderer* &renderer){
 	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 	for (const SDL_Point pt : _path){
 		SDL_Rect rect = {
-			LEFT_PANE_W + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H
+			World::getRect().x + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H
 		};
 		SDL_RenderFillRect(renderer, &rect);
 	}
-}
-
-void Game::setEntityType(EntType entity_type){
-	_entity_type = entity_type;
 }
 
 namespace GameWidgets {
@@ -278,7 +269,7 @@ namespace GameWidgets {
 	void ExitBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Exiting the game.\n";
-			_running = false;
+			app->setRunning(false);
 		}
 	}	
 }

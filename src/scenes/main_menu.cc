@@ -4,22 +4,28 @@
 
 #include "ui/all.hh"
 
+#include "app.hh"
+
 MainMenu::MainMenu(SDL_Renderer* &renderer, SceneManager &scene_mgr, bool& running):
-	IScene("MAIN_MENU", renderer)
+	IScene("MAIN_MENU", renderer),
+	_running(running)
 {
 
 	std::unique_ptr<MainMenuWidgets::StartBtn> start_btn = 
 		std::make_unique<MainMenuWidgets::StartBtn>(renderer, scene_mgr);
 	addWidget(std::move(start_btn));
 
+	std::unique_ptr<MainMenuWidgets::TestBtn> test_btn = 
+		std::make_unique<MainMenuWidgets::TestBtn>(renderer, scene_mgr);
+	addWidget(std::move(test_btn));
+
 	std::unique_ptr<MainMenuWidgets::ExitBtn> exit_btn = 
-		std::make_unique<MainMenuWidgets::ExitBtn>(renderer, running);
+		std::make_unique<MainMenuWidgets::ExitBtn>(renderer);
 	addWidget(std::move(exit_btn));
 };
 
-bool MainMenu::render(SDL_Renderer* &renderer) {
+void MainMenu::render(SDL_Renderer* &renderer) {
 	renderWidgets();
-	return (!_end_game);
 };
 
 void MainMenu::handleInputs(){
@@ -48,24 +54,36 @@ namespace MainMenuWidgets {
 
 	void StartBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
-			std::cout << "Clicked start button.\n";
 			_scene_mgr.switchScene("GAME");
 		}
 	}
 
-	ExitBtn::ExitBtn(SDL_Renderer* &renderer, bool& running):
-			Button("Exit",
+	TestBtn::TestBtn(SDL_Renderer* &renderer, SceneManager& scene_mgr):
+		Button("Test Menu",
 				(WINDOW_W/2) - (BTN_DIMS.w/2), (WINDOW_H/3) + BTN_DIMS.h+5, 
 				200, 50,
+				renderer),
+			_scene_mgr(scene_mgr) {}
+
+
+	void TestBtn::handleInputs(){
+		if (isMouseOver() && isClicked()){
+			_scene_mgr.switchScene("TEST_MENU");
+		}
+	}
+
+	ExitBtn::ExitBtn(SDL_Renderer* &renderer):
+		Button("Exit",
+				(WINDOW_W/2) - (BTN_DIMS.w/2), (WINDOW_H/3) + 2*(BTN_DIMS.h+5), 
+				200, 50,
 				renderer, 
-				Font::openSansSmall,
-				Color::RED),
-			_running(running) {}
+				Font::openSansMedium,
+				Color::RED){}
 
 	void ExitBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Exiting the game.\n";
-			_running = false;
+			App::getInstance()->isRunning();
 		}
 	}	
 }

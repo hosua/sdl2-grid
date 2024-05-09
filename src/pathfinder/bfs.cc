@@ -9,8 +9,6 @@
 
 #include "bfs.hh"
 #include "../defs.hh"
-#include "pathfinder_shared.hh"
-#include "color.hh"
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
@@ -24,7 +22,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 	function<void(SDL_Point, World&, vector<SDL_Point>, vector<SDL_Point>&,
 			std::set<pair<int,int>>&)> bfs_helper;
 	
-	const int search_delay = SEARCH_SPEED_MAP.at(search_speed);
+	const int search_delay = PathFinder::SEARCH_SPEED_MAP.at(search_speed);
 
 	SDL_Point start = world.getPlayerPos();
 	SDL_Point goal = world.getEndPos();
@@ -45,7 +43,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 			SDL_Point pos = q.front();
 			// printf("(%i,%i) -> ", pos.x, pos.y);
 			q.pop();
-			SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
+			SDL_Rect rect = { world.getRect().x + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
 
 			// animate & reconstruct the path we formed when we reach the goal
 			if (pos.x == goal.x && pos.y == goal.y){
@@ -60,7 +58,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 					path.push_back(node);
 					SDL_Point p = parent[crawl];
 					crawl.first = p.x, crawl.second = p.y;
-					rect = { LEFT_PANE_W + p.x * BLOCK_W, p.y * BLOCK_H, BLOCK_W, BLOCK_H };
+					rect = { world.getRect().x + p.x * BLOCK_W, p.y * BLOCK_H, BLOCK_W, BLOCK_H };
 					SDL_RenderFillRect(renderer, &rect);
 
 					// add some delay to the path reconstructing animation
@@ -85,7 +83,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed, SD
 				SDL_Point n = {pos.x + moves.x, pos.y + moves.y};
 				pair<int,int> pr = make_pair(n.x, n.y);
 				if (world.inBounds(n.x, n.y) &&
-						(world.getPos(n.x, n.y) == ENT_NONE || world.getPos(n.x, n.y) == ENT_END) 
+						(world.getEntityAt(n.x, n.y) == ENT_NONE || world.getEntityAt(n.x, n.y) == ENT_END) 
 						&& vis.find(pr) == vis.end()){
 					q.push(n);
 					parent[make_pair(n.x, n.y)] = pos;

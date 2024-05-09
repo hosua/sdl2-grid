@@ -10,10 +10,10 @@ class MainMenu : public IScene {
 public:
 	~MainMenu() = default;
 	MainMenu(SDL_Renderer* &renderer, SceneManager &scene_mgr, bool &running);
-	bool render(SDL_Renderer* &renderer) override;
+	void render(SDL_Renderer* &renderer) override;
 	void handleInputs() override;
 private:
-	bool _end_game = false;
+	bool _running;
 };
 
 namespace MainMenuWidgets {
@@ -26,11 +26,20 @@ namespace MainMenuWidgets {
 		SceneManager& _scene_mgr;
 	};
 
-	class ExitBtn : public UI::Button {
+	
+	class TestBtn : public UI::Button {
 		public:
-			ExitBtn(SDL_Renderer* &renderer, bool& running);
+			TestBtn(SDL_Renderer* &renderer, SceneManager& scene_mgr);
+
 			void handleInputs() override;
 		private:
-			bool& _running;
+			SceneManager& _scene_mgr;
+	};
+
+	class ExitBtn : public UI::Button {
+		public:
+			ExitBtn(SDL_Renderer* &renderer);
+			void handleInputs() override;
+		private:
 	};
 }
