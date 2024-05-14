@@ -24,7 +24,7 @@ namespace PathFinder {
 				int w, int h);
 
 		~World() = default;
-		void draw();
+		void render();
 
 		bool movePlayer(int x, int y);  /*!< Moves player directly to (x,y). Returns false if unmoved */
 		
@@ -51,6 +51,9 @@ namespace PathFinder {
 		void deleteWall(int x, int y); // walls are currently the only type that should be deletable
 
 		bool inBounds(int x, int y) const { return (x >= 0 && x < _cols && y >= 0 && y < _rows); }
+		
+		// when g_settings.block_size changes, other variables in World need to be updated
+		void updateDimensions();
 
 		const std::pair<int,int> getDimensions();
 

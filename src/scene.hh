@@ -18,6 +18,8 @@ public:
 	// render returns false if the game should shutdown
 	virtual void render() = 0;
 	virtual void handleInputs() = 0;
+	// set all data in scene to original state (does nothing if not overriden)
+	virtual void restart(){ return; };
 
 	bool isHandlingInputs() const { return _is_handling_inputs; }
 	void setHandlingInputs(bool flag){ _is_handling_inputs = flag; }

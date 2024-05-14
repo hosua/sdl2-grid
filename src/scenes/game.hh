@@ -10,31 +10,34 @@
 
 using namespace PathFinder;
 
-class Game : public IScene, public World {
-	public:
-		Game();
-		~Game() = default;
+namespace Scenes {
+	class Game : public IScene, public World {
+		public:
+			Game();
+			~Game() = default;
 
-		void render() override;
-		void handleInputs() override;
+			void render() override;
+			void handleInputs() override;
 
-		// gets and stores the path from player -> goal in _path.
-		bool getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
-		void renderPath(); // renders _path (if one can be formed)
+			void restart() override;
 
-		// sets the entity type that the player will emplace when clicking on the world
-		void setEntityType(EntType entity_type){ _entity_type = entity_type; }
+			// gets and stores the path from player -> goal in _path.
+			bool getPath(std::function<std::vector<SDL_Point>(World& world, std::vector<SDL_Point> path)> helper); // return false if no path is found
+			void renderPath(); // renders _path (if one can be formed)
 
-		// renders a rect behind the button of which entity type is currently selected
-		void renderSelectedEntityType();
+			// sets the entity type that the player will emplace when clicking on the world
+			void setEntityType(EntType entity_type){ _entity_type = entity_type; }
 
-	
-	private:
-		std::vector<SDL_Point> _path;
-		EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
-		int _search_speed = 7; // the speed of the pathfinding search
-};
+			// renders a rect behind the button of which entity type is currently selected
+			void renderSelectedEntityType();
 
+		
+		private:
+			std::vector<SDL_Point> _path;
+			EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
+			int _search_speed = 7; // the speed of the pathfinding search
+	};
+}
 
 namespace GameWidgets {
 	class DFSBtn : public UI::Button {

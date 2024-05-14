@@ -187,15 +187,15 @@
    "-Wpedantic",
    "-MD",
    "-MT",
-   "CMakeFiles/grid-game.dir/src/scenes/test.cc.o",
+   "CMakeFiles/grid-game.dir/src/scenes/settings.cc.o",
    "-MF",
-   "CMakeFiles/grid-game.dir/src/scenes/test.cc.o.d",
+   "CMakeFiles/grid-game.dir/src/scenes/settings.cc.o.d",
    "-o",
-   "CMakeFiles/grid-game.dir/src/scenes/test.cc.o",
+   "CMakeFiles/grid-game.dir/src/scenes/settings.cc.o",
    "-c",
-   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/scenes/test.cc"
+   "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/scenes/settings.cc"
   ],
-  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/scenes/test.cc"
+  "file": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/src/scenes/settings.cc"
  },
  {
   "directory": "/home/hoswoo/Desktop/git/Github/sdl2-pathfinder/build",

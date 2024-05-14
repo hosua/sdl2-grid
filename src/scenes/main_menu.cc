@@ -6,39 +6,43 @@
 
 #include "app.hh"
 
-MainMenu::MainMenu():
-	IScene("MAIN_MENU")
-{
+#include "scenes/game.hh"
 
-	std::unique_ptr<MainMenuWidgets::StartBtn> start_btn = 
-		std::make_unique<MainMenuWidgets::StartBtn>();
-	addWidget(std::move(start_btn));
+namespace Scenes {
+	MainMenu::MainMenu():
+		IScene("MAIN_MENU")
+	{
 
-	std::unique_ptr<MainMenuWidgets::TestBtn> test_btn = 
-		std::make_unique<MainMenuWidgets::TestBtn>();
-	addWidget(std::move(test_btn));
+		std::unique_ptr<MainMenuWidgets::StartBtn> start_btn = 
+			std::make_unique<MainMenuWidgets::StartBtn>();
+		addWidget(std::move(start_btn));
 
-	std::unique_ptr<MainMenuWidgets::ExitBtn> exit_btn = 
-		std::make_unique<MainMenuWidgets::ExitBtn>();
-	addWidget(std::move(exit_btn));
-};
+		std::unique_ptr<MainMenuWidgets::SettingsBtn> test_btn = 
+			std::make_unique<MainMenuWidgets::SettingsBtn>();
+		addWidget(std::move(test_btn));
 
-void MainMenu::render() {
-	renderWidgets();
-};
+		std::unique_ptr<MainMenuWidgets::ExitBtn> exit_btn = 
+			std::make_unique<MainMenuWidgets::ExitBtn>();
+		addWidget(std::move(exit_btn));
+	};
 
-void MainMenu::handleInputs(){
-	const SDL_Point& mouse_pos = App::getInstance()->getMousePos();
-	static bool lmb_down = false, rmb_down = false;
-	for (const SDL_Event& event : App::getInstance()->getFrameEvents()){
-		switch(event.type){
-			// Handle input events here
-			default:
-				break;
+	void MainMenu::render() {
+		renderWidgets();
+	};
+
+	void MainMenu::handleInputs(){
+		const SDL_Point& mouse_pos = App::getInstance()->getMousePos();
+		static bool lmb_down = false, rmb_down = false;
+		for (const SDL_Event& event : App::getInstance()->getFrameEvents()){
+			switch(event.type){
+				default:
+					break;
+			}
 		}
+
+		handleWidgetInputs();
 	}
 
-	handleWidgetInputs();
 }
 
 namespace MainMenuWidgets {
@@ -51,19 +55,19 @@ namespace MainMenuWidgets {
 
 	void StartBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
-			App::getInstance()->switchScene("GAME");
+			App::getInstance()->switchScene("GAME", true);
 		}
 	}
 
-	TestBtn::TestBtn():
-		Button("Test Menu",
+	SettingsBtn::SettingsBtn():
+		Button("Settings",
 				(WINDOW_W/2) - (BTN_DIMS.w/2), (WINDOW_H/3) + BTN_DIMS.h+5, 
 				200, 50){}
 
 
-	void TestBtn::handleInputs(){
+	void SettingsBtn::handleInputs(){
 		if (isMouseOver() && isClicked()){
-			App::getInstance()->SceneManager::switchScene("TEST_MENU");
+			App::getInstance()->SceneManager::switchScene("SETTINGS_MENU");
 		}
 	}
 

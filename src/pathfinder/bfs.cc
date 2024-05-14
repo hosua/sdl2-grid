@@ -18,6 +18,10 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed){
 	using std::vector, std::function,
 		  std::map, std::pair, std::make_pair;
 
+	const int BLOCK_W = g_settings.block_size;
+	const int BLOCK_H = g_settings.block_size;
+
+
 	SDL_Renderer* renderer = App::getInstance()->getRenderer();
 	vector<SDL_Point> path;
 	std::set<pair<int,int>> vis;
@@ -38,7 +42,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed){
 	std::vector<SDL_Rect> search_markers;
 
 	world.renderClear();
-	world.draw();
+	world.render();
 
 	const SDL_Color c = Color::GREEN;
 	while (!q.empty()){

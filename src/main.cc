@@ -8,7 +8,9 @@
 #include "app.hh"
 #include "scenes/game.hh"
 #include "scenes/main_menu.hh"
-#include "scenes/test.hh"
+#include "scenes/settings.hh"
+
+Settings g_settings;
 
 int main(){
 	srand(time(NULL));
@@ -16,12 +18,12 @@ int main(){
 	if (!App::getInstance()->isRunning())
 		return EXIT_FAILURE;
 
-	std::unique_ptr<MainMenu> main_menu_scene = 
-		std::make_unique<MainMenu>();
-	App::getInstance()->addScene(std::move(main_menu_scene));
+	std::unique_ptr<Scenes::MainMenu> main_menu_scene = 
+		std::make_unique<Scenes::MainMenu>();
 
-	App::getInstance()->addScene(std::make_unique<Game>());
-	App::getInstance()->addScene(std::make_unique<Test>());
+	App::getInstance()->addScene(std::move(main_menu_scene));
+	App::getInstance()->addScene(std::make_unique<Scenes::Game>());
+	App::getInstance()->addScene(std::make_unique<Scenes::Settings>());
 	
 	App::getInstance()->mainLoop();
 	

@@ -62,9 +62,11 @@ static int get_heuristic(int x1, int y1, int x2, int y2){
 };
 
 std::vector<SDL_Point> PathFinder::a_star(World& world, const int& search_speed){
-	std::vector<SDL_Point> path;
-	
+	const int BLOCK_W = g_settings.block_size;
+	const int BLOCK_H = g_settings.block_size;
 	const int search_delay = PathFinder::SEARCH_SPEED_MAP.at(search_speed);
+
+	std::vector<SDL_Point> path;
 
 	int g_count = 0; 
 

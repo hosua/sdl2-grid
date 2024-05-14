@@ -32,7 +32,8 @@ class App : public SceneManager {
 		void handleInputs();
 		bool initSDL();
 
-		bool isRunning() const;
+		bool isRunning() const { return _running; }
+
 		void setRunning(bool flag){ _running = flag; }
 		const bool& getRunningRef(){ return std::cref(_running); }
 		

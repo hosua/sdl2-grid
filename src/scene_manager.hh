@@ -24,10 +24,11 @@ public:
 	void drawClear(const SDL_Color& color = Color::BLACK) const; // always call at the beginning of game loop iteration
 	void drawPresent() const; // always call at the end of game loop iteration
 	
-	// disables all scenes (input and rendering) except for the scene being switched to
-	bool switchScene(const std::string& key);
-	// enables rendering and inputs management for the scene being launched but
-	// does not modify the flags for the other scenes.
+	// disables all scenes (input and rendering) except for the scene being switched to.
+	// If restart == true, will call the Scene's restart() method after switching.
+	bool switchScene(const std::string& key, bool restart = false);
+	
+	// TODO: This will remain unimplemented until I have a use-case for overlaying scenes
 	bool launchScene(const std::string& key);
 
 	/** \brief Renders all scenes that have been added with App::addScene().

@@ -8,6 +8,10 @@
 #define WINDOW_W 1280
 #define WINDOW_H 720
 
-#define BLOCK_W 10
-#define BLOCK_H 10
+struct Settings {
+	int block_size = 10;
+};
+
+extern Settings g_settings;
+
 

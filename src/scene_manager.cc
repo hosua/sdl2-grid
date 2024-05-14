@@ -67,7 +67,7 @@ void SceneManager::drawPresent() const {
 }
 
 // disables all scenes (input and rendering) except for the scene being switched to
-bool SceneManager::switchScene(const std::string& key){
+bool SceneManager::switchScene(const std::string& key, bool restart){
 	auto itr = std::find_if(_scenes.begin(), _scenes.end(), 
 				[&](std::unique_ptr<IScene>& scene){
 					return scene->getKey() == key;
@@ -83,6 +83,8 @@ bool SceneManager::switchScene(const std::string& key){
 		if (scene->getKey() == key){
 			scene->setRendering(true);
 			scene->setHandlingInputs(true);
+			if (restart)
+				scene->restart();
 		}
 	}
 	std::cout << "Switched to scene: " << key << '\n';
@@ -91,6 +93,7 @@ bool SceneManager::switchScene(const std::string& key){
 // enables rendering and inputs management for the scene being launched but
 // does not modify the flags for the other scenes.
 bool SceneManager::launchScene(const std::string& key){
+	// TODO TODO TODO
 }
 
 void SceneManager::handleAllSceneInputs(){

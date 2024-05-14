@@ -6,14 +6,18 @@
 
 #include "ui/all.hh"
 
-class MainMenu : public IScene {
-public:
-	~MainMenu() = default;
-	MainMenu();
-	void render() override;
-	void handleInputs() override;
-private:
-};
+namespace Scenes {
+
+	class MainMenu : public IScene {
+	public:
+		~MainMenu() = default;
+		MainMenu();
+		void render() override;
+		void handleInputs() override;
+	private:
+	};
+
+}
 
 namespace MainMenuWidgets {
 	class StartBtn : public UI::Button {
@@ -25,9 +29,9 @@ namespace MainMenuWidgets {
 	};
 
 	
-	class TestBtn : public UI::Button {
+	class SettingsBtn : public UI::Button {
 		public:
-			TestBtn();
+			SettingsBtn();
 
 			void handleInputs() override;
 		private:

@@ -14,7 +14,6 @@ namespace UI {
 		_bg_color(bg_color),
 		_hover_color(hover_color) {
 			_rect = { x, y, w, h };
-
 			// calculate text size
 			SDL_Rect t_sz = _text.getSize();
 			int tw = t_sz.w, th = t_sz.h;

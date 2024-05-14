@@ -42,21 +42,12 @@ namespace PathFinder {
 	World::World(int x, int y,
 			int w, int h):
 			_rect({x,y,w,h}){
-
-		_rows = h / BLOCK_H;
-		_cols = w / BLOCK_W;
-		std::printf("(rows,cols) = (%i,%i)\n", _rows, _cols);
-
-		_grid = std::vector<std::vector<EntType>>(_rows, std::vector<EntType>(_cols, ENT_NONE));
-
-		_player = { 0, 0 };
-		_grid[_player.y][_player.x] = ENT_PLAYER;
-
-		_end = { _cols-1, _rows-1 };
-		_grid[_end.y][_end.x] = ENT_END;
+		updateDimensions();
 	}
 
-	void World::draw(){
+	void World::render(){
+		const int BLOCK_W = g_settings.block_size;
+		const int BLOCK_H = g_settings.block_size;
 		const SDL_Color& c = Color::Light::GREY;
 		SDL_Renderer* renderer = App::getInstance()->getRenderer();
 		// draw entities in grid
@@ -75,7 +66,7 @@ namespace PathFinder {
 		// draw gridlines above the entities
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
 		// draw horizontal
-		for (int y = _rect.y; y < _rect.y + (_rows * BLOCK_H); y += BLOCK_H)
+		for (int y = _rect.y; y <= _rect.y + (_rows * BLOCK_H); y += BLOCK_H)
 			SDL_RenderDrawLine(renderer, _rect.x,  y, _rect.x + (_cols * BLOCK_W), y);
 		// draw vertical
 		for (int x = _rect.x; x <= _rect.x + (_cols * BLOCK_W); x += BLOCK_W)
@@ -111,8 +102,6 @@ namespace PathFinder {
 		// clear world with black color
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 255); 
 		SDL_RenderFillRect(renderer, &_rect);
-		// redraw the world
-		draw();
 	}
 
 	void World::spawnEntity(const EntType entity_type, int x, int y){
@@ -140,7 +129,8 @@ namespace PathFinder {
 			}
 		}
 	}
-
+	
+	// TODO: This function is redundant, we can delete wall by using spawnEntity(ENT_NONE).
 	void World::deleteWall(int x, int y){
 		if (inBounds(x, y) && _grid[y][x] == ENT_WALL)
 			_grid[y][x] = ENT_NONE;
@@ -156,6 +146,23 @@ namespace PathFinder {
 		return std::make_pair(_rows, _cols);
 	}
 	
+	void World::updateDimensions(){
+		const int BLOCK_W = g_settings.block_size;
+		const int BLOCK_H = g_settings.block_size;
+
+		_rows = _rect.h / BLOCK_H;
+		_cols = _rect.w / BLOCK_W;
+		std::printf("(rows,cols) = (%i,%i)\n", _rows, _cols);
+
+		_grid = std::vector<std::vector<EntType>>(_rows, std::vector<EntType>(_cols, ENT_NONE));
+
+		_player = { 0, 0 };
+		_grid[_player.y][_player.x] = ENT_PLAYER;
+
+		_end = { _cols-1, _rows-1 };
+		_grid[_end.y][_end.x] = ENT_END;
+	}
+
 	// returns true if the start and end nodes in the grid are connected
 	static bool is_connected(std::vector<std::vector<EntType>> grid){
 		SDL_Point start, end;
@@ -309,9 +316,8 @@ namespace PathFinder {
 			conways_game_of_life_iteration(grid);
 	
 		// Continue Conway's GOL Algorithm until the graph is connected
-		while (!is_connected(grid)){
+		while (!is_connected(grid))
 			conways_game_of_life_iteration(grid);
-		}
 		
 		world.setGrid(grid);
 	}

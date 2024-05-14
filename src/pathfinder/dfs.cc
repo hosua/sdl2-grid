@@ -16,6 +16,9 @@ using namespace PathFinder;
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
 std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed){
+	const int BLOCK_W = g_settings.block_size;
+	const int BLOCK_H = g_settings.block_size;
+
 	SDL_Renderer* renderer = App::getInstance()->getRenderer();
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
@@ -28,7 +31,7 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed){
 	SDL_Point goal = world.getEndPos();
 
 	world.renderClear();
-	world.draw();
+	world.render();
 
 	// set render color for path search marking
 	SDL_Color c = Color::GREEN;

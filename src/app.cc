@@ -48,45 +48,11 @@ App::~App(){
 	SDL_Quit();
 }
 
-void App::mainLoop(){
-	while (isRunning()){
-		SceneManager::renderScenes();
-		
-		const SDL_Point& mouse_pos = getMousePos();
-		SDL_Event event;
-		while (SDL_PollEvent(&event)){
-			getFrameEvents().push_back(event);
-			switch(event.type){
-				case SDL_KEYDOWN:
-					{
-						if (event.key.keysym.scancode == SDL_SCANCODE_M)
-							fprintf(stdout, "Mouse position: (%i,%i)\n", mouse_pos.x, mouse_pos.y);
-						if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE){
-							std::cout << "ESC was pressed\n";
-							setRunning(false);
-						}
-						break;
-					}
-				default:
-					break;
-			}
-		}
-
-		SceneManager::handleAllSceneInputs();
-
-		getFrameEvents().clear();
-		SDL_Delay(17);
-	}
-}
-
-bool App::isRunning() const { return _running; }
-
 bool App::initSDL(){
 	if (SDL_Init(SDL_INIT_EVERYTHING) > 0){
 		std::cerr << "SDL_Init Error: " << SDL_GetError() << '\n';
 		return false;
 	} 
-
 
 	_window = SDL_CreateWindow("Game Engine",
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -117,6 +83,37 @@ bool App::initSDL(){
 	TTF_Init();
 
 	return true;
+}
+
+void App::mainLoop(){
+	while (isRunning()){
+		SceneManager::renderScenes();
+		
+		const SDL_Point& mouse_pos = getMousePos();
+		SDL_Event event;
+		while (SDL_PollEvent(&event)){
+			getFrameEvents().push_back(event);
+			switch(event.type){
+				case SDL_KEYDOWN:
+					{
+						if (event.key.keysym.scancode == SDL_SCANCODE_M)
+							fprintf(stdout, "Mouse position: (%i,%i)\n", mouse_pos.x, mouse_pos.y);
+						if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE){
+							std::cout << "ESC was pressed\n";
+							setRunning(false);
+						}
+						break;
+					}
+				default:
+					break;
+			}
+		}
+
+		SceneManager::handleAllSceneInputs();
+
+		getFrameEvents().clear();
+		SDL_Delay(17);
+	}
 }
 
 int App::getRandInt(int min, int max) const {
