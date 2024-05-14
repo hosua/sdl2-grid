@@ -16,7 +16,6 @@ namespace UI {
 			~Text();
 			Text(const std::string& text, 
 					int x, int y, 
-					SDL_Renderer* &renderer,
 					TTF_Font* font
 				);
 
@@ -29,7 +28,6 @@ namespace UI {
 			SDL_Surface* _surface;
 			SDL_Texture* _texture;
 			TTF_Font* _font;
-			SDL_Renderer* &_renderer;
 	};
 
 }

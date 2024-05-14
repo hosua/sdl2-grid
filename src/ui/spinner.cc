@@ -1,6 +1,9 @@
 #include "spinner.hh"
+#include <SDL2/SDL_video.h>
 #include <algorithm>
 #include <sstream>
+
+#include "app.hh"
 
 // TODO: I should put this in something like utils, or in the global defs.
 template <typename T>
@@ -17,15 +20,14 @@ namespace UI {
 			int x, int y,
 			int w, int h,
 			T min_val, T max_val, T interval,
-			SDL_Renderer* &renderer,
 			SpinnerType spinner_type,
 			float btn_scalar, 
 			TTF_Font* font,
 			SDL_Color bg_color,
 			SDL_Color btn_color,
 			SDL_Color btn_hover_color)
-		: IWidget(x, y, renderer), 
-		_text(to_string_with_precision(val, SPINNER_PRECISION), 0, 0, renderer, font),
+		: IWidget(x, y), 
+		_text(to_string_with_precision(val, SPINNER_PRECISION), 0, 0, font),
 		_val(val), _min_val(min_val), _max_val(max_val), _interval(interval),
 		_btn_scalar(btn_scalar),
 		_bg_color(bg_color), _btn_color(btn_color), _btn_hover_color(btn_hover_color),
@@ -39,14 +41,12 @@ namespace UI {
 						"+",
 						x, y,
 						w, h * s,
-						renderer, 
 						font);
 
 				_dec_btn = std::make_unique<Button>(
 						"-",
 						x, y + (1/s - 1)*h*s+1,
 						w, h*s,
-						renderer, 
 						font);
 			} else { 
 				// horizontal configuration
@@ -54,14 +54,12 @@ namespace UI {
 						"+",
 						x + (1/s - 1)*w*s+1, y,
 						w*s, h,
-						renderer, 
 						font);
 
 				_dec_btn = std::make_unique<Button>(
 						"-",
 						x, y,
 						w*s, h,
-						renderer, 
 						font);
 				
 			}
@@ -110,9 +108,10 @@ namespace UI {
 
 	template<typename T>
 	void Spinner<T>::render(){
+		SDL_Renderer* renderer = App::getInstance()->getRenderer();
 		SDL_Color c = _bg_color;
-		SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, 255);
-		SDL_RenderFillRect(_renderer, &_rect);
+		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 255);
+		SDL_RenderFillRect(renderer, &_rect);
 
 		_inc_btn->render();
 		_text.render();

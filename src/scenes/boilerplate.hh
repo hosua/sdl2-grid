@@ -12,10 +12,9 @@
 class Example : public IScene {
 public:
 	~Example() = default;
-	Example(SDL_Renderer* &renderer);
-	bool render(SDL_Renderer* &renderer) override;
+	Example();
+	void render() override;
 	void handleInputs() override;
 private:
-	bool _end_game = false;
 };
 

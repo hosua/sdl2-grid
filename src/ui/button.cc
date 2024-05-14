@@ -1,15 +1,16 @@
 #include "button.hh"
 
+#include "app.hh"
+
 namespace UI {
 	Button::Button(const std::string& text,
 			int x, int y,
 			int w, int h,
-			SDL_Renderer* &renderer,
 			TTF_Font* font,
 			SDL_Color bg_color,
 			SDL_Color hover_color)
-		: IWidget(x, y, renderer),
-		_text(text, 0, 0, renderer, font),
+		: IWidget(x, y),
+		_text(text, 0, 0, font),
 		_bg_color(bg_color),
 		_hover_color(hover_color) {
 			_rect = { x, y, w, h };
@@ -22,11 +23,12 @@ namespace UI {
 		}
 
 	void Button::render(){
+		SDL_Renderer* renderer = App::getInstance()->getRenderer();
 		SDL_Point mouse_pos;
 		SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 		SDL_Color c = (isMouseOver()) ? _hover_color : _bg_color;
-		SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
-		SDL_RenderFillRect(_renderer, &_rect);
+		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+		SDL_RenderFillRect(renderer, &_rect);
 		_text.render();
 	}
 }

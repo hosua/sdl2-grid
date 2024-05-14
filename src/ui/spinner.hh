@@ -36,7 +36,6 @@ namespace UI {
 					int x, int y,
 					int w, int h,
 					T min_val, T max_val, T interval,
-					SDL_Renderer* &renderer,
 					SpinnerType spinner_type,
 					float btn_scalar = .25, 
 					TTF_Font* font = Font::openSansSmall,

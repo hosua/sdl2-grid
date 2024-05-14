@@ -1,14 +1,37 @@
 #include <algorithm>
+#include <chrono>
 #include <memory>
 #include <iostream>
 
 #include "app.hh"
 #include "defs.hh"
+// Gets a global vector of SDL_Events, which are polled in App::mainLoop().
+// This is necessary to handle events outside of while(SDL_PollEvents()).
+std::vector<SDL_Event>& App::getFrameEvents(){
+	static std::vector<SDL_Event> event_list;
+	return event_list;
+}
+
+const SDL_Point& App::getMousePos(){
+	static SDL_Point mouse_pos;
+	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+	return mouse_pos;
+}
+
+// Stops the current thread from running for float (ms) time. Converted to
+// ns for higher resolution.
+void App::delayHighRes(float ms){
+	int ns = (ms * (float)1e6);
+	auto start_time = std::chrono::steady_clock::now();
+	while ((std::chrono::steady_clock::now() - start_time) < std::chrono::nanoseconds(ns))
+		continue;
+}
+
 
 App* App::_instance = nullptr;
 
 App::App():
-	_scene_mgr(_renderer) { 
+	SceneManager(){
 	_running = initSDL() && Font::init();
 }
 
@@ -23,27 +46,23 @@ App::~App(){
 	SDL_Quit();
 }
 
-
-void App::addScene(std::unique_ptr<IScene> scene){
-	_scene_mgr.addScene(std::move(scene));
-}
-
 void App::mainLoop(){
 	while (isRunning()){
-		if (!renderScenes())
-			setRunning(false);
+		SceneManager::renderScenes();
 		
-		const SDL_Point& mouse_pos = GetMousePos();
+		const SDL_Point& mouse_pos = getMousePos();
 		SDL_Event event;
 		while (SDL_PollEvent(&event)){
-			GetFrameEvents().push_back(event);
+			getFrameEvents().push_back(event);
 			switch(event.type){
 				case SDL_KEYDOWN:
 					{
 						if (event.key.keysym.scancode == SDL_SCANCODE_M)
 							fprintf(stdout, "Mouse position: (%i,%i)\n", mouse_pos.x, mouse_pos.y);
-						if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+						if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE){
+							std::cout << "ESC was pressed\n";
 							setRunning(false);
+						}
 						break;
 					}
 				default:
@@ -51,15 +70,11 @@ void App::mainLoop(){
 			}
 		}
 
-		_scene_mgr.handleAllSceneInputs();
+		SceneManager::handleAllSceneInputs();
 
-		GetFrameEvents().clear();
+		getFrameEvents().clear();
 		SDL_Delay(17);
 	}
-}
-
-bool App::renderScenes(){
-	return _scene_mgr.renderScenes();
 }
 
 bool App::isRunning() const { return _running; }

@@ -1,10 +1,13 @@
-#include "scene_manager.hh"
 #include <algorithm>
 #include <iterator>
 #include <iostream>
 
+#include "app.hh"
+#include "scene_manager.hh"
 
-SceneManager::SceneManager(SDL_Renderer* &renderer): _renderer(renderer) {};	
+App* app = App::getInstance();
+
+SceneManager::SceneManager(){}
 
 void SceneManager::addScene(std::unique_ptr<IScene> scene){
 	// If there are no scenes yet, implicitly always render & handle inputs for the first scene added.
@@ -33,15 +36,14 @@ bool SceneManager::removeScene(const std::string& key){
 	return true;
 };
 
-bool SceneManager::renderScenes(){
+void SceneManager::renderScenes(){
 	SDL_Point mouse_pos;
 	SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 	drawClear();
 	for (auto itr = _scenes.begin(); itr != _scenes.end(); ++itr){
 		IScene* scene = itr->get();
 		if (scene->isRendering()){
-			if (!scene->render(_renderer))
-				return false;
+			scene->render();
 			
 			// If we're not rendering the scene, we can probably safely assume
 			// that we also don't want to handle its input events.
@@ -50,17 +52,18 @@ bool SceneManager::renderScenes(){
 		}
 	}
 	drawPresent();
-	return true;
 };
 
 void SceneManager::drawClear(const SDL_Color& color) const {
+	SDL_Renderer* renderer = app->getRenderer();
 	const SDL_Color& c = color;
-	SDL_SetRenderDrawColor(_renderer, c.r, c.g, c.b, c.a);
-	SDL_RenderClear(_renderer);
+	SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+	SDL_RenderClear(renderer);
 }
 
 void SceneManager::drawPresent() const {
-	SDL_RenderPresent(_renderer);
+	SDL_Renderer* renderer = app->getRenderer();
+	SDL_RenderPresent(renderer);
 }
 
 // disables all scenes (input and rendering) except for the scene being switched to

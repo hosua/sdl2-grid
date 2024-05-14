@@ -16,7 +16,6 @@ class Button : public IWidget {
 			Button(const std::string& text, 
 					int x, int y, 
 					int w, int h,
-					SDL_Renderer* &renderer,
 					TTF_Font* font = Font::openSansMedium,
 					SDL_Color bg_color = Color::Dark::GREY,
 					SDL_Color hover_color = Color::Light::GREY

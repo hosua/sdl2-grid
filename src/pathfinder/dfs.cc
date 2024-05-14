@@ -7,12 +7,16 @@
 #include "dfs.hh"
 
 #include "../defs.hh"
-#include "color.hh"
-#include "pathfinder_shared.hh"
+#include "app.hh"
+#include "world.hh"
+
+
+using namespace PathFinder;
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
-std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SDL_Renderer* &renderer){
+std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed){
+	SDL_Renderer* renderer = App::getInstance()->getRenderer();
 	std::vector<SDL_Point> path;
 	std::set<std::pair<int,int>> vis;
 
@@ -23,8 +27,8 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 
 	SDL_Point goal = world.getEndPos();
 
-	world.renderClear(renderer);
-	world.draw(renderer);
+	world.renderClear();
+	world.draw();
 
 	// set render color for path search marking
 	SDL_Color c = Color::GREEN;
@@ -35,15 +39,14 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 		curr_path.push_back({pos.x, pos.y}); // add to path
 		vis.insert(std::make_pair(pos.x, pos.y)); // mark as visited
 
-		SDL_Rect rect = { LEFT_PANE_W + pos.x * BLOCK_W, pos.y * BLOCK_H, BLOCK_W, BLOCK_H };
+		SDL_Rect rect = { world.getRect().x + (pos.x * BLOCK_W), world.getRect().y + (pos.y * BLOCK_H), BLOCK_W, BLOCK_H };
 		search_markers.push_back(rect);
 		
 		// render the current search
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 		SDL_RenderFillRect(renderer, &rect);
-		DelayHighRes(search_delay);
 		SDL_RenderPresent(renderer);
-
+		App::getInstance()->delayHighRes(search_delay);
 
 		if (pos.x == goal.x && pos.y == goal.y){
 			end_path = curr_path;
@@ -52,12 +55,13 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 				end_path.erase(end_path.begin());
 			return;	
 		}
+
 		for (const SDL_Point& moves : s_moves){
 			int nx, ny;
 			nx = pos.x + moves.x, ny = pos.y + moves.y;
 			std::pair<int,int> pr = std::make_pair(nx, ny);
 			if (world.inBounds(nx, ny) &&
-					(world.getPos(nx, ny) == ENT_NONE || world.getPos(nx, ny) == ENT_END) 
+					(world.getEntityAt(nx, ny) == ENT_NONE || world.getEntityAt(nx, ny) == ENT_END) 
 					&& vis.find(pr) == vis.end()){
 				dfs_helper({nx, ny}, world, curr_path, end_path, vis);
 				// immediately end the search if we already found a path
@@ -78,7 +82,7 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed, SD
 	SDL_SetRenderDrawColor(renderer, c_finish.r, c_finish.g, c_finish.b, 128);
 	for (auto itr = path.rbegin(); itr != path.rend(); ++itr){
 		const SDL_Point pt = *itr;
-		const SDL_Rect rect = { LEFT_PANE_W + pt.x * BLOCK_W, pt.y * BLOCK_H, BLOCK_W, BLOCK_H };
+		const SDL_Rect rect = { world.getRect().x + pt.x * BLOCK_W, world.getRect().y + (pt.y * BLOCK_H), BLOCK_W, BLOCK_H };
 		SDL_RenderFillRect(renderer, &rect);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(7);

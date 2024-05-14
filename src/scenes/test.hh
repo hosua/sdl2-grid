@@ -1,21 +1,39 @@
 #pragma once
 
 #include "scene.hh"
+#include "scene_manager.hh"
 #include "defs.hh"
-#include "color.hh"
-#include "font.hh"
-
 #include "ui/all.hh"
 
-class Test : public IScene {
+#include "pathfinder/world.hh"
+
+using namespace PathFinder;
+
+class Test : public IScene, public PathFinder::World {
 public:
+	Test();
 	~Test() = default;
-	Test(SDL_Renderer* &renderer);
 
-	bool render(SDL_Renderer* &renderer) override;
-
+	void render() override;
 	void handleInputs() override;
 
+	// sets the entity type that the player will emplace when clicking on the world
+	void setEntityType(EntType entity_type){ _entity_type = entity_type; }
+
 private:
-	bool _end_game = false;
+	EntType _entity_type = ENT_WALL;
+};
+
+class MainMenuBtn: public UI::Button {
+	public:
+		MainMenuBtn();
+		void handleInputs() override;
+	private:
+};
+
+class ExitBtn : public UI::Button {
+	public:
+		ExitBtn();
+		void handleInputs() override;
+	private:
 };
