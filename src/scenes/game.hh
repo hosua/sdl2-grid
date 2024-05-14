@@ -32,7 +32,7 @@ class Game : public IScene, public World {
 	private:
 		std::vector<SDL_Point> _path;
 		EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
-		int _search_speed = 5; // the speed of the pathfinding search
+		int _search_speed = 7; // the speed of the pathfinding search
 };
 
 
@@ -106,6 +106,22 @@ namespace GameWidgets {
 			RandomizeAlgoABtn (World& world, std::vector<SDL_Point>& path):
 				Button("Randomize A",
 						5, 270,
+						130, 50,
+						Font::openSansSmall),
+				_world(world),
+				_path(path) {}
+
+			void handleInputs() override;
+		private:
+			World& _world;
+			std::vector<SDL_Point>& _path;
+	};
+
+	class RandomizeAlgoBBtn : public UI::Button {
+		public:
+			RandomizeAlgoBBtn (World& world, std::vector<SDL_Point>& path):
+				Button("Randomize B",
+						5, 325,
 						130, 50,
 						Font::openSansSmall),
 				_world(world),

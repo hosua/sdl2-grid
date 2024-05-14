@@ -46,9 +46,13 @@ Game::Game():
 			std::make_unique<GameWidgets::SelectEntEndBtn>(_entity_type);
 		addWidget(std::move(btn_end));
 
-		std::unique_ptr<GameWidgets::RandomizeAlgoABtn> btn_randomize =
+		std::unique_ptr<GameWidgets::RandomizeAlgoABtn> btn_rand_a =
 			std::make_unique<GameWidgets::RandomizeAlgoABtn>(*this, _path);
-		addWidget(std::move(btn_randomize));
+		addWidget(std::move(btn_rand_a));
+
+		std::unique_ptr<GameWidgets::RandomizeAlgoBBtn> btn_rand_b =
+			std::make_unique<GameWidgets::RandomizeAlgoBBtn>(*this, _path);
+		addWidget(std::move(btn_rand_b));
 
 		std::unique_ptr<GameWidgets::MainMenuBtn> btn_main_menu =
 			std::make_unique<GameWidgets::MainMenuBtn>();
@@ -262,9 +266,15 @@ namespace GameWidgets {
 
 	void RandomizeAlgoABtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
-			// std::cout << "I am not implemented yet!\n";
 			_path.clear();
 			PathFinder::randomize_world_a(_world);
+		}
+	}
+
+	void RandomizeAlgoBBtn::handleInputs() {
+		if (isMouseOver() && isClicked()){
+			_path.clear();
+			PathFinder::randomize_world_b(_world);
 		}
 	}
 

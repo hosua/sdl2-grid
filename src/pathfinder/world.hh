@@ -73,5 +73,8 @@ namespace PathFinder {
 		SDL_Point _end, _player;
 	};
 
+	// randomize the world using some shit I made up
 	void randomize_world_a(World& world);
+	// randomize the world using Conway's Game of Life algorithm
+	void randomize_world_b(World& world);
 }

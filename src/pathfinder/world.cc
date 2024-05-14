@@ -9,7 +9,13 @@
 
 #include "app.hh"
 
-static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
+static std::vector<SDL_Point> cardinal_4 = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
+static std::vector<SDL_Point> cardinal_8 = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1},
+											{+1,+1}, {-1,+1}, {-1,-1}, {+1,-1}};
+
+static bool in_bounds(int x, int y, const std::vector<std::vector<PathFinder::EntType>>& grid){
+	return (x >= 0 && x < (int)grid[0].size() && y >= 0 && y < (int)grid.size());
+}
 
 namespace PathFinder {
 	const std::unordered_map<int, float> SEARCH_SPEED_MAP = {
@@ -175,9 +181,9 @@ namespace PathFinder {
 			// printf("[%i,%i] ->", x, y);
 			if (x == end.x && y == end.y)
 				return true;
-			for (const auto& [mx, my] : s_moves){
+			for (const auto& [mx, my] : cardinal_4){
 				int nx = x + mx, ny = y + my;
-				if ((nx >= 0 && nx < (int)grid[0].size() && ny >= 0 && ny < (int)grid.size()) &&
+				if (in_bounds(nx, ny, grid) &&
 						grid[ny][nx] != ENT_WALL &&
 						vis.find(std::make_pair(nx, ny)) == vis.end()){
 					s.push({ nx, ny });
@@ -223,6 +229,84 @@ namespace PathFinder {
 						grid[y][x] = ENT_NONE;
 		}
 
+		world.setGrid(grid);
+	}
+
+	// randomize the world using Conway's Game of Life algorithm
+	void randomize_world_b(World& world){
+		// probability that cell will initially be a wall
+		const float a = 0.25f; 
+		// the number of iterations to process for Conway's GOL.
+		const int max_iter = App::getInstance()->getRandInt(150, 200);
+
+		const auto& [rows, cols] = world.getDimensions();
+		std::vector<std::vector<EntType>> grid(rows, std::vector<EntType>(cols, ENT_NONE));
+
+		// place start pos on the world
+		int sx, sy;
+		sx = App::getInstance()->getRandInt(0, cols-1);
+		sy = App::getInstance()->getRandInt(0, rows-1);
+		grid[sy][sx] = ENT_PLAYER;
+
+		// place end pos on the world
+		int ex, ey;
+		do {
+			ex = App::getInstance()->getRandInt(0, cols-1);
+			ey = App::getInstance()->getRandInt(0, rows-1);
+		}
+		while ((sx == ex && sy == ey)); // redo if end is equal to start
+		grid[ey][ex] = ENT_END;
+		
+		// set a random intial grid
+		for (int y = 0; y < rows; ++y){
+			for (int x = 0; x < cols; ++x){
+				if (App::getInstance()->getRandFloat(0.f, 1.f) < a){
+					if (grid[y][x] == ENT_NONE)
+						grid[y][x] = ENT_WALL;
+				}
+			}
+		}
+		
+		for (int i = 0; i < max_iter; ++i){
+			for (int y = 0; y < rows; ++y){
+				for (int x = 0; x < cols; ++x){
+
+					int neighbor_count = 0;
+					for (const auto& [mx, my] : cardinal_8){
+						int nx = x + mx, ny = y + my;
+						if (in_bounds(nx, ny, grid) &&
+								grid[ny][nx] == ENT_WALL){
+							neighbor_count++;	
+						}
+					}
+
+					if (grid[y][x] == ENT_WALL){
+
+						if (neighbor_count < 0) {
+							 /* Any live cell with fewer than two live neighbors
+							  * dies, as if by underpopulation. */
+							grid[y][x] = ENT_NONE;
+						}
+						else if (neighbor_count == 2 || neighbor_count == 3){
+							/* Any live cell with two or three live neighbors lives
+							 * on to the next generation. */
+							// stayin' alive, stayin' alive
+						} 
+						/* Any live cell with more than three live neighbors
+						 * dies, as if by overpopulation. */
+						else {
+							grid[y][x] = ENT_NONE;
+						}
+					} else if (grid[y][x] == ENT_NONE){
+						/* Any dead cell with exactly three live neighbors
+						 * becomes a live cell, as if by reproduction. */
+						if (neighbor_count == 3)
+							grid[y][x] = ENT_WALL;
+					}
+				}
+			}
+		}
+		
 		world.setGrid(grid);
 	}
 }
