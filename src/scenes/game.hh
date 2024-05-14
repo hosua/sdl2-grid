@@ -87,11 +87,18 @@ namespace GameWidgets {
 
 	class AStarBtn : public UI::Button {
 		public:
-			AStarBtn():
+			AStarBtn(World& world,
+					std::vector<SDL_Point>& path):
 				Button("A*", 
 						5, 115, 
-						130, 50){}
+						130, 50),
+				_world(world),
+				_path(path) {}
+
 			void handleInputs() override;
+		private:
+			World& _world;
+			std::vector<SDL_Point>& _path;
 	};
 
 

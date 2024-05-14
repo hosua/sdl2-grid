@@ -20,13 +20,8 @@ int main(){
 		std::make_unique<MainMenu>();
 	App::getInstance()->addScene(std::move(main_menu_scene));
 
-	std::unique_ptr<Game> game_scene = 
-			std::make_unique<Game>();
-	App::getInstance()->addScene(std::move(game_scene));
-
-	std::unique_ptr<Test> test_scene =
-			std::make_unique<Test>();
-	App::getInstance()->addScene(std::move(test_scene));
+	App::getInstance()->addScene(std::make_unique<Game>());
+	App::getInstance()->addScene(std::make_unique<Test>());
 	
 	App::getInstance()->mainLoop();
 	

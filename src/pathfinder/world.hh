@@ -57,7 +57,7 @@ namespace PathFinder {
 
 		const std::pair<int,int> getDimensions();
 
-
+		std::vector<std::vector<EntType>> const getGrid(){ return _grid; }
 
 
 	private:

@@ -77,7 +77,7 @@ namespace MainMenuWidgets {
 	void ExitBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Exiting the game.\n";
-			App::getInstance()->isRunning();
+			App::getInstance()->setRunning(false);
 		}
 	}	
 }

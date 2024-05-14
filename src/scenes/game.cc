@@ -6,13 +6,14 @@
 #include "game.hh"
 #include "pathfinder/dfs.hh"
 #include "pathfinder/bfs.hh"
+#include "pathfinder/astar.hh"
 #include "../defs.hh"
 
 #include "app.hh"
 
 const int WORLD_X = 140,
 		PLAYER_MOVE_DELAY = 3,
-		WORLD_Y = 5,
+		WORLD_Y = 0,
 		WORLD_W = WINDOW_W - WORLD_X, 
 		WORLD_H = WINDOW_H;
 
@@ -29,9 +30,9 @@ Game::Game():
 		addWidget(std::move(btn_bfs));
 
 		// TODO: Removed while still unimplemented
-		// std::unique_ptr<AStarBtn> btn_astar = 
-		// 	std::make_unique<AStarBtn>(renderer);
-		// addWidget(std::move(btn_astar));
+		std::unique_ptr<GameWidgets::AStarBtn> btn_astar = 
+			std::make_unique<GameWidgets::AStarBtn>(*this, _path);
+		addWidget(std::move(btn_astar));
 
 		std::unique_ptr<GameWidgets::SelectEntPlayerBtn> btn_player = 
 			std::make_unique<GameWidgets::SelectEntPlayerBtn>(_entity_type);
@@ -237,7 +238,8 @@ namespace GameWidgets {
 
 	void AStarBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
-			std::cout << "A* not yet implemented!\n";
+			// std::cout << "A* not yet implemented!\n";
+			_path = PathFinder::a_star(_world);
 			// do a* logic hurr
 		}
 	}

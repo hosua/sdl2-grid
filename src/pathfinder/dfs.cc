@@ -55,6 +55,7 @@ std::vector<SDL_Point> PathFinder::dfs(World& world, const int& search_speed){
 				end_path.erase(end_path.begin());
 			return;	
 		}
+
 		for (const SDL_Point& moves : s_moves){
 			int nx, ny;
 			nx = pos.x + moves.x, ny = pos.y + moves.y;
