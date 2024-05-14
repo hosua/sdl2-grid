@@ -7,8 +7,10 @@
 namespace UI {
 	Text::Text(const std::string& text, 
 			int x, int y, 
+			int w,
 			TTF_Font* font) : 
 		IWidget(x, y),
+		_text_width(w),
 		_text(text),
 		_font(font){
 			// we'll crash if we try to render an empty string, in that case
@@ -20,9 +22,15 @@ namespace UI {
 			//
 			// Later, I plan on adding different types of buttons that won't
 			// use text. Then this should be rewritten
-			if (_text.empty()) _text = " ";
-			
-			_surface = TTF_RenderText_Blended(font, _text.c_str(), Color::WHITE);
+			if (_text.empty()){
+				_text = " ";
+			 	_surface = TTF_RenderText_Blended(font, _text.c_str(), Color::WHITE);
+			} else {
+				_surface = TTF_RenderText_Blended_Wrapped(_font, text.c_str(), Color::WHITE, _text_width );
+			}
+			if (!_surface){
+				fprintf(stderr, "Error : %s", TTF_GetError());
+			}
 			_texture = SDL_CreateTextureFromSurface(App::getInstance()->getRenderer(), _surface);
 			_rect = { x, y, _surface->w, _surface->h };
 		}
@@ -49,7 +57,8 @@ namespace UI {
 		// once again, avoid the empty string by inserting a space
 		if (_text.empty()) _text = " ";
 
-		_surface = TTF_RenderText_Blended(_font, text.c_str(), Color::WHITE);
+		// _surface = TTF_RenderText_Blended(_font, text.c_str(), Color::WHITE);
+		_surface = TTF_RenderText_Blended_Wrapped(_font, text.c_str(), Color::WHITE, _text_width );
 		_texture = SDL_CreateTextureFromSurface(App::getInstance()->getRenderer(), _surface);
 		_rect = { _rect.x, _rect.y, _surface->w, _surface->h };
 	}

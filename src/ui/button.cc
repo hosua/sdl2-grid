@@ -10,7 +10,7 @@ namespace UI {
 			SDL_Color bg_color,
 			SDL_Color hover_color)
 		: IWidget(x, y),
-		_text(text, 0, 0, font),
+		_text(text, 0, 0, 0, font), // TODO: wrapline == 0 means that it will only newline on \n
 		_bg_color(bg_color),
 		_hover_color(hover_color) {
 			_rect = { x, y, w, h };

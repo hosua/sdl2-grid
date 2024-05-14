@@ -21,7 +21,8 @@ namespace Scenes {
 			// block size label
 			std::unique_ptr<UI::Text> block_size_lbl =
 				std::make_unique<UI::Text>("Block Size",
-						50, 200,
+						110, 200,
+						50,
 						Font::openSansSmall);
 			addWidget(std::move(block_size_lbl));
 

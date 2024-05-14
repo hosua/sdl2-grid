@@ -27,7 +27,7 @@ namespace UI {
 			SDL_Color btn_color,
 			SDL_Color btn_hover_color)
 		: IWidget(x, y), 
-		_text(to_string_with_precision(val, SPINNER_PRECISION), 0, 0, font),
+		_text(to_string_with_precision(val, SPINNER_PRECISION), 0, 0, 0, font),
 		_val(val), _min_val(min_val), _max_val(max_val), _interval(interval),
 		_btn_scalar(btn_scalar),
 		_bg_color(bg_color), _btn_color(btn_color), _btn_hover_color(btn_hover_color),

@@ -71,6 +71,7 @@ namespace Scenes {
 			std::unique_ptr<UI::Text> search_speed_lbl =
 				std::make_unique<UI::Text>("Speed",
 						10, 215,
+						100,
 						Font::openSansSmall);
 
 			addWidget(std::move(search_speed_lbl));
