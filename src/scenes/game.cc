@@ -216,6 +216,7 @@ namespace Scenes {
 	}
 
 	void Game::restart(){
+		_path.clear();
 		World::updateDimensions();
 	}
 }

@@ -1,6 +1,7 @@
 #include "world.hh"
 
 #include <cstdio>
+#include <iterator>
 #include <stack>
 #include <set>
 #include <unordered_map>
@@ -153,7 +154,8 @@ namespace PathFinder {
 		_rows = _rect.h / BLOCK_H;
 		_cols = _rect.w / BLOCK_W;
 		std::printf("(rows,cols) = (%i,%i)\n", _rows, _cols);
-
+		
+		std::vector<std::vector<EntType>> old_grid = _grid;
 		_grid = std::vector<std::vector<EntType>>(_rows, std::vector<EntType>(_cols, ENT_NONE));
 
 		_player = { 0, 0 };
