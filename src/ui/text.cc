@@ -24,6 +24,8 @@ namespace UI {
 			// use text. Then this should be rewritten
 			if (_text.empty()){
 				_text = " ";
+				// Wrapped not be able to return a surface if _text is empty or
+				// contains only spaces, so we need to use this if it's empty.
 			 	_surface = TTF_RenderText_Blended(font, _text.c_str(), Color::WHITE);
 			} else {
 				_surface = TTF_RenderText_Blended_Wrapped(_font, text.c_str(), Color::WHITE, _text_width );
@@ -55,10 +57,17 @@ namespace UI {
 	void Text::setText(const std::string& text){
 		_text = text;
 		// once again, avoid the empty string by inserting a space
-		if (_text.empty()) _text = " ";
-
-		// _surface = TTF_RenderText_Blended(_font, text.c_str(), Color::WHITE);
-		_surface = TTF_RenderText_Blended_Wrapped(_font, text.c_str(), Color::WHITE, _text_width );
+		if (_text.empty()){
+			_text = " ";
+			// Wrapped not be able to return a surface if _text is empty or
+			// contains only spaces, so we need to use this if it's empty.
+			_surface = TTF_RenderText_Blended(_font, _text.c_str(), Color::WHITE);
+		} else {
+			_surface = TTF_RenderText_Blended_Wrapped(_font, text.c_str(), Color::WHITE, _text_width );
+		}
+		if (!_surface){
+			fprintf(stderr, "Error : %s", TTF_GetError());
+		}
 		_texture = SDL_CreateTextureFromSurface(App::getInstance()->getRenderer(), _surface);
 		_rect = { _rect.x, _rect.y, _surface->w, _surface->h };
 	}
