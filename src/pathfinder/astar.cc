@@ -6,6 +6,10 @@
 #include <set>
 #include <queue>
 #include "../defs.hh"
+#include "app.hh"
+
+static App* app = App::getInstance();
+static SDL_Renderer* renderer = app->getRenderer();
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
@@ -14,7 +18,7 @@ static float get_euclidean_dist(int x1, int y1, int x2, int y2){
 }
 
 // g = cost of path from start to current pos (number of parent nodes)
-// h = heuristic estimate of the cost to reach the goal (manhattan dist? Euclidean dist?)
+// h = heuristic estimate of the cost to reach the goal (manhattan dist? **Euclidean dist**)
 // f = g + h
 struct SearchState {
 	int g, h, f;
@@ -79,16 +83,22 @@ std::vector<SDL_Point> PathFinder::a_star(World& world){
 		int x = node.x, y = node.y;
 		closed.insert(std::make_pair(x, y));
 		if (x == goal.x && y == goal.y){
-			std::cout << "\nReconstructing the path...\n";
+			// std::cout << "\nReconstructing the path...\n";
 			// crawl
+			SDL_Color c = Color::Light::GREEN;
+			SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 			for (SearchState* crawl = node.parent.get(); crawl; crawl = crawl->parent.get()){
 				// std::cout << '(' << crawl->x << ',' << crawl->y << ")\n";
 				path.push_back({ crawl->x, crawl->y });
+				SDL_Rect rect = { world.getRect().x + crawl->x * BLOCK_W, crawl->y * BLOCK_H, BLOCK_W, BLOCK_H };
+				SDL_RenderFillRect(renderer, &rect);
 				std::reverse(path.begin(), path.end());
-				return path;
-
+				SDL_RenderFillRect(renderer, &rect);
+				// add some delay to the path reconstructing animation
+				SDL_Delay(7); 
+				SDL_RenderPresent(renderer);
 			}
-			break;
+			return path;
 		}
 		
 		// "expand" the current node
@@ -115,6 +125,7 @@ std::vector<SDL_Point> PathFinder::a_star(World& world){
 						// we found a better g, update the parent of the adjacent node
 						open_node->parent = std::make_shared<SearchState>(new_node);
 
+
 						// recalculate f g h
 						open_node->g = g_count;
 						open_node->f = open_node->g + open_node->h;
@@ -124,6 +135,17 @@ std::vector<SDL_Point> PathFinder::a_star(World& world){
 					// did not already exist in the open list, so insert it
 					pq.push(new_node);
 				}
+
+				const SDL_Color c = Color::GREEN;
+				SDL_Rect rect = { world.getRect().x + (nx * BLOCK_W), 
+					world.getRect().y + (ny * BLOCK_H), 
+					BLOCK_W, BLOCK_H 
+				};
+				SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
+				SDL_RenderFillRect(renderer, &rect);
+				SDL_Delay(5);
+				SDL_RenderPresent(renderer);
+
 			}
 		}
 	}

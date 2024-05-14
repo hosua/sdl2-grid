@@ -29,9 +29,8 @@ Game::Game():
 			std::make_unique<GameWidgets::BFSBtn>(*this, _path, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_bfs));
 
-		// TODO: Removed while still unimplemented
 		std::unique_ptr<GameWidgets::AStarBtn> btn_astar = 
-			std::make_unique<GameWidgets::AStarBtn>(*this, _path);
+			std::make_unique<GameWidgets::AStarBtn>(*this, _path, _render_path_flag, _search_speed);
 		addWidget(std::move(btn_astar));
 
 		std::unique_ptr<GameWidgets::SelectEntPlayerBtn> btn_player = 
@@ -238,9 +237,20 @@ namespace GameWidgets {
 
 	void AStarBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
-			// std::cout << "A* not yet implemented!\n";
+			std::cout << "Finding path with A* search!\n";
+			
 			_path = PathFinder::a_star(_world);
-			// do a* logic hurr
+			_render_path_flag = true;
+
+			if (_path.size() == 0){
+				std::cout << "No path found!\n";
+			} else {
+				std::cout << "Path: \n";
+				for (const SDL_Point& pt : _path)
+					printf("(%i,%i) -> ", pt.x, pt.y);
+				std::cout << "\n";
+			}
+
 		}
 	}
 
