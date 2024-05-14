@@ -95,7 +95,7 @@ namespace Scenes {
 }
 
 MainMenuBtn::MainMenuBtn():
-	Button("Main Menu",
+	TextButton("Main Menu",
 			5, WINDOW_H - 110,
 			100, 50, 
 			Font::openSansSmall){}
@@ -107,7 +107,7 @@ void MainMenuBtn::handleInputs(){
 }
 
 ExitBtn::ExitBtn():
-	Button("Exit",
+	TextButton("Exit",
 			5, WINDOW_H - 55,
 			100, 50,
 			Font::openSansSmall,

@@ -49,7 +49,7 @@ namespace MainMenuWidgets {
 	static const SDL_Rect BTN_DIMS = { 0, 0, 200, 50 };
 
 	StartBtn::StartBtn():
-		Button("Start", 
+		TextButton("Start", 
 				(WINDOW_W/2) - (BTN_DIMS.w/2), (WINDOW_H / 3), 
 				200, 50){}
 
@@ -60,7 +60,7 @@ namespace MainMenuWidgets {
 	}
 
 	SettingsBtn::SettingsBtn():
-		Button("Settings",
+		TextButton("Settings",
 				(WINDOW_W/2) - (BTN_DIMS.w/2), (WINDOW_H/3) + BTN_DIMS.h+5, 
 				200, 50){}
 
@@ -72,7 +72,7 @@ namespace MainMenuWidgets {
 	}
 
 	ExitBtn::ExitBtn():
-		Button("Exit",
+		TextButton("Exit",
 				(WINDOW_W/2) - (BTN_DIMS.w/2), (WINDOW_H/3) + 2*(BTN_DIMS.h+5), 
 				200, 50,
 				Font::openSansMedium,

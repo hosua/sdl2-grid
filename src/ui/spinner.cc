@@ -37,26 +37,26 @@ namespace UI {
 			const float s = _btn_scalar; // btn size relative to spinner
 			if (_type == ST_VERTICAL){
 				// vertical configuration
-				_inc_btn = std::make_unique<Button>(
+				_inc_btn = std::make_unique<TextButton>(
 						"+",
 						x, y,
 						w, h * s,
 						font);
 
-				_dec_btn = std::make_unique<Button>(
+				_dec_btn = std::make_unique<TextButton>(
 						"-",
 						x, y + (1/s - 1)*h*s+1,
 						w, h*s,
 						font);
 			} else { 
 				// horizontal configuration
-				_inc_btn = std::make_unique<Button>(
+				_inc_btn = std::make_unique<TextButton>(
 						"+",
 						x + (1/s - 1)*w*s+1, y,
 						w*s, h,
 						font);
 
-				_dec_btn = std::make_unique<Button>(
+				_dec_btn = std::make_unique<TextButton>(
 						"-",
 						x, y,
 						w*s, h,

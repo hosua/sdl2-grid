@@ -40,13 +40,13 @@ namespace Scenes {
 }
 
 namespace GameWidgets {
-	class DFSBtn : public UI::Button {
+	class DFSBtn : public UI::TextButton {
 		public:
 			~DFSBtn() = default;
 			DFSBtn(World& world,
 					std::vector<SDL_Point>& path,
 					const int& search_speed):
-				Button("DFS",
+				TextButton("DFS",
 						5, 5,
 						130, 50),
 				_world(world),
@@ -60,13 +60,13 @@ namespace GameWidgets {
 			const int& _search_speed;
 	};
 
-	class BFSBtn : public UI::Button {
+	class BFSBtn : public UI::TextButton {
 		public:
 			~BFSBtn() = default;
 			BFSBtn(World& world,
 					std::vector<SDL_Point>& path,
 					const int& search_speed):
-				Button("BFS", 
+				TextButton("BFS", 
 						5, 60, 
 						130, 50),
 				_world(world),
@@ -81,12 +81,12 @@ namespace GameWidgets {
 			const int& _search_speed;
 	};
 
-	class AStarBtn : public UI::Button {
+	class AStarBtn : public UI::TextButton {
 		public:
 			AStarBtn(World& world,
 					std::vector<SDL_Point>& path,
 					const int& search_speed):
-				Button("A*", 
+				TextButton("A*", 
 						5, 115, 
 						130, 50),
 				_world(world),
@@ -104,10 +104,10 @@ namespace GameWidgets {
 	 * Generates a random map
 	 */
 
-	class RandomizeAlgoABtn : public UI::Button {
+	class RandomizeAlgoABtn : public UI::TextButton {
 		public:
 			RandomizeAlgoABtn (World& world, std::vector<SDL_Point>& path):
-				Button("Randomize A",
+				TextButton("Randomize A",
 						5, 270,
 						130, 50,
 						Font::openSansSmall),
@@ -120,10 +120,10 @@ namespace GameWidgets {
 			std::vector<SDL_Point>& _path;
 	};
 
-	class RandomizeAlgoBBtn : public UI::Button {
+	class RandomizeAlgoBBtn : public UI::TextButton {
 		public:
 			RandomizeAlgoBBtn (World& world, std::vector<SDL_Point>& path):
-				Button("Randomize B",
+				TextButton("Randomize B",
 						5, 325,
 						130, 50,
 						Font::openSansSmall),
@@ -138,13 +138,11 @@ namespace GameWidgets {
 
 	// TODO: Create add noise to current map button
 
-	class SelectEntWallBtn : public UI::Button {
+	class SelectEntWallBtn : public UI::IButton {
 		public:
 			SelectEntWallBtn(EntType &ent_type):
-				Button("",
-						5, 170,
+				IButton(5, 170,
 						40, 40,
-						Font::openSansSmall,
 						Color::GREY),
 				_ent_type(ent_type) {}
 			void handleInputs() override;
@@ -152,13 +150,11 @@ namespace GameWidgets {
 			EntType& _ent_type;
 	};
 
-	class SelectEntPlayerBtn : public UI::Button {
+	class SelectEntPlayerBtn : public UI::IButton {
 		public:
 			SelectEntPlayerBtn(EntType &ent_type):
-				Button("",
-						50, 170,
+				IButton(50, 170,
 						40, 40,
-						Font::openSansSmall,
 						Color::BLUE),
 				_ent_type(ent_type) {}
 			void handleInputs() override;
@@ -166,13 +162,11 @@ namespace GameWidgets {
 			EntType& _ent_type;
 	};
 
-	class SelectEntEndBtn : public UI::Button {
+	class SelectEntEndBtn : public UI::IButton {
 		public:
 			SelectEntEndBtn(EntType &ent_type):
-				Button("",
-						95, 170,
+				IButton(95, 170,
 						40, 40,
-						Font::openSansSmall,
 						Color::RED),
 				_ent_type(ent_type) {}
 			void handleInputs() override;
@@ -180,10 +174,10 @@ namespace GameWidgets {
 			EntType& _ent_type;
 	};
 
-	class MainMenuBtn : public UI::Button {
+	class MainMenuBtn : public UI::TextButton {
 		public:
 			MainMenuBtn():
-				Button("Main Menu",
+				TextButton("Main Menu",
 						5, WINDOW_H - 110,
 						130, 50,
 						Font::openSansSmall){}
@@ -191,10 +185,10 @@ namespace GameWidgets {
 		private:
 	};
 
-	class ExitBtn : public UI::Button {
+	class ExitBtn : public UI::TextButton {
 		public:
 			ExitBtn():
-				Button("Exit",
+				TextButton("Exit",
 						5, WINDOW_H - 55,
 						130, 50,
 						Font::openSansSmall,

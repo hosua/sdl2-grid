@@ -11,9 +11,27 @@
 #include "text.hh"
 
 namespace UI {
-class Button : public IWidget {
+	// An interface for all buttons, but can be used standalone if you simply want a colored button
+	class IButton : public IWidget {
 		public:
-			Button(const std::string& text, 
+			IButton(int x, int y, 
+					int w, int h,
+					SDL_Color bg_color = Color::Dark::GREY,
+					SDL_Color hover_color = Color::Light::GREY
+				   );
+
+			~IButton() = default;
+
+			// override handleInputs from IWidget class for input events
+			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;
+			void render() override;
+		private:
+			SDL_Color _bg_color, _hover_color;
+	};
+
+	class TextButton : public IButton {
+		public:
+			TextButton(const std::string& text, 
 					int x, int y, 
 					int w, int h,
 					TTF_Font* font = Font::openSansMedium,
@@ -21,8 +39,8 @@ class Button : public IWidget {
 					SDL_Color hover_color = Color::Light::GREY
 				  );
 
-			~Button() = default;
-			
+			~TextButton() = default;
+
 			// override handleInputs from IWidget class for input events
 			// void handleInput(SDL_Point mouse_pos, const uint8_t* kb_state) override;
 			void render() override;

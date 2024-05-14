@@ -20,7 +20,7 @@ namespace Scenes {
 }
 
 namespace MainMenuWidgets {
-	class StartBtn : public UI::Button {
+	class StartBtn : public UI::TextButton {
 	public:
 		~StartBtn() = default;
 		StartBtn();
@@ -29,7 +29,7 @@ namespace MainMenuWidgets {
 	};
 
 	
-	class SettingsBtn : public UI::Button {
+	class SettingsBtn : public UI::TextButton {
 		public:
 			SettingsBtn();
 
@@ -37,7 +37,7 @@ namespace MainMenuWidgets {
 		private:
 	};
 
-	class ExitBtn : public UI::Button {
+	class ExitBtn : public UI::TextButton {
 		public:
 			ExitBtn();
 			void handleInputs() override;

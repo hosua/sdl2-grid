@@ -29,14 +29,14 @@ namespace Scenes {
 
 namespace SettingsWidgets {
 
-	class MainMenuBtn: public UI::Button {
+	class MainMenuBtn: public UI::TextButton {
 		public:
 			MainMenuBtn();
 			void handleInputs() override;
 		private:
 	};
 
-	class ExitBtn : public UI::Button {
+	class ExitBtn : public UI::TextButton {
 		public:
 			ExitBtn();
 			void handleInputs() override;
