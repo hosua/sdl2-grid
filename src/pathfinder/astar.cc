@@ -94,7 +94,6 @@ std::vector<SDL_Point> PathFinder::a_star(World& world, const int& search_speed)
 				path.push_back({ crawl->x, crawl->y });
 				SDL_Rect rect = { world.getRect().x + crawl->x * BLOCK_W, crawl->y * BLOCK_H, BLOCK_W, BLOCK_H };
 				SDL_RenderFillRect(renderer, &rect);
-				SDL_RenderFillRect(renderer, &rect);
 
 				App::getInstance()->delayHighRes(search_delay);
 
