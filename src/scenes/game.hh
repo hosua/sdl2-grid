@@ -101,11 +101,11 @@ namespace GameWidgets {
 	 * Generates a random map
 	 */
 
-	class RandomizeBtn : public UI::Button {
+	class RandomizeAlgoABtn : public UI::Button {
 		public:
-			RandomizeBtn (World& world, std::vector<SDL_Point>& path):
-				Button("Randomize",
-						5, 225,
+			RandomizeAlgoABtn (World& world, std::vector<SDL_Point>& path):
+				Button("Randomize A",
+						5, 270,
 						130, 50,
 						Font::openSansSmall),
 				_world(world),

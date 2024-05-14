@@ -186,8 +186,10 @@ namespace PathFinder {
 		}
 		return false;
 	}
-
-	void randomize_world(World& world){
+	
+	// randomize the world using algorithm A (some shit I made up)
+	void randomize_world_a(World& world){
+		const float a = 0.25f;
 		const auto& [rows, cols] = world.getDimensions();
 
 		std::vector<std::vector<EntType>> grid(rows, std::vector<EntType>(cols, ENT_NONE));
@@ -217,7 +219,7 @@ namespace PathFinder {
 			for (int y = 0; y < rows; ++y)
 				for (int x = 0; x < cols; ++x)
 					if (grid[y][x] == ENT_WALL &&
-							App::getInstance()->getRandFloat(0.f, 1.f) < 0.3f)
+							App::getInstance()->getRandFloat(0.f, 1.f) < a)
 						grid[y][x] = ENT_NONE;
 		}
 

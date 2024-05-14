@@ -73,5 +73,5 @@ namespace PathFinder {
 		SDL_Point _end, _player;
 	};
 
-	void randomize_world(World& world);
+	void randomize_world_a(World& world);
 }

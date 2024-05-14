@@ -46,8 +46,8 @@ Game::Game():
 			std::make_unique<GameWidgets::SelectEntEndBtn>(_entity_type);
 		addWidget(std::move(btn_end));
 
-		std::unique_ptr<GameWidgets::RandomizeBtn> btn_randomize =
-			std::make_unique<GameWidgets::RandomizeBtn>(*this, _path);
+		std::unique_ptr<GameWidgets::RandomizeAlgoABtn> btn_randomize =
+			std::make_unique<GameWidgets::RandomizeAlgoABtn>(*this, _path);
 		addWidget(std::move(btn_randomize));
 
 		std::unique_ptr<GameWidgets::MainMenuBtn> btn_main_menu =
@@ -60,8 +60,8 @@ Game::Game():
 
 		// search speed label
 		std::unique_ptr<UI::Text> search_speed_lbl =
-			std::make_unique<UI::Text>("Search Speed",
-					18, 380,
+			std::make_unique<UI::Text>("Speed",
+					10, 215,
 					Font::openSansSmall);
 
 		addWidget(std::move(search_speed_lbl));
@@ -69,7 +69,7 @@ Game::Game():
 		// search speed spinner
 		std::unique_ptr<UI::Spinner<int>> search_speed_spnr =
 			std::make_unique<UI::Spinner<int>>(_search_speed,
-					40, 400,
+					5, 240,
 					65, 25,
 					0, 10, 1,
 					UI::ST_HORIZONTAL);
@@ -260,11 +260,11 @@ namespace GameWidgets {
 		}
 	}
 
-	void RandomizeBtn::handleInputs() {
+	void RandomizeAlgoABtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
 			// std::cout << "I am not implemented yet!\n";
 			_path.clear();
-			PathFinder::randomize_world(_world);
+			PathFinder::randomize_world_a(_world);
 		}
 	}
 
