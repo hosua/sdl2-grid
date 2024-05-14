@@ -2,7 +2,7 @@
 
 A fun little project that demonstrates different path-finding algorithms with pretty visuals, made with SDL2 and C++.
 
-https://github.com/hosua/sdl2-grid/assets/22788738/6a682d61-5d16-410e-a766-e598570c0d8b
+https://github.com/hosua/sdl2-pathfinder/assets/22788738/1f211b33-0196-4d86-b14e-c87fdaa18a4f
 
 # Linux Compilation Instructions
 ```
@@ -17,10 +17,10 @@ If you want, you can also just run the `./run.sh` script to compile and run ever
 
 
 # Features to be Implemented
-- [ ] Modular UI Widgets (not sure how many I want to actually do yet)
+- [ ] Modular UI Widgets (not sure how many I want to do yet)
 - [X] Robust scene management (still needs work)
 - [X] A* search 
 - [ ] Loading/Saving Maps
 - [ ] Add compilation instructions/binary for Windows
 - [ ] Multithreading support so that input isn't blocked whilst pathfinding
-- [ ] World randomizer
+- [X] World randomizer (need to add more/better randomization techniques)
