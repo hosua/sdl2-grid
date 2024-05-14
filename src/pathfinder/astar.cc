@@ -13,8 +13,14 @@ static SDL_Renderer* renderer = app->getRenderer();
 
 static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
+static int get_heuristic(int x1, int y1, int x2, int y2);
+
 static float get_euclidean_dist(int x1, int y1, int x2, int y2){
 	return sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+}
+
+static int get_manhattan_dist(int x1, int y1, int x2, int y2){
+	return abs(y2 - y1) + abs(x2 - x1);
 }
 
 // g = cost of path from start to current pos (number of parent nodes)
@@ -50,6 +56,11 @@ class AStarPriorityQueue : public std::priority_queue<SearchState> {
 		}
 };
 
+static int get_heuristic(int x1, int y1, int x2, int y2){
+	return get_manhattan_dist(x1, y1, x2, y2);
+	// return floor(get_euclidean_dist(x1, y1, x2, y2));
+};
+
 std::vector<SDL_Point> PathFinder::a_star(World& world, const int& search_speed){
 	std::vector<SDL_Point> path;
 	
@@ -60,7 +71,7 @@ std::vector<SDL_Point> PathFinder::a_star(World& world, const int& search_speed)
 	SDL_Point start = world.getPlayerPos();
 	SDL_Point goal = world.getEndPos();
 
-	int start_h = floor(get_euclidean_dist(start.x, start.y, goal.x, goal.y));
+	int start_h = get_heuristic(start.x, start.y, goal.x, goal.y);
 	
 	SearchState start_node = {
 		g_count,
@@ -111,7 +122,7 @@ std::vector<SDL_Point> PathFinder::a_star(World& world, const int& search_speed)
 					world.getEntityAt(nx, ny) != ENT_WALL && // is not blocked
 					closed.find(std::make_pair(nx, ny)) == closed.end()){ // has not already been marked closed
 
-				int h = floor(get_euclidean_dist(nx, ny, goal.x, goal.y));
+				int h = get_heuristic(nx, ny, goal.x, goal.y);
 				SearchState new_node = {
 					g_count,
 					h,
@@ -126,8 +137,6 @@ std::vector<SDL_Point> PathFinder::a_star(World& world, const int& search_speed)
 					if (g_count < open_node->g){
 						// we found a better g, update the parent of the adjacent node
 						open_node->parent = std::make_shared<SearchState>(new_node);
-
-
 						// recalculate f g h
 						open_node->g = g_count;
 						open_node->f = open_node->g + open_node->h;
