@@ -47,7 +47,7 @@ Game::Game():
 		addWidget(std::move(btn_end));
 
 		std::unique_ptr<GameWidgets::RandomizeBtn> btn_randomize =
-			std::make_unique<GameWidgets::RandomizeBtn>(*this);
+			std::make_unique<GameWidgets::RandomizeBtn>(*this, _path);
 		addWidget(std::move(btn_randomize));
 
 		std::unique_ptr<GameWidgets::MainMenuBtn> btn_main_menu =
@@ -263,6 +263,7 @@ namespace GameWidgets {
 	void RandomizeBtn::handleInputs() {
 		if (isMouseOver() && isClicked()){
 			// std::cout << "I am not implemented yet!\n";
+			_path.clear();
 			PathFinder::randomize_world(_world);
 		}
 	}

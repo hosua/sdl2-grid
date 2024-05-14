@@ -103,16 +103,18 @@ namespace GameWidgets {
 
 	class RandomizeBtn : public UI::Button {
 		public:
-			RandomizeBtn (World& world):
+			RandomizeBtn (World& world, std::vector<SDL_Point>& path):
 				Button("Randomize",
 						5, 225,
 						130, 50,
 						Font::openSansSmall),
-				_world(world){}
+				_world(world),
+				_path(path) {}
 
 			void handleInputs() override;
 		private:
 			World& _world;
+			std::vector<SDL_Point>& _path;
 	};
 
 	// TODO: Create add noise to current map button

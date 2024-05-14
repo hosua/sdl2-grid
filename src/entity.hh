@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: Josh... just put this in world.hh
+
 #include <SDL2/SDL.h>
 #include <unordered_map>
 #include "defs.hh"
