@@ -22,15 +22,15 @@ Game::Game():
 	World(WORLD_X, WORLD_Y, WORLD_W, WORLD_H){
 
 		std::unique_ptr<GameWidgets::DFSBtn> btn_dfs = 
-			std::make_unique<GameWidgets::DFSBtn>(*this, _path, _render_path_flag, _search_speed);
+			std::make_unique<GameWidgets::DFSBtn>(*this, _path, _search_speed);
 		addWidget(std::move(btn_dfs));
 
 		std::unique_ptr<GameWidgets::BFSBtn> btn_bfs = 
-			std::make_unique<GameWidgets::BFSBtn>(*this, _path, _render_path_flag, _search_speed);
+			std::make_unique<GameWidgets::BFSBtn>(*this, _path, _search_speed);
 		addWidget(std::move(btn_bfs));
 
 		std::unique_ptr<GameWidgets::AStarBtn> btn_astar = 
-			std::make_unique<GameWidgets::AStarBtn>(*this, _path, _render_path_flag, _search_speed);
+			std::make_unique<GameWidgets::AStarBtn>(*this, _path, _search_speed);
 		addWidget(std::move(btn_astar));
 
 		std::unique_ptr<GameWidgets::SelectEntPlayerBtn> btn_player = 
@@ -76,7 +76,8 @@ Game::Game():
 void Game::render() {
 	World::draw();
 
-	if (World::getRenderPathFlag())
+	// if (World::getRenderPathFlag())
+	if (_path.size() > 0)
 		renderPath();
 
 	renderSelectedEntityType(); // render selected rect around entity button
@@ -166,8 +167,8 @@ void Game::handleInputs(){
 
 		// if the player moved, reset the delay timer
 		if (moved){ 
+			_path.clear();
 			s_player_last_moved = PLAYER_MOVE_DELAY;
-			World::setRenderPathFlag(false);
 		}
 	} else {
 		s_player_last_moved--;
@@ -203,8 +204,8 @@ namespace GameWidgets {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Finding path with DFS!\n";
 
+			_path.clear();
 			_path = PathFinder::dfs(_world, _search_speed); 
-			_render_path_flag = true;
 
 			if (_path.size() == 0){
 				std::cout << "No path found!\n";
@@ -221,8 +222,8 @@ namespace GameWidgets {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Finding path with BFS!\n";
 
+			_path.clear();
 			_path = PathFinder::bfs(_world, _search_speed); 
-			_render_path_flag = true;
 
 			if (_path.size() == 0){
 				std::cout << "No path found!\n";
@@ -239,8 +240,8 @@ namespace GameWidgets {
 		if (isMouseOver() && isClicked()){
 			std::cout << "Finding path with A* search!\n";
 			
-			_path = PathFinder::a_star(_world);
-			_render_path_flag = true;
+			_path.clear();
+			_path = PathFinder::a_star(_world, _search_speed);
 
 			if (_path.size() == 0){
 				std::cout << "No path found!\n";

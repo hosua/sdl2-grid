@@ -6,5 +6,5 @@
 #include "world.hh"
 
 namespace PathFinder {
-	std::vector<SDL_Point> a_star(World& world);
+	std::vector<SDL_Point> a_star(World& world, const int& search_speed);
 }

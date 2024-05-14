@@ -47,7 +47,7 @@ std::vector<SDL_Point> PathFinder::bfs(World& world, const int& search_speed){
 			SDL_Point pos = q.front();
 			// printf("(%i,%i) -> ", pos.x, pos.y);
 			q.pop();
-			SDL_Rect rect = { world.getRect().x + (pos.x * BLOCK_W), 
+			SDL_Rect rect = { world.getRect().x + pos.x * BLOCK_W, 
 				world.getRect().y + (pos.y * BLOCK_H), 
 				BLOCK_W, BLOCK_H 
 			};

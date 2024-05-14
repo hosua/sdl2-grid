@@ -33,7 +33,7 @@ std::ostream & operator << (std::ostream &out, const SearchState& s){
 	return out;
 }
 
-// necessary for priority_queue insertion and sorting
+// necessary for priority_queue
 bool operator<(const SearchState& a, const SearchState& b){
 	return a.f > b.f; // min heap on f = g + h
 }
@@ -50,9 +50,11 @@ class AStarPriorityQueue : public std::priority_queue<SearchState> {
 		}
 };
 
-std::vector<SDL_Point> PathFinder::a_star(World& world){
+std::vector<SDL_Point> PathFinder::a_star(World& world, const int& search_speed){
 	std::vector<SDL_Point> path;
 	
+	const int search_delay = PathFinder::SEARCH_SPEED_MAP.at(search_speed);
+
 	int g_count = 0; 
 
 	SDL_Point start = world.getPlayerPos();
@@ -92,12 +94,13 @@ std::vector<SDL_Point> PathFinder::a_star(World& world){
 				path.push_back({ crawl->x, crawl->y });
 				SDL_Rect rect = { world.getRect().x + crawl->x * BLOCK_W, crawl->y * BLOCK_H, BLOCK_W, BLOCK_H };
 				SDL_RenderFillRect(renderer, &rect);
-				std::reverse(path.begin(), path.end());
 				SDL_RenderFillRect(renderer, &rect);
-				// add some delay to the path reconstructing animation
-				SDL_Delay(7); 
+
+				App::getInstance()->delayHighRes(search_delay);
+
 				SDL_RenderPresent(renderer);
 			}
+			std::reverse(path.begin(), path.end());
 			return path;
 		}
 		
@@ -143,7 +146,7 @@ std::vector<SDL_Point> PathFinder::a_star(World& world){
 				};
 				SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, 128);
 				SDL_RenderFillRect(renderer, &rect);
-				SDL_Delay(5);
+				App::getInstance()->delayHighRes(search_delay);
 				SDL_RenderPresent(renderer);
 
 			}

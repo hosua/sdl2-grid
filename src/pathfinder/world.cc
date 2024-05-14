@@ -77,7 +77,6 @@ namespace PathFinder {
 			_grid[_player.y][_player.x] = ENT_NONE;
 			_player.x = x, _player.y = y;
 			_grid[y][x] = ENT_PLAYER;
-			_render_path_flag = false;
 			return true;
 		}
 		return false;
@@ -90,7 +89,6 @@ namespace PathFinder {
 			_grid[_player.y][_player.x] = ENT_NONE;
 			_player.x = nx, _player.y = ny;
 			_grid[ny][nx] = ENT_PLAYER;
-			_render_path_flag = false;
 			return true;
 		}
 		return false;
@@ -142,14 +140,6 @@ namespace PathFinder {
 		if (inBounds(x, y))
 			return _grid[y][x];
 		return ENT_NONE;
-	}
-
-	bool World::getRenderPathFlag() const {
-		return _render_path_flag;
-	}
-
-	void World::setRenderPathFlag(bool flag){ 
-		_render_path_flag = flag; 
 	}
 
 	const std::pair<int,int> World::getDimensions(){

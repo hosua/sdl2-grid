@@ -30,7 +30,6 @@ class Game : public IScene, public World {
 
 	
 	private:
-		bool _render_path_flag = false;
 		std::vector<SDL_Point> _path;
 		EntType _entity_type = ENT_WALL; // the current type of entity to spawn/move when clicking
 		int _search_speed = 5; // the speed of the pathfinding search
@@ -43,21 +42,18 @@ namespace GameWidgets {
 			~DFSBtn() = default;
 			DFSBtn(World& world,
 					std::vector<SDL_Point>& path,
-					bool& render_path_flag,
 					const int& search_speed):
 				Button("DFS",
 						5, 5,
 						130, 50),
 				_world(world),
 				_path(path),
-				_render_path_flag(render_path_flag),
 				_search_speed(search_speed) {}
 
 			void handleInputs() override;
 		private:
 			World& _world;
 			std::vector<SDL_Point>& _path;
-			bool& _render_path_flag;
 			const int& _search_speed;
 	};
 
@@ -66,14 +62,12 @@ namespace GameWidgets {
 			~BFSBtn() = default;
 			BFSBtn(World& world,
 					std::vector<SDL_Point>& path,
-					bool& render_path_flag,
 					const int& search_speed):
 				Button("BFS", 
 						5, 60, 
 						130, 50),
 				_world(world),
 				_path(path),
-				_render_path_flag(render_path_flag) ,
 				_search_speed(search_speed) {}
 
 			void handleInputs() override;
@@ -81,7 +75,6 @@ namespace GameWidgets {
 		private:
 			World& _world;
 			std::vector<SDL_Point>& _path;
-			bool& _render_path_flag;
 			const int& _search_speed;
 	};
 
@@ -89,21 +82,18 @@ namespace GameWidgets {
 		public:
 			AStarBtn(World& world,
 					std::vector<SDL_Point>& path,
-					bool& render_path_flag,
 					const int& search_speed):
 				Button("A*", 
 						5, 115, 
 						130, 50),
 				_world(world),
 				_path(path),
-				_render_path_flag(render_path_flag) ,
 				_search_speed(search_speed) {}
 
 			void handleInputs() override;
 		private:
 			World& _world;
 			std::vector<SDL_Point>& _path;
-			bool& _render_path_flag;
 			const int& _search_speed;
 	};
 

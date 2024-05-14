@@ -75,7 +75,6 @@ void App::mainLoop(){
 		getFrameEvents().clear();
 		SDL_Delay(17);
 	}
-	printf("_running = %i\n", _running);
 }
 
 bool App::isRunning() const { return _running; }

@@ -42,9 +42,6 @@ namespace PathFinder {
 		SDL_Point getPlayerPos() const { return _player; }
 		const SDL_Rect getRect() const { return _rect; }
 
-		bool getRenderPathFlag() const;
-		void setRenderPathFlag(bool flag);
-
 		// clearly renders only the world grid portion of the screen
 		void renderClear();
 
@@ -65,6 +62,5 @@ namespace PathFinder {
 		std::vector<std::vector<EntType>> _grid;
 		SDL_Rect _rect;	
 		SDL_Point _end, _player;
-		bool _render_path_flag; // if true, path rendering should stop
 	};
 }
