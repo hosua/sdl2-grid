@@ -2,6 +2,7 @@
 #include <chrono>
 #include <memory>
 #include <iostream>
+#include <random>
 
 #include "app.hh"
 #include "defs.hh"
@@ -31,7 +32,8 @@ void App::delayHighRes(float ms){
 App* App::_instance = nullptr;
 
 App::App():
-	SceneManager(){
+	SceneManager(),
+	_gen(std::random_device{}()){
 	_running = initSDL() && Font::init();
 }
 
@@ -115,4 +117,14 @@ bool App::initSDL(){
 	TTF_Init();
 
 	return true;
+}
+
+int App::getRandInt(int min, int max) const {
+	std::uniform_int_distribution<> distr(min, max);
+	return distr(_gen);
+}
+
+float App::getRandFloat(float min, float max) const {
+	std::uniform_real_distribution<> distr(min, max);
+	return distr(_gen);
 }

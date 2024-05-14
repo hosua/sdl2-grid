@@ -1,11 +1,15 @@
 #include "world.hh"
 
 #include <cstdio>
+#include <stack>
+#include <set>
 #include <unordered_map>
 
 #include "defs.hh"
 
 #include "app.hh"
+
+static std::vector<SDL_Point> s_moves = {{0, +1}, {+1, 0}, {-1, 0}, {0, -1}};
 
 namespace PathFinder {
 	const std::unordered_map<int, float> SEARCH_SPEED_MAP = {
@@ -144,5 +148,80 @@ namespace PathFinder {
 
 	const std::pair<int,int> World::getDimensions(){
 		return std::make_pair(_rows, _cols);
+	}
+	
+	// returns true if the start and end nodes in the grid are connected
+	static bool is_connected(std::vector<std::vector<EntType>> grid){
+		SDL_Point start, end;
+
+		for (int y = 0; y < (int)grid.size(); ++y){
+			for (int x = 0; x < (int)grid[y].size(); ++x){
+				if (grid[y][x] == ENT_PLAYER)
+					start = { x, y };
+				else if (grid[y][x] == ENT_END)
+					end = { x, y };
+			}
+		}
+		
+		std::set<std::pair<int,int>> vis;
+		std::stack<SDL_Point> s;
+		s.push(start);
+
+		while (!s.empty()){
+			SDL_Point node = s.top();
+			s.pop();
+			int x = node.x, y = node.y;
+			vis.insert(std::make_pair(x, y));
+			// printf("[%i,%i] ->", x, y);
+			if (x == end.x && y == end.y)
+				return true;
+			for (const auto& [mx, my] : s_moves){
+				int nx = x + mx, ny = y + my;
+				if ((nx >= 0 && nx < (int)grid[0].size() && ny >= 0 && ny < (int)grid.size()) &&
+						grid[ny][nx] != ENT_WALL &&
+						vis.find(std::make_pair(nx, ny)) == vis.end()){
+					s.push({ nx, ny });
+				}
+			}
+		}
+		return false;
+	}
+
+	void randomize_world(World& world){
+		const auto& [rows, cols] = world.getDimensions();
+
+		std::vector<std::vector<EntType>> grid(rows, std::vector<EntType>(cols, ENT_NONE));
+
+		// fill the entire grid with walls 
+		for (int y = 0; y < rows; ++y)
+			for (int x = 0; x < cols; ++x)
+					grid[y][x] = ENT_WALL;
+
+		// place start pos on the world
+		int sx, sy;
+		sx = App::getInstance()->getRandInt(0, cols-1);
+		sy = App::getInstance()->getRandInt(0, rows-1);
+		world.movePlayer(sx, sy);
+		grid[sy][sx] = ENT_PLAYER;
+
+		// place end pos on the world
+		int ex, ey;
+		do {
+			ex = App::getInstance()->getRandInt(0, cols-1);
+			ey = App::getInstance()->getRandInt(0, rows-1);
+		}
+		while ((sx == ex && sy == ey)); // redo if end is equal to start
+		world.setEndPos(ex, ey);
+		grid[ey][ex] = ENT_END;
+
+		while (!is_connected(grid)){
+			// randomly remove some walls
+			for (int y = 0; y < rows; ++y)
+				for (int x = 0; x < cols; ++x)
+					if (grid[y][x] == ENT_WALL &&
+							App::getInstance()->getRandFloat(0.f, 1.f) < 0.3f)
+						grid[y][x] = ENT_NONE;
+		}
+		world.setGrid(grid);
 	}
 }

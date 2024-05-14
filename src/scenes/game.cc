@@ -10,6 +10,7 @@
 #include "../defs.hh"
 
 #include "app.hh"
+#include "pathfinder/world.hh"
 
 const int WORLD_X = 140,
 		PLAYER_MOVE_DELAY = 3,
@@ -44,6 +45,10 @@ Game::Game():
 		std::unique_ptr<GameWidgets::SelectEntEndBtn> btn_end = 
 			std::make_unique<GameWidgets::SelectEntEndBtn>(_entity_type);
 		addWidget(std::move(btn_end));
+
+		std::unique_ptr<GameWidgets::RandomizeBtn> btn_randomize =
+			std::make_unique<GameWidgets::RandomizeBtn>(*this);
+		addWidget(std::move(btn_randomize));
 
 		std::unique_ptr<GameWidgets::MainMenuBtn> btn_main_menu =
 			std::make_unique<GameWidgets::MainMenuBtn>();
@@ -252,6 +257,13 @@ namespace GameWidgets {
 				std::cout << "\n";
 			}
 
+		}
+	}
+
+	void RandomizeBtn::handleInputs() {
+		if (isMouseOver() && isClicked()){
+			// std::cout << "I am not implemented yet!\n";
+			PathFinder::randomize_world(_world);
 		}
 	}
 

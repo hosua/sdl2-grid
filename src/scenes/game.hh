@@ -96,7 +96,26 @@ namespace GameWidgets {
 			std::vector<SDL_Point>& _path;
 			const int& _search_speed;
 	};
+	
+	/**
+	 * Generates a random map
+	 */
 
+	class RandomizeBtn : public UI::Button {
+		public:
+			RandomizeBtn (World& world):
+				Button("Randomize",
+						5, 225,
+						130, 50,
+						Font::openSansSmall),
+				_world(world){}
+
+			void handleInputs() override;
+		private:
+			World& _world;
+	};
+
+	// TODO: Create add noise to current map button
 
 	class SelectEntWallBtn : public UI::Button {
 		public:

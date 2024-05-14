@@ -55,7 +55,10 @@ namespace PathFinder {
 		const std::pair<int,int> getDimensions();
 
 		std::vector<std::vector<EntType>> const getGrid(){ return _grid; }
-
+		std::vector<std::vector<EntType>> setGrid(std::vector<std::vector<EntType>> grid){ 
+			_grid = grid; 
+			return grid; 
+		}
 
 	private:
 		uint16_t _rows, _cols;
@@ -63,4 +66,6 @@ namespace PathFinder {
 		SDL_Rect _rect;	
 		SDL_Point _end, _player;
 	};
+
+	void randomize_world(World& world);
 }

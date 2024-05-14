@@ -8,6 +8,6 @@
 #define WINDOW_W 1280
 #define WINDOW_H 720
 
-#define BLOCK_W 20
-#define BLOCK_H 20
+#define BLOCK_W 10
+#define BLOCK_H 10
 

@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <random>
 #include <vector>
 
 #include "scene.hh"
@@ -39,6 +40,9 @@ class App : public SceneManager {
 		SDL_Surface* getSurface(){ return _surface; }
 		SDL_Renderer* getRenderer(){ return _renderer; }
 
+		int getRandInt(int min, int max) const;
+		float getRandFloat(float min, float max) const;
+
 		// move player relative to current pos, returns true if player moved
 		bool movePlayer(int dx, int dy); 
 
@@ -49,6 +53,8 @@ class App : public SceneManager {
 		static App* _instance;
 		App();
 		~App();
+
+		mutable std::mt19937 _gen;
 
 		bool _running = false;
 		SDL_Point _mouse_pos;
