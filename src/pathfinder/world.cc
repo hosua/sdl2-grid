@@ -201,7 +201,6 @@ namespace PathFinder {
 		int sx, sy;
 		sx = App::getInstance()->getRandInt(0, cols-1);
 		sy = App::getInstance()->getRandInt(0, rows-1);
-		world.movePlayer(sx, sy);
 		grid[sy][sx] = ENT_PLAYER;
 
 		// place end pos on the world
@@ -211,7 +210,6 @@ namespace PathFinder {
 			ey = App::getInstance()->getRandInt(0, rows-1);
 		}
 		while ((sx == ex && sy == ey)); // redo if end is equal to start
-		world.setEndPos(ex, ey);
 		grid[ey][ex] = ENT_END;
 
 		while (!is_connected(grid)){
@@ -222,6 +220,7 @@ namespace PathFinder {
 							App::getInstance()->getRandFloat(0.f, 1.f) < 0.3f)
 						grid[y][x] = ENT_NONE;
 		}
+
 		world.setGrid(grid);
 	}
 }

@@ -57,6 +57,12 @@ namespace PathFinder {
 		std::vector<std::vector<EntType>> const getGrid(){ return _grid; }
 		std::vector<std::vector<EntType>> setGrid(std::vector<std::vector<EntType>> grid){ 
 			_grid = grid; 
+			for (int y = 0; y < (int)grid.size(); ++y)
+				for (int x = 0; x < (int)grid[y].size(); ++x)
+					if (grid[y][x] == ENT_PLAYER)
+						_player = { x, y };
+					else if (grid[y][x] == ENT_END)
+						_end = { x, y };
 			return grid; 
 		}
 
